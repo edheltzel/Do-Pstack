@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Quality
+        run: python3 e2e/ci_static.py --quality
+
+      - name: Lint
+        run: |
+          npx --yes -p typescript@5.9.3 tsc --noEmit -p tsconfig.ci.json --pretty false
+          python3 e2e/ci_static.py --frontmatter
+          python3 e2e/run.py --skip-rpc
+
+      - name: Performance
+        run: python3 e2e/ci_static.py --perf

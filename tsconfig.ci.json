@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": [],
+    "baseUrl": "."
+  },
+  "files": ["extensions/pstack.ts", "e2e/ci-shims/node-fs.d.ts"]
+}
