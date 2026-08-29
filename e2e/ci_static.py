@@ -10,9 +10,12 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PSTACK_TS = ROOT / "extensions/pstack.ts"
 PSTACK_MAX_BYTES = 32 * 1024
 E2E_BUDGET_S = 8.0
+
+
+def pstack_ts(root: Path) -> Path:
+    return root / "extensions/pstack.ts"
 
 
 def check(name: str, ok: bool, detail: str) -> dict:
@@ -47,9 +50,10 @@ def frontmatter_fields(text: str) -> dict[str, str] | None:
     return fields
 
 
-def quality() -> list[dict]:
+def quality(root: Path | None = None) -> list[dict]:
+    root = ROOT if root is None else Path(root)
     results = []
-    pkg_path = ROOT / "package.json"
+    pkg_path = root / "package.json"
     if not pkg_path.is_file():
         return [check("package_json", False, "package.json missing")]
     try:
@@ -71,7 +75,7 @@ def quality() -> list[dict]:
         results.append(check("omp_skills", skill_ok, "omp.skills declared" if skill_ok else "missing or empty"))
         declared = [*(exts if isinstance(exts, list) else []), *(skills if isinstance(skills, list) else [])]
     for rel in declared:
-        path = ROOT / str(rel)
+        path = root / str(rel)
         results.append(check(f"omp_path:{rel}", path.exists(), "present" if path.exists() else "missing"))
 
     required = (
@@ -81,19 +85,20 @@ def quality() -> list[dict]:
         ("commands", False),
     )
     for rel, want_file in required:
-        path = ROOT / rel
+        path = root / rel
         ok = path.is_file() if want_file else path.is_dir()
         kind = "file" if want_file else "directory"
         results.append(check(rel, ok, f"{kind} present" if ok else f"{kind} missing"))
     return results
 
 
-def frontmatter() -> list[dict]:
+def frontmatter(root: Path | None = None) -> list[dict]:
+    root = ROOT if root is None else Path(root)
     results = []
-    skills = sorted(ROOT.glob("skills/**/SKILL.md"))
+    skills = sorted(root.glob("skills/**/SKILL.md"))
     results.append(check("skill_files", bool(skills), f"{len(skills)} SKILL.md"))
     for path in skills:
-        rel = path.relative_to(ROOT).as_posix()
+        rel = path.relative_to(root).as_posix()
         fields = frontmatter_fields(path.read_text(encoding="utf-8"))
         if fields is None:
             results.append(check(rel, False, "missing YAML frontmatter"))
@@ -104,10 +109,10 @@ def frontmatter() -> list[dict]:
         missing = [k for k, v in (("name", name), ("description", desc)) if not v]
         results.append(check(rel, ok, "name + description" if ok else f"missing {', '.join(missing)}"))
 
-    commands = sorted((ROOT / "commands").glob("*.md")) if (ROOT / "commands").is_dir() else []
+    commands = sorted((root / "commands").glob("*.md")) if (root / "commands").is_dir() else []
     results.append(check("command_files", bool(commands), f"{len(commands)} command md"))
     for path in commands:
-        rel = path.relative_to(ROOT).as_posix()
+        rel = path.relative_to(root).as_posix()
         fields = frontmatter_fields(path.read_text(encoding="utf-8"))
         if fields is None:
             results.append(check(rel, False, "missing YAML frontmatter"))
@@ -153,11 +158,13 @@ def _brace_balance(text: str) -> bool:
     return depth == 0
 
 
-def size_and_parse() -> list[dict]:
+def size_and_parse(root: Path | None = None) -> list[dict]:
+    root = ROOT if root is None else Path(root)
     results = []
-    if not PSTACK_TS.is_file():
+    target = pstack_ts(root)
+    if not target.is_file():
         return [check("pstack_size", False, "extensions/pstack.ts missing")]
-    raw = PSTACK_TS.read_bytes()
+    raw = target.read_bytes()
     size_ok = len(raw) <= PSTACK_MAX_BYTES
     results.append(
         check(
@@ -212,17 +219,20 @@ def main() -> int:
     parser.add_argument("--quality", action="store_true")
     parser.add_argument("--frontmatter", action="store_true")
     parser.add_argument("--perf", action="store_true")
+    parser.add_argument("--root", type=Path, default=None, help="plugin root (tests)")
     args = parser.parse_args()
+    root = args.root.resolve() if args.root is not None else ROOT
     selected = [args.quality, args.frontmatter, args.perf]
     run_all = not any(selected)
     results: list[dict] = []
     if run_all or args.quality:
-        results.extend(quality())
+        results.extend(quality(root))
     if run_all or args.frontmatter:
-        results.extend(frontmatter())
+        results.extend(frontmatter(root))
     if run_all or args.perf:
-        results.extend(size_and_parse())
-        results.extend(timed_e2e())
+        results.extend(size_and_parse(root))
+        if root == ROOT:
+            results.extend(timed_e2e())
     failed = [r for r in results if not r["ok"]]
     print(json.dumps({"ok": not failed, "failed": [r["name"] for r in failed], "n": len(results)}), flush=True)
     return 1 if failed else 0

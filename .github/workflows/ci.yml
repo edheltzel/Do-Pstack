@@ -15,14 +15,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
       - name: Quality
         run: python3 e2e/ci_static.py --quality
 
       - name: Lint
         run: |
-          npx --yes -p typescript@5.9.3 tsc --noEmit -p tsconfig.ci.json --pretty false
+          npx tsc --noEmit -p tsconfig.ci.json --pretty false
           python3 e2e/ci_static.py --frontmatter
           python3 e2e/run.py --skip-rpc
+
+      - name: Unit tests
+        run: npm test
 
       - name: Performance
         run: python3 e2e/ci_static.py --perf
