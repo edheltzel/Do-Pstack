@@ -88,7 +88,7 @@ describe("potetoOnFromScope (Map keyed by sid, missing-entry-is-off)", () => {
   });
 });
 
-describe("factory /new leak class (ExtensionAPI, no omp)", () => {
+describe("factory RPC new_session leak class (ExtensionAPI, no omp)", () => {
   it("same-process sid B stays off when A is poteto-on and B has no jsonl entry", async () => {
     const { events, commandHandler } = installFactory();
     const dir = mkdtempSync(join(tmpdir(), "pstack-sid-"));
@@ -105,7 +105,7 @@ describe("factory /new leak class (ExtensionAPI, no omp)", () => {
     expect(offB).toBeUndefined();
   });
 
-  it("new_session for B (TUI /new class) does not inherit A's on state", async () => {
+  it("RPC new_session for sid B does not inherit A's on state", async () => {
     const { events, commandHandler } = installFactory();
     await commandHandler("", ctxFor("sid-a"));
     await events.new_session?.({}, ctxFor("sid-b"));
