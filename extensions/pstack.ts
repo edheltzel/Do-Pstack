@@ -29,16 +29,12 @@ function sessionFileFromCtx(ctx: any): string | undefined {
   return typeof file === "string" && file.length > 0 ? file : undefined;
 }
 
-function lastPotetoInJsonl(path: string): { found: boolean; enabled: boolean } | undefined {
-  if (!existsSync(path)) return undefined;
+export type PstackModeLookup = { found: boolean; enabled: boolean };
+
+/** Last pstack-mode row wins. Empty text / missing customType → found:false. */
+export function lastWinsPstackMode(text: string): PstackModeLookup {
   let found = false;
   let enabled = false;
-  let text = "";
-  try {
-    text = readFileSync(path, "utf8");
-  } catch {
-    return undefined;
-  }
   for (const line of text.split("\n")) {
     if (!line.includes("pstack-mode")) continue;
     try {
@@ -54,6 +50,15 @@ function lastPotetoInJsonl(path: string): { found: boolean; enabled: boolean } |
     }
   }
   return { found, enabled };
+}
+
+function lastPotetoInJsonl(path: string): PstackModeLookup | undefined {
+  if (!existsSync(path)) return undefined;
+  try {
+    return lastWinsPstackMode(readFileSync(path, "utf8"));
+  } catch {
+    return undefined;
+  }
 }
 
 function enabledFromBranch(ctx: any): boolean | undefined {
@@ -76,17 +81,28 @@ function enabledFromBranch(ctx: any): boolean | undefined {
   return found ? enabled : false;
 }
 
+/**
+ * This conversation only. Missing pstack-mode entry means off.
+ * `cache` is keyed by session id (and optionally session file). Never a process-wide boolean.
+ */
+export function potetoOnFromScope(args: {
+  cache: Map<string, boolean>;
+  sid?: string;
+  file?: string;
+  jsonl?: PstackModeLookup;
+}): boolean {
+  if (args.jsonl?.found) return args.jsonl.enabled;
+  if (args.sid && args.cache.has(args.sid)) return args.cache.get(args.sid) === true;
+  if (args.file && args.cache.has(args.file)) return args.cache.get(args.file) === true;
+  return false;
+}
+
 /** This conversation only. Missing pstack-mode entry means off. Never a process-wide boolean. */
 function isPotetoOn(ctx: any, cache: Map<string, boolean>): boolean {
   const file = sessionFileFromCtx(ctx);
   const sid = sessionIdFromCtx(ctx);
-  if (file) {
-    const parsed = lastPotetoInJsonl(file);
-    if (parsed?.found) return parsed.enabled;
-  }
-  if (sid && cache.has(sid)) return cache.get(sid) === true;
-  if (file && cache.has(file)) return cache.get(file) === true;
-  return false;
+  const jsonl = file ? lastPotetoInJsonl(file) : undefined;
+  return potetoOnFromScope({ cache, sid, file, jsonl });
 }
 
 export default function pstackExtension(pi: any): void {
