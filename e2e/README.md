@@ -1,15 +1,24 @@
 # pstack e2e
 
-Live omp RPC evals for this plugin. Not chat-only.
+Static doctor/lint/perf + Vitest on every PR. Live omp RPC evals are local-only. Not chat-only.
+
+Static (CI and local; no omp):
+
+```bash
+python3 e2e/run.py --skip-rpc
+npm test
+```
+
+Live RPC (local only; needs `omp` on PATH):
 
 ```bash
 python3 e2e/run.py
-python3 e2e/run.py --skip-rpc
 python3 e2e/run.py --case poteto_on --case new_session_starts_off
 ```
 
-Requires `omp` on PATH. Each RPC run uses `--session-dir` under a temp folder and `--no-tools`.
+Each RPC run uses `--session-dir` under a temp folder and `--no-tools`.
 A factory change still needs an omp restart (a fresh `omp --mode rpc` process loads the tree).
+Do not run `omp --mode rpc` on GitHub runners.
 
 | Case | What it proves |
 | --- | --- |

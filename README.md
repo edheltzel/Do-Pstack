@@ -12,9 +12,17 @@ Worktrees: `~/.omp/wt`, override `worktree.base` / `OMP_WORKTREE_DIR`.
 
 ## Evals
 
+Static (CI and local; no omp):
+
+```bash
+python3 e2e/run.py --skip-rpc
+npm test
+```
+
+Live RPC (local only; needs omp):
+
 ```bash
 python3 e2e/run.py
-python3 e2e/run.py --skip-rpc
 ```
 
 See [e2e/README.md](e2e/README.md).

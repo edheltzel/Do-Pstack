@@ -4,6 +4,9 @@
   "description": "pstack for omp: one extension (sticky /poteto-mode), skills, agents.",
   "private": true,
   "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
   "omp": {
     "extensions": [
       "./extensions/pstack.ts"
@@ -19,5 +22,9 @@
     "skills": [
       "./skills"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   }
 }

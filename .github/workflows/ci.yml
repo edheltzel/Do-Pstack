@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Quality
+        run: python3 e2e/ci_static.py --quality
+
+      - name: Lint
+        run: |
+          npx tsc --noEmit -p tsconfig.ci.json --pretty false
+          python3 e2e/ci_static.py --frontmatter
+          python3 e2e/run.py --skip-rpc
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Performance
+        run: python3 e2e/ci_static.py --perf
