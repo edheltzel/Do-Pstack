@@ -2,10 +2,12 @@
 
 This tree is an omp **extension**. Load it with `omp -e ./extensions/pstack.ts`. Same map as the [README](../README.md).
 
+That command is how `/poteto-mode` and `/skill:ps-…` are live. Skills come from this clone via `.omp/skills` → `../skills`. `--plugin-dir .` is optional, not the first command.
+
 It is not an `omp plugin list` plugin. It is not `omp plugin install`. It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
 
 1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
-2. Clone this repository and start omp with the extension file. That is how `/poteto-mode` is live:
+2. Clone this repository and start omp with the extension file. That is how `/poteto-mode` and `/skill:ps-…` are live:
 
 ```
 git clone https://github.com/edheltzel/pstack.git
@@ -20,4 +22,4 @@ omp -e ./extensions/pstack.ts
 
 When on, a prompt needle prepends “Pstack Poteto Mode is on…”. The TUI status reads `pstack: poteto mode`.
 
-Skills under `skills/` are markdown `/skill:ps-<name>` prompts, not functions. Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner.
+Skills under `skills/` are markdown `/skill:ps-<name>` prompts, not functions. They list and inject on the `-e` command above. Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner.
