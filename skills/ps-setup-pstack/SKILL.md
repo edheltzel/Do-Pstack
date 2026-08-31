@@ -1,5 +1,5 @@
 ---
-name: setup-pstack
+name: ps-setup-pstack
 description: Show which pstack plugin agents use which @role. Change routing via /agents or /model Roles. Use for /setup-pstack, "configure pstack models", or changing pstack's model choices.
 ---
 

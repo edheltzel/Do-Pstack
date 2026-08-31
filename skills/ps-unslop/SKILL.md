@@ -1,5 +1,5 @@
 ---
-name: unslop
+name: ps-unslop
 description: Cut AI tells from any writing. Must always apply.
 ---
 

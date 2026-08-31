@@ -1,5 +1,5 @@
 ---
-name: typescript-best-practices
+name: ps-typescript-best-practices
 description: TypeScript best practices. Use when reading or editing any .ts or .tsx file.
 ---
 
