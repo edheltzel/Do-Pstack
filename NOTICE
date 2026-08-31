@@ -1,0 +1,9 @@
+pstack is MIT. See LICENSE in this repository.
+
+OMP (Oh My Pi) is MIT. See https://github.com/can1357/oh-my-pi/blob/main/LICENSE (“OMP is licensed under the MIT License.”) and https://github.com/can1357/oh-my-pi/blob/main/README.md#license
+
+Upstream Pi is MIT. See https://github.com/badlogic/pi-mono/blob/main/LICENSE
+
+This plugin adapts OMP and Pi. Their licenses are preserved.
+
+OMP vendored crates stay on their own terms. See THIRD-PARTY-NOTICES.txt in oh-my-pi. This repository does not copy those crate licenses.

@@ -26,4 +26,8 @@ Static evals (CI; no omp) live in [e2e/README.md](e2e/README.md).
 
 ## License
 
-[MIT](LICENSE). Copyright the pstack contributors.
+pstack is [MIT](LICENSE). Copyright the pstack contributors.
+
+OMP (Oh My Pi) is MIT ([LICENSE](https://github.com/can1357/oh-my-pi/blob/main/LICENSE), [README](https://github.com/can1357/oh-my-pi/blob/main/README.md#license)). Upstream Pi is MIT ([LICENSE](https://github.com/badlogic/pi-mono/blob/main/LICENSE)). This plugin adapts those two projects; their licenses are preserved. OMP vendored crates stay on their own terms (`THIRD-PARTY-NOTICES.txt` in oh-my-pi).
+
+See [NOTICE](NOTICE).
