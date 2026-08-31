@@ -1,33 +1,45 @@
 # pstack
 
-pstack is the omp (Oh My Pi) plugin that puts sticky Poteto Mode and named roles in omp. It is not the Cursor pstack plugin.
+pstack is an [omp (Oh My Pi)](https://github.com/can1357/oh-my-pi) plugin that puts sticky Poteto Mode and named model roles on an omp conversation.
 
-Use it when you already work in omp and want Poteto Mode to stay on for that session, plus roles you persist through omp itself.
+Use this repo when you work in omp and want that workflow there. First run: [Getting started](docs/getting-started.md).
 
-## Why
+## Original plugin and this repo
 
-omp sessions start without a working mode. pstack turns Poteto Mode on for one conversation and keeps it on until you turn it off or start a new one. It lists how plugin agents map to `@role` aliases without writing your omp config.
+The original pstack is Lauren Tan's ([@poteto](https://x.com/poteto)) Cursor plugin:
 
-Any machine that runs omp can load it. It is not a Cursor-only plugin, not a host or IdP kit, and not a process-wide switch.
+- Marketplace: https://cursor.com/marketplace/cursor/pstack
+- Source: https://github.com/cursor/plugins/tree/main/pstack
+- Cursor install: `/add-plugin pstack`
+
+This repository is not that plugin. It is the omp port: one plugin this repo builds, running on omp as the harness (`omp.extensions` / `pi.extensions`). Do not install this tree with `/add-plugin pstack`; that command installs the Cursor original.
+
+## Usage
+
+### Poteto Mode
+
+- `/poteto-mode` turns sticky Poteto Mode on for this conversation.
+- `/poteto-mode off` turns it off.
+- `/new` starts off.
+- Resume an on conversation and it stays on.
+- Mode is per conversation, not process-wide. If Poteto Mode was never turned on in this conversation, it is off.
+
+The TUI can show a status chip. Other omp surfaces may not.
+
+### Roles
+
+`/setup-pstack` lists `modelRoles` and the `@role` names from `agents/*.md`. It does not write omp `config.yml`, `models.json`, or Cursor rules. (The Cursor original's `/setup-pstack` does write a Cursor rule. This plugin does not.)
 
 ## Install
 
-Clone this repository to any path. From that clone, load it as an omp plugin:
+From a clone of this repository, with omp already installed:
 
-```sh
+```bash
 omp plugin install .
 ```
 
-That is omp's local-folder install. There is no required plugin directory and no one-machine layout. `package.json` `omp.extensions` points at the one factory, `./extensions/pstack.ts`. Restart omp after a factory change.
-
-First omp session: [Getting started](docs/getting-started.md).
-
-Static evals (CI; no omp) live in [e2e/README.md](e2e/README.md).
+Then follow [Getting started](docs/getting-started.md) for the first on / sticky / roles / off pass.
 
 ## License
 
-pstack is [MIT](LICENSE). Copyright the pstack contributors.
-
-OMP (Oh My Pi) is MIT ([LICENSE](https://github.com/can1357/oh-my-pi/blob/main/LICENSE), [README](https://github.com/can1357/oh-my-pi/blob/main/README.md#license)). Upstream Pi is MIT ([LICENSE](https://github.com/badlogic/pi-mono/blob/main/LICENSE)). This plugin adapts those two projects; their licenses are preserved. OMP vendored crates stay on their own terms (`THIRD-PARTY-NOTICES.txt` in oh-my-pi).
-
-See [NOTICE](NOTICE).
+MIT. The omp harness ([Oh My Pi](https://github.com/can1357/oh-my-pi)) is MIT. Upstream Pi is MIT. See `LICENSE` and `NOTICE`.
