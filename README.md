@@ -1,8 +1,10 @@
 # pstack
 
-This repository is a clone of pstack skills plus `extensions/pstack.ts`. It is not the Cursor plugin. It is not an official Cursor port. It is not an `omp plugin list` plugin.
+This tree is an omp **extension**. Load it with `omp -e ./extensions/pstack.ts`. That is how `/poteto-mode` is live.
 
-`package.json` `omp.extensions` does not auto-load. `cd pstack && omp` without `-e` does not load this tree.
+It is not an `omp plugin list` plugin. It is not `omp plugin install`. It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
+
+`cd pstack && omp` without `-e` does not load this tree.
 
 ## What pstack is
 
@@ -13,7 +15,7 @@ pstack is a Cursor-verified plugin of Lauren Tan ([@poteto](https://x.com/poteto
 - Product README: https://github.com/cursor/plugins/blob/main/pstack/README.md
 - User guide: https://github.com/cursor/plugins/blob/main/pstack/docs/guide/README.md
 
-Those pages are the Cursor product. This README does not retell them. `/add-plugin pstack` is Cursor only. It is not the omp install for this repo.
+Those pages are the Cursor product. This README does not retell them. `/add-plugin pstack` is Cursor only.
 
 ## What omp is
 
@@ -26,9 +28,9 @@ Those pages are the Cursor product. This README does not retell them. `/add-plug
 - How omp can install plugins in general (not this repo’s command): https://omp.sh/docs/plugins
 - Authoring: https://omp.sh/docs/extension-authoring
 
-## Load this tree
+## Load this extension
 
-Clone https://github.com/edheltzel/pstack, then start omp with the extension file. That is how `/poteto-mode` is live.
+Clone https://github.com/edheltzel/pstack, then start omp with the extension file:
 
 ```
 git clone https://github.com/edheltzel/pstack.git
@@ -41,8 +43,8 @@ There is no `omp plugin install` or `omp add` in this repo. Do not use `/add-plu
 ## First steps
 
 1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
-2. Clone this repository and start omp with `-e` (see Load this tree).
-3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:poteto-mode`.
+2. Clone this repository and start omp with `-e` (see Load this extension).
+3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:ps-poteto-mode`.
 4. Work as usual. Resume an on conversation and it stays on. `/new` starts off.
 5. `/poteto-mode off` (aliases: `disable`, `stop`) — disable this conversation.
 
@@ -54,14 +56,14 @@ The TUI status reads `pstack: poteto mode` when on. Other omp surfaces may not s
 
 | Command | What it does |
 |---|---|
-| `/poteto-mode` | Enable sticky Poteto Mode for this conversation. Also sends `/skill:poteto-mode`. |
+| `/poteto-mode` | Enable sticky Poteto Mode for this conversation. Also sends `/skill:ps-poteto-mode`. |
 | `/poteto-mode off` | Disable this conversation. Aliases: `disable`, `stop`. |
 
-That is the live extension. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs.
+That is the live extension command. It stays unprefixed. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs.
 
 ## Poteto Mode (this extension)
 
-- Enable sends `/skill:poteto-mode`. The `/skill:poteto-mode` input hook also persists enabled.
+- Enable sends `/skill:ps-poteto-mode`. The `/skill:ps-poteto-mode` input hook also persists enabled.
 - Stored as a custom `pstack-mode` entry on that conversation’s session jsonl. Last `{enabled}` wins. Missing means off.
 - `session_start` re-reads the jsonl. `new_session` / `/new` starts off. Resume of an on conversation stays on.
 - When on, a prompt needle prepends “Pstack Poteto Mode is on…”
@@ -71,9 +73,9 @@ That is the live extension. There is no worktree command. No `hooks/` tree. No `
 
 ## Skills
 
-Files under `skills/` are markdown prompts. Invoke them with `/skill:<name>`. They are not live omp functions or CLIs.
+Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are not live omp functions or CLIs.
 
-`/skill:create-verification-skill`, `/skill:swarm`, and `/skill:principle-build-the-lever` are markdown prompts. Feature Map is a section in `create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
+Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
 
 ## License
 
