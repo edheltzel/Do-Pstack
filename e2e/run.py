@@ -180,7 +180,7 @@ def check(name, ok, detail):
 
 
 def static_worktree():
-    path = ROOT / "skills/poteto-mode/playbooks/worktree-cleanup.md"
+    path = ROOT / "skills/ps-poteto-mode/playbooks/worktree-cleanup.md"
     text = path.read_text()
     ok = (
         "~/.omp/wt" in text
@@ -198,7 +198,7 @@ def static_worktree():
 
 
 def static_setup_docs():
-    skill = (ROOT / "skills/setup-pstack/SKILL.md").read_text()
+    skill = (ROOT / "skills/ps-setup-pstack/SKILL.md").read_text()
     cmd = (ROOT / "commands/setup-pstack.md").read_text()
     ok = (
         "Do not write" in skill
