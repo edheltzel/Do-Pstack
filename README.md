@@ -1,10 +1,10 @@
 # pstack
 
-This tree is an omp **extension**. Load it with `omp -e ./extensions/pstack.ts`. That is how `/poteto-mode` is live.
+This tree is an omp **extension**. Load it with `omp -e ./extensions/pstack.ts`. That is how `/poteto-mode` and `/skill:ps-…` are live. Skills come from this clone via `.omp/skills` → `../skills`.
 
 It is not an `omp plugin list` plugin. It is not `omp plugin install`. It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
 
-`cd pstack && omp` without `-e` does not load this tree.
+`cd pstack && omp` without `-e` does not load this tree. `--plugin-dir .` is optional, not the first command.
 
 ## What pstack is
 
@@ -37,6 +37,8 @@ git clone https://github.com/edheltzel/pstack.git
 cd pstack
 omp -e ./extensions/pstack.ts
 ```
+
+That command lists and injects `/skill:ps-…` from this clone (`.omp/skills` → `../skills`). `--plugin-dir .` is an alternate, not required.
 
 There is no `omp plugin install` or `omp add` in this repo. Do not use `/add-plugin pstack` here. A local `.omp-plugin/marketplace.json` (`source: ./`) does not put this on `omp plugin list`.
 
@@ -73,7 +75,7 @@ That is the live extension command. It stays unprefixed. There is no worktree co
 
 ## Skills
 
-Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are not live omp functions or CLIs.
+Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are live on `omp -e ./extensions/pstack.ts` because `.omp/skills` points at `../skills`. They are not live omp functions or CLIs.
 
 Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
 
