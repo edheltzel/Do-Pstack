@@ -26,4 +26,4 @@ Static evals (CI; no omp) live in [e2e/README.md](e2e/README.md).
 
 ## License
 
-MIT. Copyright the pstack contributors.
+[MIT](LICENSE). Copyright the pstack contributors.
