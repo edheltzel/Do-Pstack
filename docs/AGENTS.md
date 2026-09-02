@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Human docs for this omp extension. First-run is omp; the numbered guide is the original pstack product tutorial.
+Human docs for this omp plugin. First-run is omp; the numbered guide is the original pstack product tutorial.
 
 ## Ownership
 
-- `getting-started.md` — omp first-run (`omp -e`, `/poteto-mode`, `/skill:ps-…`).
+- `getting-started.md` — omp first-run (`omp plugin link ./`, later `omp` with no `-e`, `/poteto-mode`, `/skill:ps-…`). One-off `omp -e ./extensions/pstack.ts` stays a test path.
 - `guide/` — original numbered tutorial (01–10 plus images), ported from `cursor/plugins` `pstack/docs/guide/`.
 
 ## Local Contracts

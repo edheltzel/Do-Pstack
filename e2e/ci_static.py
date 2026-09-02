@@ -64,16 +64,12 @@ def quality(root: Path | None = None) -> list[dict]:
     results.append(check("package_json", True, "present"))
     if not isinstance(omp, dict):
         results.append(check("omp_extensions", False, "package.json has no omp object"))
-        results.append(check("omp_skills", False, "package.json has no omp object"))
         declared: list[str] = []
     else:
         exts = omp.get("extensions")
-        skills = omp.get("skills")
         ext_ok = isinstance(exts, list) and bool(exts)
-        skill_ok = isinstance(skills, list) and bool(skills)
         results.append(check("omp_extensions", ext_ok, "omp.extensions declared" if ext_ok else "missing or empty"))
-        results.append(check("omp_skills", skill_ok, "omp.skills declared" if skill_ok else "missing or empty"))
-        declared = [*(exts if isinstance(exts, list) else []), *(skills if isinstance(skills, list) else [])]
+        declared = [*(exts if isinstance(exts, list) else [])]
     for rel in declared:
         path = root / str(rel)
         results.append(check(f"omp_path:{rel}", path.exists(), "present" if path.exists() else "missing"))

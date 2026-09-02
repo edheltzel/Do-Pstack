@@ -12,6 +12,7 @@ The one omp factory. Sticky `/poteto-mode` for a single conversation.
 
 - Mode is per-session (`pstack-mode` on that session's jsonl / session id). Missing entry means off.
 - Never a process-wide boolean.
+- Sticky `/poteto-mode` is factory `registerCommand("poteto-mode")` only. Do not ship `commands/poteto-mode.md`.
 - `package.json` `omp.extensions` points here.
 
 ## Work Guidance
