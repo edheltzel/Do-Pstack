@@ -40,4 +40,15 @@ describe("ci_static.py CLI fixtures", () => {
     expect(status).toBe(1);
     expect(summary.failed).toContain("pstack_parse");
   });
+
+  it("fails product when docs/guide is missing", () => {
+    const root = fixture({
+      "docs/getting-started.md": "# getting started\n",
+    });
+    const { status, summary } = runCiStatic(["--product"], root);
+    expect(status).toBe(1);
+    expect(summary.failed).toContain("docs/guide/README.md");
+    expect(summary.failed).toContain("automations/benny/FOR_AGENTS.md");
+    expect(summary.failed).toContain("skills/ps-swarm/SKILL.md");
+  });
 });

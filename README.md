@@ -17,6 +17,17 @@ pstack is a Cursor-verified plugin of Lauren Tan ([@poteto](https://x.com/poteto
 
 Those pages are the Cursor product. This README does not retell them. `/add-plugin pstack` is Cursor only.
 
+## Docs
+
+- [Getting started](./docs/getting-started.md) — omp first-run (`omp -e`). Keep this as the first-run tutorial.
+- [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/ps-*`; slash skills are `/skill:ps-…`. `/poteto-mode` stays unprefixed.
+
+## Automations
+
+pstack also ships a dormant [benny automation pack](./automations/benny/). Benny triages Slack issue reports, then reproduces and fixes confirmed bugs with real UI evidence. Its files are **not** registered as slash skills (`package.json` `omp.skills` stays `./skills` only).
+
+Setup starts at [`automations/benny/FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). That README records the Cursor Automations host vs what omp can run.
+
 ## What omp is
 
 [omp](https://omp.sh) is “A coding agent with the IDE wired in.”

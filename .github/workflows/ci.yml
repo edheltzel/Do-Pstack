@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Quality
-        run: python3 e2e/ci_static.py --quality
+        run: python3 e2e/ci_static.py --quality --product
 
       - name: Lint
         run: |

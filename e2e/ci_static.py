@@ -92,6 +92,54 @@ def quality(root: Path | None = None) -> list[dict]:
     return results
 
 
+PRODUCT_PACK_FILES = (
+    "docs/getting-started.md",
+    "docs/guide/README.md",
+    "docs/guide/01-setup.md",
+    "docs/guide/02-poteto-mode.md",
+    "docs/guide/03-understand.md",
+    "docs/guide/04-design.md",
+    "docs/guide/05-build-and-clean.md",
+    "docs/guide/06-verify-and-ship.md",
+    "docs/guide/07-overnight.md",
+    "docs/guide/08-principles.md",
+    "docs/guide/09-make-it-yours.md",
+    "docs/guide/10-recipes-and-pitfalls.md",
+    "docs/guide/images/design.jpg",
+    "docs/guide/images/overnight.jpg",
+    "docs/guide/images/recipes.jpg",
+    "docs/guide/images/router.jpg",
+    "docs/guide/images/understanding.jpg",
+    "docs/guide/images/verification.jpg",
+    "automations/benny/FOR_AGENTS.md",
+    "automations/benny/README.md",
+    "automations/benny/skills/reproduce-and-fix-issues/SKILL.md",
+    "automations/benny/skills/reproduce-and-fix-issues/references/control-adapter.md",
+    "automations/benny/skills/reproduce-and-fix-issues/references/feature-map.example.md",
+    "automations/benny/skills/reproduce-and-fix-issues/references/verify-existing-fix.md",
+    "automations/benny/skills/setup-benny/SKILL.md",
+    "automations/benny/skills/triage-issue-reports/SKILL.md",
+    "automations/benny/skills/triage-issue-reports/references/routing.example.md",
+    "automations/benny/templates/configuration.example.yaml",
+    "automations/benny/templates/reproduce-automation-prompt.md",
+    "automations/benny/templates/triage-automation-prompt.md",
+    "skills/ps-swarm/SKILL.md",
+    "agents/comment-sicko.md",
+    "agents/poteto-agent.md",
+)
+
+
+def product(root: Path | None = None) -> list[dict]:
+    root = ROOT if root is None else Path(root)
+    results = []
+    for rel in PRODUCT_PACK_FILES:
+        path = root / rel
+        ok = path.is_file()
+        results.append(check(rel, ok, "present" if ok else "missing"))
+    return results
+
+
+
 def frontmatter(root: Path | None = None) -> list[dict]:
     root = ROOT if root is None else Path(root)
     results = []
@@ -219,14 +267,17 @@ def main() -> int:
     parser.add_argument("--quality", action="store_true")
     parser.add_argument("--frontmatter", action="store_true")
     parser.add_argument("--perf", action="store_true")
+    parser.add_argument("--product", action="store_true")
     parser.add_argument("--root", type=Path, default=None, help="plugin root (tests)")
     args = parser.parse_args()
     root = args.root.resolve() if args.root is not None else ROOT
-    selected = [args.quality, args.frontmatter, args.perf]
+    selected = [args.quality, args.frontmatter, args.perf, args.product]
     run_all = not any(selected)
     results: list[dict] = []
     if run_all or args.quality:
         results.extend(quality(root))
+    if run_all or args.product:
+        results.extend(product(root))
     if run_all or args.frontmatter:
         results.extend(frontmatter(root))
     if run_all or args.perf:
