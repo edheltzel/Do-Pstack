@@ -68,5 +68,7 @@ npm test
 | [extensions/AGENTS.md](extensions/AGENTS.md) | Factory `pstack.ts`; per-session poteto-mode |
 | [e2e/AGENTS.md](e2e/AGENTS.md) | Static doctor/lint/perf + Vitest; live RPC local-only |
 | [skills/AGENTS.md](skills/AGENTS.md) | Skill tree; SKILL.md frontmatter `name` + `description` |
+| [docs/AGENTS.md](docs/AGENTS.md) | omp first-run `getting-started.md`; original numbered `guide/` |
+| [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills |
 
 `agents/` and `commands/` have no child AGENTS.md; they follow this rail. Commands need frontmatter `description`.

@@ -23,3 +23,5 @@ omp -e ./extensions/pstack.ts
 When on, a prompt needle prepends “Pstack Poteto Mode is on…”. The TUI status reads `pstack: poteto mode`.
 
 Skills under `skills/` are markdown `/skill:ps-<name>` prompts, not functions. They list and inject on the `-e` command above. Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner.
+
+The original numbered product tutorial is [the pstack guide](./guide/README.md). This page stays the omp first-run.

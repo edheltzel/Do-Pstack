@@ -19,7 +19,7 @@ Prove the plugin without chat-only guesses. Static doctor/lint/perf + Vitest on 
 
 ## Work Guidance
 
-Add static cases to `ci_static.py` or `unit/`. Add live RPC cases to `run.py` only when they stay local.
+Add static cases to `ci_static.py` or `unit/`. Product-pack presence (docs/guide, automations/benny, ps-swarm) lives in `ci_static.py --product` and `unit/product-capabilities.test.ts`. Add live RPC cases to `run.py` only when they stay local.
 
 ## Verification
 
