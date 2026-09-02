@@ -2,14 +2,14 @@
 
 This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Same map as the [README](../README.md).
 
-Later `omp` sessions (any cwd, no `-e`) get `/skill:ps-…` and sticky `/poteto-mode`. Sibling `skills/` at the package root is what omp auto-discovers after link.
+Later sessions (any cwd): start `omp`, type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link.
 
 `omp -e ./extensions/pstack.ts` is a one-off test only. Keep `.omp/skills` → `../skills` so that one-off still injects.
 
 It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
 
 1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
-2. Clone this repository and, from the package root, link once. That is how later `omp` sessions (any cwd, no `-e`) get `/poteto-mode` and `/skill:ps-…`:
+2. Clone this repository and, from the package root, link once. Later sessions (any cwd): type `/` (`/skill:ps-…`, sticky `/poteto-mode`):
 
 ```
 git clone https://github.com/edheltzel/pstack.git
@@ -17,7 +17,7 @@ cd pstack
 omp plugin link ./
 ```
 
-Confirm with `omp plugin list`. Then start `omp` with no `-e`.
+Confirm with `omp plugin list`. Later sessions (any cwd): start `omp` and type `/`.
 
 For a one-off test only (does not persist the plugin):
 

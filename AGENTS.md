@@ -54,6 +54,16 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 - No `omp`, no `omp --mode rpc`, no TUI on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`.
 - One factory. Poteto-mode is per-session, never a process-wide boolean.
 
+## Native omp
+
+Tell operators plugin-link, not `-e` every session:
+
+- Install host via https://omp.sh/install if needed.
+- From this package root: `omp plugin link ./`
+- Later sessions, any cwd: type `/` (`/skill:ps-…`, sticky `/poteto-mode`)
+- Do not marketplace. Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
+- `omp -e ./extensions/pstack.ts` is one-off test only.
+
 ## Verification
 
 ```bash

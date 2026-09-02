@@ -1,6 +1,6 @@
 # pstack
 
-This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later `omp` sessions (any cwd, no `-e`) get `/skill:ps-…` and sticky `/poteto-mode`. Sibling `skills/` at the package root is what omp auto-discovers after link.
+This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later sessions (any cwd): start `omp`, type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link.
 
 `omp -e ./extensions/pstack.ts` is a one-off test only. Keep `.omp/skills` → `../skills` so that one-off still injects.
 
@@ -49,7 +49,7 @@ cd pstack
 omp plugin link ./
 ```
 
-That one-time link is how later `omp` sessions (any cwd, no `-e`) list and inject `/skill:ps-…` and sticky `/poteto-mode`. Confirm with `omp plugin list`.
+That one-time link is how later sessions (any cwd) type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Confirm with `omp plugin list`.
 
 For a one-off test only (does not persist the plugin):
 
@@ -64,7 +64,7 @@ Do not use `/add-plugin pstack` here. Do not copy only `pstack.ts` into `~/.omp/
 ## First steps
 
 1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
-2. Clone this repository and, from the package root, `omp plugin link ./` (see Load this plugin). Later sessions: `omp` with no `-e`.
+2. Clone this repository and, from the package root, `omp plugin link ./` (see Load this plugin). Later sessions (any cwd): `omp`, then type `/`.
 3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:ps-poteto-mode`.
 4. Work as usual. Resume an on conversation and it stays on. `/new` starts off.
 5. `/poteto-mode off` (aliases: `disable`, `stop`) — disable this conversation.
