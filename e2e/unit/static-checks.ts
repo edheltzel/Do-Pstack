@@ -139,26 +139,15 @@ export function qualityFromPackage(args: {
   let declared: string[] = [];
   if (!isRecord(omp)) {
     results.push({ name: "omp_extensions", ok: false, detail: "package.json has no omp object" });
-    results.push({ name: "omp_skills", ok: false, detail: "package.json has no omp object" });
   } else {
     const exts = omp.extensions;
-    const skills = omp.skills;
     const extOk = Array.isArray(exts) && exts.length > 0;
-    const skillOk = Array.isArray(skills) && skills.length > 0;
     results.push({
       name: "omp_extensions",
       ok: extOk,
       detail: extOk ? "omp.extensions declared" : "missing or empty",
     });
-    results.push({
-      name: "omp_skills",
-      ok: skillOk,
-      detail: skillOk ? "omp.skills declared" : "missing or empty",
-    });
-    declared = [
-      ...(Array.isArray(exts) ? exts.map(String) : []),
-      ...(Array.isArray(skills) ? skills.map(String) : []),
-    ];
+    declared = Array.isArray(exts) ? exts.map(String) : [];
   }
   for (const rel of declared) {
     const ok = tree.exists(rel);

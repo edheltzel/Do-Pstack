@@ -10,17 +10,11 @@
   "omp": {
     "extensions": [
       "./extensions/pstack.ts"
-    ],
-    "skills": [
-      "./skills"
     ]
   },
   "pi": {
     "extensions": [
       "./extensions/pstack.ts"
-    ],
-    "skills": [
-      "./skills"
     ]
   },
   "devDependencies": {

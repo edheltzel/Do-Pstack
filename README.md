@@ -1,10 +1,10 @@
 # pstack
 
-This tree is an omp **extension**. Load it with `omp -e ./extensions/pstack.ts`. That is how `/poteto-mode` and `/skill:ps-…` are live. Skills come from this clone via `.omp/skills` → `../skills`.
+This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later `omp` sessions (any cwd, no `-e`) get `/skill:ps-…` and sticky `/poteto-mode`. Sibling `skills/` at the package root is what omp auto-discovers after link.
 
-It is not an `omp plugin list` plugin. It is not `omp plugin install`. It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
+`omp -e ./extensions/pstack.ts` is a one-off test only. Keep `.omp/skills` → `../skills` so that one-off still injects.
 
-`cd pstack && omp` without `-e` does not load this tree. `--plugin-dir .` is optional, not the first command.
+It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
 
 ## What pstack is
 
@@ -19,12 +19,12 @@ Those pages are the Cursor product. This README does not retell them. `/add-plug
 
 ## Docs
 
-- [Getting started](./docs/getting-started.md) — omp first-run (`omp -e`). Keep this as the first-run tutorial.
+- [Getting started](./docs/getting-started.md) — omp first-run (`omp plugin link ./`). Keep this as the first-run tutorial.
 - [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/ps-*`; slash skills are `/skill:ps-…`. `/poteto-mode` stays unprefixed.
 
 ## Automations
 
-pstack also ships a dormant [benny automation pack](./automations/benny/). Benny triages Slack issue reports, then reproduces and fixes confirmed bugs with real UI evidence. Its files are **not** registered as slash skills (`package.json` `omp.skills` stays `./skills` only).
+pstack also ships a dormant [benny automation pack](./automations/benny/). Benny triages Slack issue reports, then reproduces and fixes confirmed bugs with real UI evidence. Its files are **not** slash skills. Sibling `skills/` at the package root is the only skill tree; do not add a second one.
 
 Setup starts at [`automations/benny/FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). That README records the Cursor Automations host vs what omp can run.
 
@@ -39,24 +39,32 @@ Setup starts at [`automations/benny/FOR_AGENTS.md`](./automations/benny/FOR_AGEN
 - How omp can install plugins in general (not this repo’s command): https://omp.sh/docs/plugins
 - Authoring: https://omp.sh/docs/extension-authoring
 
-## Load this extension
+## Load this plugin
 
-Clone https://github.com/edheltzel/pstack, then start omp with the extension file:
+Clone https://github.com/edheltzel/pstack, then from the package root:
 
 ```
 git clone https://github.com/edheltzel/pstack.git
 cd pstack
+omp plugin link ./
+```
+
+That one-time link is how later `omp` sessions (any cwd, no `-e`) list and inject `/skill:ps-…` and sticky `/poteto-mode`. Confirm with `omp plugin list`.
+
+For a one-off test only (does not persist the plugin):
+
+```
 omp -e ./extensions/pstack.ts
 ```
 
-That command lists and injects `/skill:ps-…` from this clone (`.omp/skills` → `../skills`). `--plugin-dir .` is an alternate, not required.
+That one-off still injects `/skill:ps-…` because `.omp/skills` → `../skills`.
 
-There is no `omp plugin install` or `omp add` in this repo. Do not use `/add-plugin pstack` here. A local `.omp-plugin/marketplace.json` (`source: ./`) does not put this on `omp plugin list`.
+Do not use `/add-plugin pstack` here. Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`.
 
 ## First steps
 
 1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
-2. Clone this repository and start omp with `-e` (see Load this extension).
+2. Clone this repository and, from the package root, `omp plugin link ./` (see Load this plugin). Later sessions: `omp` with no `-e`.
 3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:ps-poteto-mode`.
 4. Work as usual. Resume an on conversation and it stays on. `/new` starts off.
 5. `/poteto-mode off` (aliases: `disable`, `stop`) — disable this conversation.
@@ -86,7 +94,7 @@ That is the live extension command. It stays unprefixed. There is no worktree co
 
 ## Skills
 
-Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are live on `omp -e ./extensions/pstack.ts` because `.omp/skills` points at `../skills`. They are not live omp functions or CLIs.
+Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are live after `omp plugin link ./` (sibling tree auto-discovered). They still inject on a one-off `omp -e ./extensions/pstack.ts` because `.omp/skills` points at `../skills`. They are not live omp functions or CLIs.
 
 Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
 

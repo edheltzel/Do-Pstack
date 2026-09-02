@@ -2,7 +2,7 @@
 
 ## Purpose
 
-pstack skill tree loaded via `package.json` `omp.skills`.
+pstack skill tree. Sibling `skills/` at the package root is what omp auto-discovers after `omp plugin link ./`. Do not add a second skills tree.
 
 ## Ownership
 
