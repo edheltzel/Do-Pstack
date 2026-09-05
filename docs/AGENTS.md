@@ -2,23 +2,22 @@
 
 ## Purpose
 
-Human docs for this omp plugin. First-run is omp; the numbered guide is the original pstack product tutorial. Agent-facing native install lives on the root rail; this file must not tell operators `-e` every session.
+Human docs for this omp plugin. First-run is the README (`omp plugin link ./`). The numbered guide is the original pstack product tutorial. This file must not teach a second mount story.
 
 ## Ownership
 
-- `getting-started.md` — omp first-run (`omp plugin link ./`, later any cwd type `/` for `/skill:ps-…` and sticky `/poteto-mode`). One-off `omp -e ./extensions/pstack.ts` stays a test path.
 - `guide/` — original numbered tutorial (01–10 plus images), ported from `cursor/plugins` `pstack/docs/guide/`.
 
 ## Local Contracts
 
-- Do not replace `getting-started.md` with the original guide.
-- README may link to both.
+- README owns first-run: `omp plugin link ./`. Do not add `docs/getting-started.md` or teach `omp -e` as an install path.
+- README may link the numbered guide.
 - Guide on-disk skill links use `skills/ps-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live surface is `/skill:ps-how`. `/poteto-mode` stays unprefixed.
-- Operator install matches the root rail Native omp contract. Do not tell operators `-e` every session.
+- Operator install matches the root rail Native omp contract.
 
 ## Work Guidance
 
-Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/ps-<name>/`. Keep getting-started omp-specific. Agents tell operators plugin-link, not `-e` every session.
+Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/ps-<name>/`. Agents tell operators plugin-link.
 
 ## Verification
 

@@ -22,8 +22,8 @@ Restart omp after a factory change. Do not add a second extension unless the roo
 ## Verification
 
 - `npx tsc --noEmit -p tsconfig.ci.json`
-- `python3 e2e/ci_static.py --perf` (size/parse)
-- Live sticky behavior: `python3 e2e/run.py` locally (not CI)
+- `python3 e2e/ci_static.py --quality` (includes factory size)
+- Live sticky behavior: `python3 e2e/run.py` locally (not CI); launcher uses `omp plugin link ./`
 
 ## Child DOX Index
 

@@ -7,7 +7,7 @@ Cases:
   poteto_off             /poteto-mode off removes the needle
   new_session_starts_off same-process new_session: new sid, no entry, next turn off
   resume_stays_on        switch_session back to the on-session: needle on
-  setup_pstack_no_write  /setup-pstack does not write models.json or config.yml
+  install_plugin_link    README/AGENTS teach omp plugin link ./; competing stories gone
   worktree_cleanup_omp   playbook uses ~/.omp/wt and worktree.base
 
 Usage (from repo root):
@@ -129,8 +129,26 @@ def scan_pstack_mode(path):
     return hits
 
 
+def omp_bin():
+    return shutil.which("omp") or "/opt/homebrew/bin/omp"
+
+
+def plugin_link():
+    """Supported load path. Do not pass -e."""
+    return subprocess.run(
+        [omp_bin(), "plugin", "link", str(ROOT)],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+    )
+
+
 def start_omp(session_dir: Path):
-    omp = shutil.which("omp") or "/opt/homebrew/bin/omp"
+    omp = omp_bin()
+    linked = plugin_link()
+    if linked.returncode != 0:
+        err = (linked.stderr or linked.stdout or "").strip()[-2000:]
+        raise RuntimeError(f"omp plugin link ./ failed ({linked.returncode}): {err}")
     cmd = [
         omp,
         "--mode",
@@ -199,16 +217,41 @@ def static_worktree():
 
 def static_setup_docs():
     skill = (ROOT / "skills/ps-setup-pstack/SKILL.md").read_text()
-    cmd = (ROOT / "commands/setup-pstack.md").read_text()
     ok = (
         "Do not write" in skill
         and "models.json" in skill
         and "config.yml" in skill
         and "modelRoles" in skill
         and "/model" in skill
-        and "/agents" in cmd
+        and "/agents" in skill
+        and not (ROOT / "commands/setup-pstack.md").exists()
     )
-    return check("setup_pstack_docs", ok, "setup-pstack lists roles; writes nothing")
+    return check("setup_pstack_docs", ok, "setup-pstack skill lists roles; no commands/ wrapper")
+
+
+def static_install_docs():
+    readme = (ROOT / "README.md").read_text()
+    agents = (ROOT / "AGENTS.md").read_text()
+    ok = (
+        "omp plugin link ./" in readme
+        and "omp plugin link ./" in agents
+        and "omp -e" not in readme
+        and "/add-plugin" not in readme
+        and ".omp/skills" not in readme
+        and not (ROOT / ".omp/skills").exists()
+        and not (ROOT / ".omp/skills").is_symlink()
+        and not (ROOT / "docs/getting-started.md").exists()
+        and not (ROOT / "commands/setup-pstack.md").exists()
+        and not (ROOT / "commands/poteto-mode.md").exists()
+        and not (ROOT / ".omp-plugin/marketplace.json").exists()
+        and not (ROOT / "e2e/unit/static-checks.ts").exists()
+        and not (ROOT / "skills/ps-poteto-mode/playbooks/shipping.md").exists()
+    )
+    return check(
+        "install_plugin_link",
+        ok,
+        "canonical install is omp plugin link ./; competing stories gone",
+    )
 
 
 def rpc_suite():
@@ -216,11 +259,16 @@ def rpc_suite():
     work = Path(tempfile.mkdtemp(prefix="pstack-e2e-"))
     session_dir = work / "sessions"
     session_dir.mkdir()
-    home = Path.home()
-    models_json = home / ".omp/agent/pstack/models.json"
-    config_yml = home / ".omp/agent/config.yml"
-    models_existed = models_json.exists()
-    config_stat = config_yml.stat() if config_yml.exists() else None
+    linked = plugin_link()
+    results.append(
+        check(
+            "plugin_link",
+            linked.returncode == 0,
+            f"exit {linked.returncode} {(linked.stderr or linked.stdout or '').strip()[:200]}",
+        )
+    )
+    if linked.returncode != 0:
+        return results
     proc = start_omp(session_dir)
     try:
         send(proc, {"id": "cmds", "type": "get_available_commands"})
@@ -310,21 +358,6 @@ def rpc_suite():
             )
         )
 
-        send(proc, {"id": "setup", "type": "prompt", "message": "/setup-pstack"})
-        wait_prompt_done(proc, "setup")
-        models_now = models_json.exists()
-        config_same = True
-        if config_stat and config_yml.exists():
-            now = config_yml.stat()
-            config_same = (now.st_mtime, now.st_size) == (config_stat.st_mtime, config_stat.st_size)
-        write_ok = (models_now == models_existed) and config_same
-        results.append(
-            check(
-                "setup_pstack_no_write",
-                write_ok,
-                f"models.json existed={models_existed} now={models_now} config_same={config_same}",
-            )
-        )
     finally:
         stop_omp(proc)
     return results
@@ -335,7 +368,7 @@ def main():
     parser.add_argument("--skip-rpc", action="store_true")
     parser.add_argument("--case", action="append", default=[])
     args = parser.parse_args()
-    results = [static_worktree(), static_setup_docs()]
+    results = [static_worktree(), static_setup_docs(), static_install_docs()]
     if not args.skip_rpc:
         results.extend(rpc_suite())
     if args.case:

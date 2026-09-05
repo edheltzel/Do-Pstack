@@ -56,13 +56,13 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 
 ## Native omp
 
-Tell operators plugin-link, not `-e` every session:
+Tell operators plugin-link only:
 
 - Install host via https://omp.sh/install if needed.
 - From this package root: `omp plugin link ./`
 - Later sessions, any cwd: type `/` (`/skill:ps-…`, sticky `/poteto-mode`)
 - Do not marketplace. Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
-- `omp -e ./extensions/pstack.ts` is one-off test only.
+- Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what plugin-link discovers.
 
 ## Verification
 
@@ -76,9 +76,9 @@ npm test
 | Path | Owns |
 | --- | --- |
 | [extensions/AGENTS.md](extensions/AGENTS.md) | Factory `pstack.ts`; per-session poteto-mode |
-| [e2e/AGENTS.md](e2e/AGENTS.md) | Static doctor/lint/perf + Vitest; live RPC local-only |
+| [e2e/AGENTS.md](e2e/AGENTS.md) | Static doctor/lint + Vitest; live RPC local-only via plugin-link |
 | [skills/AGENTS.md](skills/AGENTS.md) | Skill tree; SKILL.md frontmatter `name` + `description` |
-| [docs/AGENTS.md](docs/AGENTS.md) | omp first-run `getting-started.md`; original numbered `guide/` |
+| [docs/AGENTS.md](docs/AGENTS.md) | original numbered `guide/`; first-run lives on README (`omp plugin link ./`) |
 | [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills |
 
 `agents/` and `commands/` have no child AGENTS.md; they follow this rail. Commands need frontmatter `description`.

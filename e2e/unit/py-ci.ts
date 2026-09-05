@@ -52,15 +52,6 @@ print(json.dumps(mod.frontmatter_fields(sys.stdin.read())))
   ) as Record<string, string> | null;
 }
 
-export function pyBraceBalance(text: string): boolean {
-  return pyEval(
-    `${LOAD}
-print(json.dumps(mod._brace_balance(sys.stdin.read())))
-`,
-    text,
-  ) as boolean;
-}
-
 export function runCiStatic(
   args: string[],
   root?: string,

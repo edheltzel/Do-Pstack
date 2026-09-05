@@ -12,7 +12,7 @@ On this omp fork, `/skill:ps-…` is the slash surface. Do not add this director
 
 ## HOST GAP (omp)
 
-Cursor Automations (`/automate`, Slack-triggered live automations, Automations editor) do not exist on omp. If the user is on omp, complete pack copy and configuration, then stop before section 7's `/automate` path. Run the operational files in a live `omp -e ./extensions/pstack.ts` session when a report arrives. Do not build a Slack poller into the pstack factory.
+Cursor Automations (`/automate`, Slack-triggered live automations, Automations editor) do not exist on omp. If the user is on omp, complete pack copy and configuration, then stop before section 7's `/automate` path. Run the operational files in a live session after `omp plugin link ./` when a report arrives. Do not build a Slack poller into the pstack factory.
 
 The human enters setup by pointing Cursor or omp at the pack's `FOR_AGENTS.md`. The bootstrap flow copies the whole pack into the target repository, then reads this file directly at `.cursor/automations/benny/skills/setup-benny/SKILL.md`.
 

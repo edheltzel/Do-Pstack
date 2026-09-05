@@ -56,26 +56,6 @@ function lastPotetoInJsonl(path: string): { found: boolean; enabled: boolean } |
   return { found, enabled };
 }
 
-function enabledFromBranch(ctx: any): boolean | undefined {
-  const sm = ctx?.sessionManager;
-  if (!sm || typeof sm.getBranch !== "function") return undefined;
-  let found = false;
-  let enabled = false;
-  try {
-    const branch = sm.getBranch();
-    if (!Array.isArray(branch)) return undefined;
-    for (const entry of branch as ModeEntry[]) {
-      if (entry?.type === "custom" && entry.customType === "pstack-mode") {
-        found = true;
-        enabled = Boolean(entry.data?.enabled);
-      }
-    }
-  } catch {
-    return undefined;
-  }
-  return found ? enabled : false;
-}
-
 /** This conversation only. Missing pstack-mode entry means off. Never a process-wide boolean. */
 function isPotetoOn(ctx: any, cache: Map<string, boolean>): boolean {
   const file = sessionFileFromCtx(ctx);
