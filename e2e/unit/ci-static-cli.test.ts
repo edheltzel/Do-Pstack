@@ -52,6 +52,6 @@ describe("ci_static.py CLI fixtures", () => {
     expect(status).toBe(1);
     expect(summary.failed).toContain("docs/guide/README.md");
     expect(summary.failed).toContain("automations/benny/FOR_AGENTS.md");
-    expect(summary.failed).toContain("skills/ps-swarm/SKILL.md");
+    expect(summary.failed).toContain("skills/do-swarm/SKILL.md");
   });
 });

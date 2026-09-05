@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 
-const POTETO_SKILL = "/skill:ps-poteto-mode";
+const POTETO_SKILL = "/skill:do-poteto-mode";
 const POTETO_PROMPT =
-  "Pstack Poteto Mode is on for this session. Follow skills/ps-poteto-mode/SKILL.md: match a playbook, copy its steps, delegate through omp task({ context, tasks: [{ agent, task }] }), verify real behavior, name only principles that changed a decision. /poteto-mode off disables it.";
+  "Pstack Poteto Mode is on for this session. Follow skills/do-poteto-mode/SKILL.md: match a playbook, copy its steps, delegate through omp task({ context, tasks: [{ agent, task }] }), verify real behavior, name only principles that changed a decision. /poteto-mode off disables it.";
 
 type ModeEntry = {
   type?: string;
@@ -121,7 +121,7 @@ export default function pstackExtension(pi: any): void {
   }
 
   pi.on("input", async (event: any, ctx: any) => {
-    if (typeof event?.text === "string" && /^\/skill:ps-poteto-mode(?:\s|$)/.test(event.text)) {
+    if (typeof event?.text === "string" && /^\/skill:do-poteto-mode(?:\s|$)/.test(event.text)) {
       persistMode(true, ctx);
     }
     return { action: "continue" as const };

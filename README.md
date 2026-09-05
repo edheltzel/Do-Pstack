@@ -1,6 +1,6 @@
 # pstack
 
-This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later sessions (any cwd): start `omp`, type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link.
+This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later sessions (any cwd): start `omp`, type `/` (`/skill:do-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link.
 
 It is not the Cursor plugin and not an official Cursor port.
 
@@ -16,7 +16,7 @@ Those pages are the Cursor product. This README does not retell them.
 
 ## Docs
 
-- [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/ps-*`; slash skills are `/skill:ps-…`. `/poteto-mode` stays unprefixed.
+- [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/do-*`; slash skills are `/skill:do-…`. `/poteto-mode` stays unprefixed.
 
 ## Automations
 
@@ -45,7 +45,7 @@ cd pstack
 omp plugin link ./
 ```
 
-That one-time link is how later sessions (any cwd) type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Confirm with `omp plugin list`.
+That one-time link is how later sessions (any cwd) type `/` (`/skill:do-…`, sticky `/poteto-mode`). Confirm with `omp plugin list`.
 
 Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`.
 
@@ -53,7 +53,7 @@ Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`.
 
 1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
 2. Clone this repository and, from the package root, `omp plugin link ./` (see Load this plugin). Later sessions (any cwd): `omp`, then type `/`.
-3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:ps-poteto-mode`.
+3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:do-poteto-mode`.
 4. Work as usual. Resume an on conversation and it stays on. `/new` starts off.
 5. `/poteto-mode off` (aliases: `disable`, `stop`) — disable this conversation.
 
@@ -65,14 +65,14 @@ The TUI status reads `pstack: poteto mode` when on. Other omp surfaces may not s
 
 | Command | What it does |
 |---|---|
-| `/poteto-mode` | Enable sticky Poteto Mode for this conversation. Also sends `/skill:ps-poteto-mode`. |
+| `/poteto-mode` | Enable sticky Poteto Mode for this conversation. Also sends `/skill:do-poteto-mode`. |
 | `/poteto-mode off` | Disable this conversation. Aliases: `disable`, `stop`. |
 
 That is the live extension command. It stays unprefixed. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs.
 
 ## Poteto Mode (this extension)
 
-- Enable sends `/skill:ps-poteto-mode`. The `/skill:ps-poteto-mode` input hook also persists enabled.
+- Enable sends `/skill:do-poteto-mode`. The `/skill:do-poteto-mode` input hook also persists enabled.
 - Stored as a custom `pstack-mode` entry on that conversation’s session jsonl. Last `{enabled}` wins. Missing means off.
 - `session_start` re-reads the jsonl. `new_session` / `/new` starts off. Resume of an on conversation stays on.
 - When on, a prompt needle prepends “Pstack Poteto Mode is on…”
@@ -82,9 +82,9 @@ That is the live extension command. It stays unprefixed. There is no worktree co
 
 ## Skills
 
-Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are live after `omp plugin link ./` (sibling tree auto-discovered). They are not live omp functions or CLIs.
+Files under `skills/` are markdown prompts. Invoke them with `/skill:do-<name>`. They are live after `omp plugin link ./` (sibling tree auto-discovered). They are not live omp functions or CLIs.
 
-Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
+Examples: `/skill:do-create-verification-skill`, `/skill:do-swarm`, `/skill:do-principle-build-the-lever`. Feature Map is a section in `do-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
 
 ## License
 

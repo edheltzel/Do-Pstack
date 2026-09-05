@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Benny ships as a dormant automation pack inside pstack. The plugin manifest exposes only pstack's normal skill root; this file and the two operational files are not slash skills.
 
-On this omp fork, `/skill:ps-…` is the slash surface. Do not add this directory to `package.json` `omp.skills`. Shared dependencies resolve as `ps-how`, `ps-why`, `ps-tdd`, `ps-unslop`, and the `ps-principle-*` skills.
+On this omp fork, `/skill:do-…` is the slash surface. Do not add this directory to `package.json` `omp.skills`. Shared dependencies resolve as `do-how`, `do-why`, `do-tdd`, `do-unslop`, and the `do-principle-*` skills.
 
 ## HOST GAP (omp)
 
@@ -53,16 +53,16 @@ Preserve every unrelated top-level setting and every other plugin entry. If `plu
 
 Reload the target project or start a fresh agent rooted there. Verify that these shared pstack skills resolve from project scope:
 
-- `how` (omp: `/skill:ps-how`)
-- `why` (omp: `/skill:ps-why`)
-- `tdd` (omp: `/skill:ps-tdd`)
-- `unslop` (omp: `/skill:ps-unslop`)
-- `principle-separate-before-serializing-shared-state` (omp: `/skill:ps-principle-separate-before-serializing-shared-state`)
-- `principle-minimize-reader-load` (omp: `/skill:ps-principle-minimize-reader-load`)
-- `principle-guard-the-context-window` (omp: `/skill:ps-principle-guard-the-context-window`)
-- `principle-sequence-verifiable-units` (omp: `/skill:ps-principle-sequence-verifiable-units`)
-- `principle-fix-root-causes` (omp: `/skill:ps-principle-fix-root-causes`)
-- `principle-prove-it-works` (omp: `/skill:ps-principle-prove-it-works`)
+- `how` (omp: `/skill:do-how`)
+- `why` (omp: `/skill:do-why`)
+- `tdd` (omp: `/skill:do-tdd`)
+- `unslop` (omp: `/skill:do-unslop`)
+- `principle-separate-before-serializing-shared-state` (omp: `/skill:do-principle-separate-before-serializing-shared-state`)
+- `principle-minimize-reader-load` (omp: `/skill:do-principle-minimize-reader-load`)
+- `principle-guard-the-context-window` (omp: `/skill:do-principle-guard-the-context-window`)
+- `principle-sequence-verifiable-units` (omp: `/skill:do-principle-sequence-verifiable-units`)
+- `principle-fix-root-causes` (omp: `/skill:do-principle-fix-root-causes`)
+- `principle-prove-it-works` (omp: `/skill:do-principle-prove-it-works`)
 
 Do not count a skill loaded from the current session or a user-scoped plugin. The check must show that a fresh agent in the target repository receives pstack through project settings.
 

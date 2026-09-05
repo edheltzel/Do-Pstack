@@ -30,39 +30,39 @@ Each phrase lands because the rule behind it is specific. The agent still has to
 
 The core principles decide how much to build and when to rethink the design:
 
-- [Laziness Protocol](../../skills/ps-principle-laziness-protocol/SKILL.md) prefers deletion and the smallest change that solves the problem.
-- [Foundational Thinking](../../skills/ps-principle-foundational-thinking/SKILL.md) chooses the core data structures before writing logic.
-- [Redesign from First Principles](../../skills/ps-principle-redesign-from-first-principles/SKILL.md) integrates a new requirement as if it had been there from day one.
-- [Subtract Before You Add](../../skills/ps-principle-subtract-before-you-add/SKILL.md) removes dead weight before building on top of it.
-- [Minimize Reader Load](../../skills/ps-principle-minimize-reader-load/SKILL.md) collapses layers and hidden state a reader must hold in their head.
-- [Outcome-Oriented Execution](../../skills/ps-principle-outcome-oriented-execution/SKILL.md) converges rewrites on the target design instead of preserving throwaway compatibility states.
-- [Experience First](../../skills/ps-principle-experience-first/SKILL.md) chooses the user's result over implementation convenience.
-- [Exhaust the Design Space](../../skills/ps-principle-exhaust-the-design-space/SKILL.md) builds two or three competing prototypes when there's no precedent.
-- [Build the Lever](../../skills/ps-principle-build-the-lever/SKILL.md) builds the script that does or proves the work, so a reviewer can rerun it.
+- [Laziness Protocol](../../skills/do-principle-laziness-protocol/SKILL.md) prefers deletion and the smallest change that solves the problem.
+- [Foundational Thinking](../../skills/do-principle-foundational-thinking/SKILL.md) chooses the core data structures before writing logic.
+- [Redesign from First Principles](../../skills/do-principle-redesign-from-first-principles/SKILL.md) integrates a new requirement as if it had been there from day one.
+- [Subtract Before You Add](../../skills/do-principle-subtract-before-you-add/SKILL.md) removes dead weight before building on top of it.
+- [Minimize Reader Load](../../skills/do-principle-minimize-reader-load/SKILL.md) collapses layers and hidden state a reader must hold in their head.
+- [Outcome-Oriented Execution](../../skills/do-principle-outcome-oriented-execution/SKILL.md) converges rewrites on the target design instead of preserving throwaway compatibility states.
+- [Experience First](../../skills/do-principle-experience-first/SKILL.md) chooses the user's result over implementation convenience.
+- [Exhaust the Design Space](../../skills/do-principle-exhaust-the-design-space/SKILL.md) builds two or three competing prototypes when there's no precedent.
+- [Build the Lever](../../skills/do-principle-build-the-lever/SKILL.md) builds the script that does or proves the work, so a reviewer can rerun it.
 
 The architecture principles decide where state, validation, and compatibility live:
 
-- [Model the Domain](../../skills/ps-principle-model-the-domain/SKILL.md) encodes repeated rules in one structure, not scattered conditionals.
-- [Boundary Discipline](../../skills/ps-principle-boundary-discipline/SKILL.md) validates at the boundary and trusts internal types.
-- [Type System Discipline](../../skills/ps-principle-type-system-discipline/SKILL.md) makes illegal states unrepresentable.
-- [Make Operations Idempotent](../../skills/ps-principle-make-operations-idempotent/SKILL.md) converges retries on the same end state.
-- [Migrate Callers Then Delete Legacy APIs](../../skills/ps-principle-migrate-callers-then-delete-legacy-apis/SKILL.md) migrates and deletes in one wave.
-- [Separate Before Serializing Shared State](../../skills/ps-principle-separate-before-serializing-shared-state/SKILL.md) removes the sharing before adding coordination.
+- [Model the Domain](../../skills/do-principle-model-the-domain/SKILL.md) encodes repeated rules in one structure, not scattered conditionals.
+- [Boundary Discipline](../../skills/do-principle-boundary-discipline/SKILL.md) validates at the boundary and trusts internal types.
+- [Type System Discipline](../../skills/do-principle-type-system-discipline/SKILL.md) makes illegal states unrepresentable.
+- [Make Operations Idempotent](../../skills/do-principle-make-operations-idempotent/SKILL.md) converges retries on the same end state.
+- [Migrate Callers Then Delete Legacy APIs](../../skills/do-principle-migrate-callers-then-delete-legacy-apis/SKILL.md) migrates and deletes in one wave.
+- [Separate Before Serializing Shared State](../../skills/do-principle-separate-before-serializing-shared-state/SKILL.md) removes the sharing before adding coordination.
 
 The verification principles define what counts as proof:
 
-- [Prove It Works](../../skills/ps-principle-prove-it-works/SKILL.md) verifies the real artifact, not a proxy.
-- [Fix Root Causes](../../skills/ps-principle-fix-root-causes/SKILL.md) reproduces and traces to the cause before changing code.
-- [Sequence Work into Verifiable Units](../../skills/ps-principle-sequence-verifiable-units/SKILL.md) ends each small unit in a check before starting the next.
+- [Prove It Works](../../skills/do-principle-prove-it-works/SKILL.md) verifies the real artifact, not a proxy.
+- [Fix Root Causes](../../skills/do-principle-fix-root-causes/SKILL.md) reproduces and traces to the cause before changing code.
+- [Sequence Work into Verifiable Units](../../skills/do-principle-sequence-verifiable-units/SKILL.md) ends each small unit in a check before starting the next.
 
 The delegation principles keep parallel work sane:
 
-- [Guard the Context Window](../../skills/ps-principle-guard-the-context-window/SKILL.md) routes bulk reading to subagents and keeps findings in the main chat.
-- [Never Block on the Human](../../skills/ps-principle-never-block-on-the-human/SKILL.md) proceeds on reversible work and presents the result.
+- [Guard the Context Window](../../skills/do-principle-guard-the-context-window/SKILL.md) routes bulk reading to subagents and keeps findings in the main chat.
+- [Never Block on the Human](../../skills/do-principle-never-block-on-the-human/SKILL.md) proceeds on reversible work and presents the result.
 
 And one meta principle:
 
-- [Encode Lessons in Structure](../../skills/ps-principle-encode-lessons-in-structure/SKILL.md) turns advice you've repeated twice into a lint, check, or script.
+- [Encode Lessons in Structure](../../skills/do-principle-encode-lessons-in-structure/SKILL.md) turns advice you've repeated twice into a lint, check, or script.
 
 Don't memorize the list. Skim it now, then come back when you catch the agent doing something a name here would have prevented. That's how the vocabulary sticks.
 

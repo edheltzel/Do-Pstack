@@ -12,12 +12,12 @@ Human docs for this omp plugin. First-run is the README (`omp plugin link ./`). 
 
 - README owns first-run: `omp plugin link ./`. Do not add `docs/getting-started.md` or teach `omp -e` as an install path.
 - README may link the numbered guide.
-- Guide on-disk skill links use `skills/ps-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live surface is `/skill:ps-how`. `/poteto-mode` stays unprefixed.
+- Guide on-disk skill links use `skills/do-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live surface is `/skill:do-how`. `/poteto-mode` stays unprefixed.
 - Operator install matches the root rail Native omp contract.
 
 ## Work Guidance
 
-Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/ps-<name>/`. Agents tell operators plugin-link.
+Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/do-<name>/`. Agents tell operators plugin-link.
 
 ## Verification
 

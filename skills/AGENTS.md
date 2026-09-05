@@ -10,6 +10,7 @@ pstack skill tree. Sibling `skills/` at the package root is what omp auto-discov
 
 ## Local Contracts
 
+- Skill directories and YAML `name` use the `do-` prefix. After `omp plugin link ./`, the live slash is `/skill:do-<name>`.
 - Every `SKILL.md` has YAML frontmatter with non-empty `name` and `description`.
 - `python3 e2e/ci_static.py --frontmatter` is the gate.
 

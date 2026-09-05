@@ -60,7 +60,7 @@ Tell operators plugin-link only:
 
 - Install host via https://omp.sh/install if needed.
 - From this package root: `omp plugin link ./`
-- Later sessions, any cwd: type `/` (`/skill:ps-…`, sticky `/poteto-mode`)
+- Later sessions, any cwd: type `/` (`/skill:do-…`, sticky `/poteto-mode`)
 - Do not marketplace. Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
 - Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what plugin-link discovers.
 
