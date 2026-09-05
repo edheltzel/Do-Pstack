@@ -62,6 +62,7 @@ Tell operators plugin-link only:
 - From this package root: `omp plugin link ./`
 - Later sessions, any cwd: type `/` (`/skill:ps-…`, sticky `/poteto-mode`)
 - Do not marketplace. Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
+- Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what plugin-link discovers.
 
 ## Verification
 

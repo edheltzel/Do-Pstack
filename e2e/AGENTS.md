@@ -18,6 +18,7 @@ Prove the plugin without chat-only guesses. Static doctor/lint + Vitest on every
 - Do not install or run live omp / the plugin extension as a test harness on CI.
 - Live RPC, when omp is present, must `omp plugin link ./` before starting. Do not pass `-e`.
 - Do not keep a TypeScript copy of `ci_static.py` (no `unit/static-checks.ts`, no homemade brace parser).
+- Do not keep a repo `.omp/skills` symlink. `static_install_docs` and `unit/product-capabilities.test.ts` assert filesystem absence, not only README text.
 
 ## Work Guidance
 

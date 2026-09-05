@@ -238,6 +238,8 @@ def static_install_docs():
         and "omp -e" not in readme
         and "/add-plugin" not in readme
         and ".omp/skills" not in readme
+        and not (ROOT / ".omp/skills").exists()
+        and not (ROOT / ".omp/skills").is_symlink()
         and not (ROOT / "docs/getting-started.md").exists()
         and not (ROOT / "commands/setup-pstack.md").exists()
         and not (ROOT / "commands/poteto-mode.md").exists()

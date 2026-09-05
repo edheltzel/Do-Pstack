@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -105,6 +105,8 @@ describe("original product pack", () => {
     expect(readme).not.toMatch(/omp -e /);
     expect(readme).not.toContain("/add-plugin");
     expect(readme).not.toContain(".omp/skills");
+    expect(existsSync(join(root, ".omp/skills"))).toBe(false);
+    expect(() => lstatSync(join(root, ".omp/skills"))).toThrow();
     expect(existsSync(join(root, "docs/getting-started.md"))).toBe(false);
     expect(existsSync(join(root, "commands/setup-pstack.md"))).toBe(false);
     expect(existsSync(join(root, "commands/poteto-mode.md"))).toBe(false);
