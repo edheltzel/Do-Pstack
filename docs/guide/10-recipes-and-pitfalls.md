@@ -76,7 +76,7 @@ You rarely need more words. You need the right name, and [the principles page](.
 /bro
 ```
 
-That's the whole prompt. [`/bro`](../../skills/ps-bro/SKILL.md) restates the last message like one human talking to another, no jargon, shorter. Use it when a reply is technically thorough and you still don't know what it said.
+That's the whole prompt. [`/bro`](../../skills/do-bro/SKILL.md) restates the last message like one human talking to another, no jargon, shorter. Use it when a reply is technically thorough and you still don't know what it said.
 
 ## The pitfalls
 
@@ -87,7 +87,7 @@ That's the whole prompt. [`/bro`](../../skills/ps-bro/SKILL.md) restates the las
 - **Accepting every review comment.** Bots and humans both file real catches and noise in one list. `/interrogate` sorts findings into act-on and dismissed buckets with reasons, and you can override either way.
 - **Treating `auto` as a model slug.** `auto` and `inherit-parent` mean "omit the model field so the subagent inherits the parent chat model." [Setup](./01-setup.md) covers the roles.
 - **Reporting success off a green build.** A build proves it compiles. Ask for the real command, flow, stored value, or profile, and expect the evidence in the reply.
-- **Writing a `SKILL.md` freehand.** Route it through the [Authoring or modifying a skill playbook](../../skills/ps-poteto-mode/playbooks/authoring-a-skill.md) so validation and review happen.
+- **Writing a `SKILL.md` freehand.** Route it through the [Authoring or modifying a skill playbook](../../skills/do-poteto-mode/playbooks/authoring-a-skill.md) so validation and review happen.
 
 That's the guide. If you skipped ahead, go back to [setup](./01-setup.md) and run one real task. The habits stick from use, not from reading.
 

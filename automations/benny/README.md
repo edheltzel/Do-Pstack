@@ -2,7 +2,7 @@
 
 benny gives you two automations for slack issue reports. one triages each report. the other reproduces confirmed bugs and may prepare a small draft fix.
 
-the files in this directory are dormant setup and automation sources. they do not appear as slash skills. do not add them to `package.json` `omp.skills` or expect `/skill:ps-setup-benny`.
+the files in this directory are dormant setup and automation sources. they do not appear as slash skills. do not add them to `package.json` `omp.skills` or expect `/skill:do-setup-benny`.
 
 ## HOST GAP
 
@@ -38,5 +38,5 @@ keep this path when the consuming repo still uses Cursor:
 2. point the agent at [`FOR_AGENTS.md`](./FOR_AGENTS.md) and name the target repository.
 3. merge this whole directory into the target at `.cursor/automations/benny/` (same destination as Cursor, so a later Cursor Automations host can pick it up) or keep using this in-repo pack.
 4. preserve destination-only files and review conflicts. keep user-owned configuration outside the pack, for example `.cursor/benny/` or `.omp/benny/`.
-5. shared pstack skills on omp are `/skill:ps-how`, `/skill:ps-why`, `/skill:ps-tdd`, `/skill:ps-unslop`, and the `ps-principle-*` skills. they load from this clone after `omp plugin link ./`. do not register benny `SKILL.md` files as slash skills.
+5. shared pstack skills on omp are `/skill:do-how`, `/skill:do-why`, `/skill:do-tdd`, `/skill:do-unslop`, and the `do-principle-*` skills. they load from this clone after `omp plugin link ./`. do not register benny `SKILL.md` files as slash skills.
 6. there is no `/automate` and no Automations editor. after the pack and secret-free config are committed, run `skills/triage-issue-reports/SKILL.md` and `skills/reproduce-and-fix-issues/SKILL.md` directly in an omp session when a report arrives.

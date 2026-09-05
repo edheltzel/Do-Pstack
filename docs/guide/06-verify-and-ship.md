@@ -1,6 +1,6 @@
 # Verify the result and open a PR
 
-"It compiles" is not evidence. The [Prove It Works principle](../../skills/ps-principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success, and your job is to make "the real artifact" checkable. This page covers stating a finish condition, generating a verification skill for your app, opening the PR, and driving it to merged.
+"It compiles" is not evidence. The [Prove It Works principle](../../skills/do-principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success, and your job is to make "the real artifact" checkable. This page covers stating a finish condition, generating a verification skill for your app, opening the PR, and driving it to merged.
 
 ![A prototype plane flies a real test course while she times it with a stopwatch and robots film and checklist the run; the terminal reads verify: pass, evidence: captured.](./images/verification.jpg)
 
@@ -22,7 +22,7 @@ Match the check to the change:
 - A perf change compares before and after profiles.
 - A storage change reads back the written value.
 
-For a small diff you don't fully trust, [`/blast-radius`](../../skills/ps-blast-radius/SKILL.md) finds what it could break elsewhere. It picks the one fact the change is safe because of and proves it by running code instead of writing an essay about it.
+For a small diff you don't fully trust, [`/blast-radius`](../../skills/do-blast-radius/SKILL.md) finds what it could break elsewhere. It picks the one fact the change is safe because of and proves it by running code instead of writing an essay about it.
 
 ## Create a project verification skill
 
@@ -32,13 +32,13 @@ The UI bullet above hides a real requirement. The agent needs a scripted way to 
 /create-verification-skill
 ```
 
-[`/create-verification-skill`](../../skills/ps-create-verification-skill/SKILL.md) interviews the repository, not you. It works out what a user touches, how the app launches locally, what can drive it (an existing harness first, otherwise browser and CDP, a PTY, or plain HTTP), what evidence proves behavior, and whether two instances can run side by side. It asks you only what the code can't answer.
+[`/create-verification-skill`](../../skills/do-create-verification-skill/SKILL.md) interviews the repository, not you. It works out what a user touches, how the app launches locally, what can drive it (an existing harness first, otherwise browser and CDP, a PTY, or plain HTTP), what evidence proves behavior, and whether two instances can run side by side. It asks you only what the code can't answer.
 
-It writes `.cursor/skills/verify-<app>/`, agent-facing instructions with exact Launch, Doctor, Drive, Evidence, and Cleanup sections, plus a feature map under `features/` that indexes what the app does and what result proves each feature works. The skill ships a [worked feature-map example](../../skills/ps-create-verification-skill/references/feature-map-example/) with a README index and one file per feature using the four required H2s. Before handing it over, the generator proves the skill once end to end: launch, doctor check, drive one feature, capture evidence, clean up. If that proof fails, don't use the output.
+It writes `.cursor/skills/verify-<app>/`, agent-facing instructions with exact Launch, Doctor, Drive, Evidence, and Cleanup sections, plus a feature map under `features/` that indexes what the app does and what result proves each feature works. The skill ships a [worked feature-map example](../../skills/do-create-verification-skill/references/feature-map-example/) with a README index and one file per feature using the four required H2s. Before handing it over, the generator proves the skill once end to end: launch, doctor check, drive one feature, capture evidence, clean up. If that proof fails, don't use the output.
 
 From then on, "verify it in the app" is a step any agent can execute, in this repo, with no setup conversation.
 
-Once the verify skill works, a [`/swarm`](../../skills/ps-swarm/SKILL.md) can split a full pass by feature-map entry and aggregate the results.
+Once the verify skill works, a [`/swarm`](../../skills/do-swarm/SKILL.md) can split a full pass by feature-map entry and aggregate the results.
 
 ## Keep the verification skill honest
 
@@ -48,7 +48,7 @@ Apps change and feature maps rot. When yours drifts, run:
 /maintain-verification-skill
 ```
 
-[`/maintain-verification-skill`](../../skills/ps-maintain-verification-skill/SKILL.md) audits the generated skill: one read-only source reader per feature in parallel, then one live pass that drives every mapped feature. It ends in exactly one of three outcomes. `clean` means full coverage and nothing to ship. `changed` means one PR of proven corrections, confined to the verification skill's own directory. `blocked` names the blocker. It never edits product code. If the live pass catches a product regression, it reports the regression instead of papering over it in docs.
+[`/maintain-verification-skill`](../../skills/do-maintain-verification-skill/SKILL.md) audits the generated skill: one read-only source reader per feature in parallel, then one live pass that drives every mapped feature. It ends in exactly one of three outcomes. `clean` means full coverage and nothing to ship. `changed` means one PR of proven corrections, confined to the verification skill's own directory. `blocked` names the blocker. It never edits product code. If the live pass catches a product regression, it reports the regression instead of papering over it in docs.
 
 ## Open the PR
 
@@ -56,11 +56,11 @@ Apps change and feature maps rot. When yours drifts, run:
 /poteto-mode open the pr. small ordered commits, evidence in the description.
 ```
 
-The [Opening a PR playbook](../../skills/ps-poteto-mode/playbooks/opening-a-pr.md) works from a worktree, rebases the work into small ordered commits, cleans the diff, unslops the prose, and returns the PR link. Five narrow PRs beat one fat one, and stacked follow-ups beat a growing branch.
+The [Opening a PR playbook](../../skills/do-poteto-mode/playbooks/opening-a-pr.md) works from a worktree, rebases the work into small ordered commits, cleans the diff, unslops the prose, and returns the PR link. Five narrow PRs beat one fat one, and stacked follow-ups beat a growing branch.
 
 ## Drive the PR to merge-ready with Babysit
 
-An open PR starts collecting blockers immediately. Checks fail, reviewers comment, trunk moves. Hand that churn to the [Babysit playbook](../../skills/ps-poteto-mode/playbooks/babysit.md):
+An open PR starts collecting blockers immediately. Checks fail, reviewers comment, trunk moves. Hand that churn to the [Babysit playbook](../../skills/do-poteto-mode/playbooks/babysit.md):
 
 ```text
 /poteto-mode babysit this pr. get it green.

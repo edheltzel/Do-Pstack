@@ -68,7 +68,7 @@ function walkMarkdown(root: string, relDir: string): string[] {
 describe("original product pack", () => {
   const root = repoDir();
 
-  it("ci_static.py --product fails when docs/guide, benny, or ps-swarm are missing", () => {
+  it("ci_static.py --product fails when docs/guide, benny, or do-swarm are missing", () => {
     const empty = mkdtempSync(join(tmpdir(), "pstack-product-"));
     mkdirSync(join(empty, "docs"), { recursive: true });
     writeFileSync(join(empty, "docs/README.md"), "# hi\n");
@@ -76,10 +76,10 @@ describe("original product pack", () => {
     expect(status).toBe(1);
     expect(summary.failed).toContain("docs/guide/README.md");
     expect(summary.failed).toContain("automations/benny/FOR_AGENTS.md");
-    expect(summary.failed).toContain("skills/ps-swarm/SKILL.md");
+    expect(summary.failed).toContain("skills/do-swarm/SKILL.md");
   });
 
-  it("keeps the original numbered guide, benny pack, ps-swarm, and comment-sicko", () => {
+  it("keeps the original numbered guide, benny pack, do-swarm, and comment-sicko", () => {
     const { status, summary } = runCiStatic(["--product"], root);
     expect(status).toBe(0);
     expect(summary.ok).toBe(true);
@@ -112,7 +112,7 @@ describe("original product pack", () => {
     expect(existsSync(join(root, "commands/poteto-mode.md"))).toBe(false);
     expect(existsSync(join(root, ".omp-plugin/marketplace.json"))).toBe(false);
     expect(existsSync(join(root, "e2e/unit/static-checks.ts"))).toBe(false);
-    expect(existsSync(join(root, "skills/ps-poteto-mode/playbooks/shipping.md"))).toBe(false);
+    expect(existsSync(join(root, "skills/do-poteto-mode/playbooks/shipping.md"))).toBe(false);
   });
 
   it("README and docs relative links resolve (no 404 on original guide paths)", () => {
@@ -130,16 +130,16 @@ describe("original product pack", () => {
 
   it("benny pack stays a non-slash source (not under skills/)", () => {
     expect(statSync(join(root, "automations/benny")).isDirectory()).toBe(true);
-    expect(existsSync(join(root, "skills/ps-setup-benny/SKILL.md"))).toBe(false);
+    expect(existsSync(join(root, "skills/do-setup-benny/SKILL.md"))).toBe(false);
     expect(existsSync(join(root, "skills/setup-benny/SKILL.md"))).toBe(false);
   });
 
-  it("comment-sicko still matches the original product and is spawned by ps-no-comments", () => {
+  it("comment-sicko still matches the original product and is spawned by do-no-comments", () => {
     const sicko = readFileSync(join(root, "agents/comment-sicko.md"), "utf8");
     expect(sicko).toContain("Yes... Ha ha ha... Yes!");
     expect(sicko).toContain("MUST KILL");
     expect(sicko).toContain("I never write application code.");
-    const noComments = readFileSync(join(root, "skills/ps-no-comments/SKILL.md"), "utf8");
+    const noComments = readFileSync(join(root, "skills/do-no-comments/SKILL.md"), "utf8");
     expect(noComments).toMatch(/agent:\s*"comment-sicko"/);
   });
 

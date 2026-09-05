@@ -10,7 +10,7 @@ if the host is **omp**:
 
 - there is no slack-triggered cursor automations equivalent: no `/automate`, no automations editor, no platform-managed slack event that starts an agent on a new top-level report.
 - copy this pack into the target repository at `.cursor/automations/benny/` (same destination so a later cursor host can pick it up), or run it from this in-repo `automations/benny/` tree.
-- shared dependencies on omp are `/skill:ps-how`, `/skill:ps-why`, `/skill:ps-tdd`, `/skill:ps-unslop`, and the `ps-principle-*` skills after `omp plugin link ./`. do not add this pack to `package.json` `omp.skills`.
+- shared dependencies on omp are `/skill:do-how`, `/skill:do-why`, `/skill:do-tdd`, `/skill:do-unslop`, and the `do-principle-*` skills after `omp plugin link ./`. do not add this pack to `package.json` `omp.skills`.
 - when a report arrives, read and follow the committed operational files directly in an omp session. unattended slack-triggered runs need cursor automations or an operator-hosted slack listener. do not invent a slack poller in the pstack factory.
 
 ## what i want to automate
