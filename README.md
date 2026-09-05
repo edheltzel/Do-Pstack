@@ -2,24 +2,20 @@
 
 This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later sessions (any cwd): start `omp`, type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link.
 
-`omp -e ./extensions/pstack.ts` is a one-off test only. Keep `.omp/skills` → `../skills` so that one-off still injects.
-
-It is not `/add-plugin pstack` (that is Cursor). It is not the Cursor plugin and not an official Cursor port.
+It is not the Cursor plugin and not an official Cursor port.
 
 ## What pstack is
 
 pstack is a Cursor-verified plugin of Lauren Tan ([@poteto](https://x.com/poteto)) skills.
 
-- Marketplace: https://cursor.com/marketplace/cursor/pstack — in Cursor, install with `/add-plugin pstack`
 - Source (a folder in `cursor/plugins`, not a standalone repo): https://github.com/cursor/plugins/tree/main/pstack
 - Product README: https://github.com/cursor/plugins/blob/main/pstack/README.md
 - User guide: https://github.com/cursor/plugins/blob/main/pstack/docs/guide/README.md
 
-Those pages are the Cursor product. This README does not retell them. `/add-plugin pstack` is Cursor only.
+Those pages are the Cursor product. This README does not retell them.
 
 ## Docs
 
-- [Getting started](./docs/getting-started.md) — omp first-run (`omp plugin link ./`). Keep this as the first-run tutorial.
 - [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/ps-*`; slash skills are `/skill:ps-…`. `/poteto-mode` stays unprefixed.
 
 ## Automations
@@ -51,15 +47,7 @@ omp plugin link ./
 
 That one-time link is how later sessions (any cwd) type `/` (`/skill:ps-…`, sticky `/poteto-mode`). Confirm with `omp plugin list`.
 
-For a one-off test only (does not persist the plugin):
-
-```
-omp -e ./extensions/pstack.ts
-```
-
-That one-off still injects `/skill:ps-…` because `.omp/skills` → `../skills`.
-
-Do not use `/add-plugin pstack` here. Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`.
+Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`.
 
 ## First steps
 
@@ -94,7 +82,7 @@ That is the live extension command. It stays unprefixed. There is no worktree co
 
 ## Skills
 
-Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are live after `omp plugin link ./` (sibling tree auto-discovered). They still inject on a one-off `omp -e ./extensions/pstack.ts` because `.omp/skills` points at `../skills`. They are not live omp functions or CLIs.
+Files under `skills/` are markdown prompts. Invoke them with `/skill:ps-<name>`. They are live after `omp plugin link ./` (sibling tree auto-discovered). They are not live omp functions or CLIs.
 
 Examples: `/skill:ps-create-verification-skill`, `/skill:ps-swarm`, `/skill:ps-principle-build-the-lever`. Feature Map is a section in `ps-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
 

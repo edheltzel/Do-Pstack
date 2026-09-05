@@ -10,7 +10,7 @@ if the host is **omp**:
 
 - there is no slack-triggered cursor automations equivalent: no `/automate`, no automations editor, no platform-managed slack event that starts an agent on a new top-level report.
 - copy this pack into the target repository at `.cursor/automations/benny/` (same destination so a later cursor host can pick it up), or run it from this in-repo `automations/benny/` tree.
-- shared dependencies on omp are `/skill:ps-how`, `/skill:ps-why`, `/skill:ps-tdd`, `/skill:ps-unslop`, and the `ps-principle-*` skills via `omp -e ./extensions/pstack.ts`. do not add this pack to `package.json` `omp.skills`.
+- shared dependencies on omp are `/skill:ps-how`, `/skill:ps-why`, `/skill:ps-tdd`, `/skill:ps-unslop`, and the `ps-principle-*` skills after `omp plugin link ./`. do not add this pack to `package.json` `omp.skills`.
 - when a report arrives, read and follow the committed operational files directly in an omp session. unattended slack-triggered runs need cursor automations or an operator-hosted slack listener. do not invent a slack poller in the pstack factory.
 
 ## what i want to automate
@@ -69,7 +69,7 @@ start from [`configuration.example.yaml`](./templates/configuration.example.yaml
 
 the human enters setup by pointing cursor or omp at this file. do not look for or invoke a discovered benny slash skill.
 
-on **omp**, after the copy-and-config steps, stop before `/automate`. tell me the host gap: omp cannot create slack-triggered cursor automations. then wait for a report and follow the operational files in a live `omp -e` session unless i am using cursor.
+on **omp**, after the copy-and-config steps, stop before `/automate`. tell me the host gap: omp cannot create slack-triggered cursor automations. then wait for a report and follow the operational files in a live session after `omp plugin link ./` unless i am using cursor.
 
 on **cursor**, continue with `/automate` as written below.
 

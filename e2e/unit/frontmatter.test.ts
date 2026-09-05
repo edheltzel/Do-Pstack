@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { frontmatterCommandCheck, frontmatterSkillCheck, parseFrontmatter } from "./static-checks.ts";
 import { pyFrontmatter } from "./py-ci.ts";
 
 const cases: { name: string; text: string; fields: Record<string, string> | null }[] = [
@@ -35,20 +34,8 @@ const cases: { name: string; text: string; fields: Record<string, string> | null
   },
 ];
 
-describe("parseFrontmatter", () => {
+describe("frontmatter_fields (ci_static.py)", () => {
   it.each(cases)("$name", ({ text, fields }) => {
-    expect(parseFrontmatter(text)).toEqual(fields);
     expect(pyFrontmatter(text)).toEqual(fields);
-  });
-
-  it("rejects empty name or description on skills", () => {
-    expect(frontmatterSkillCheck("---\nname: x\n---\n").ok).toBe(false);
-    expect(frontmatterSkillCheck("---\ndescription: y\n---\n").ok).toBe(false);
-    expect(frontmatterSkillCheck("---\nname: x\ndescription: y\n---\n").ok).toBe(true);
-  });
-
-  it("requires description on commands", () => {
-    expect(frontmatterCommandCheck("---\nname: only\n---\n").ok).toBe(false);
-    expect(frontmatterCommandCheck("---\ndescription: go\n---\n").ok).toBe(true);
   });
 });

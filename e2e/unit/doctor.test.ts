@@ -1,49 +1,9 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { qualityFromPackage, type TreeStat } from "./static-checks.ts";
 import { repoDir, runCiStatic } from "./py-ci.ts";
 
-const present: TreeStat = {
-  exists: () => true,
-  isFile: (rel) => rel.endsWith(".ts"),
-  isDir: (rel) => !rel.endsWith(".ts"),
-};
-
-const validPkg = JSON.stringify({
-  omp: {
-    extensions: ["./extensions/pstack.ts"],
-  },
-});
-
 describe("package.json doctor", () => {
-  it("passes a complete plugin manifest", () => {
-    const results = qualityFromPackage({ packageJsonText: validPkg, tree: present });
-    expect(results.every((r) => r.ok)).toBe(true);
-    expect(results.map((r) => r.name)).toEqual([
-      "package_json",
-      "omp_extensions",
-      "omp_path:./extensions/pstack.ts",
-      "extensions/pstack.ts",
-      "skills",
-      "agents",
-      "commands",
-    ]);
-  });
-
-  it("fails when package.json is missing", () => {
-    const results = qualityFromPackage({ packageJsonText: undefined, tree: present });
-    expect(results).toEqual([{ name: "package_json", ok: false, detail: "package.json missing" }]);
-  });
-
-  it("fails when omp.extensions is missing", () => {
-    const results = qualityFromPackage({
-      packageJsonText: JSON.stringify({ name: "pstack" }),
-      tree: present,
-    });
-    expect(results.find((r) => r.name === "omp_extensions")?.ok).toBe(false);
-  });
-
   it("plugin layout is real: omp.extensions path and skills/ps-*/SKILL.md", () => {
     const root = repoDir();
     const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
@@ -58,20 +18,6 @@ describe("package.json doctor", () => {
       (name) => name.startsWith("ps-") && existsSync(join(root, "skills", name, "SKILL.md")),
     );
     expect(skillMd.length).toBeGreaterThan(0);
-  });
-
-  it("fails when declared omp paths or required dirs are gone", () => {
-    const missing: TreeStat = {
-      exists: () => false,
-      isFile: () => false,
-      isDir: () => false,
-    };
-    const results = qualityFromPackage({ packageJsonText: validPkg, tree: missing });
-    expect(results.find((r) => r.name === "omp_path:./extensions/pstack.ts")?.ok).toBe(false);
-    expect(results.find((r) => r.name === "extensions/pstack.ts")?.ok).toBe(false);
-    expect(results.find((r) => r.name === "skills")?.ok).toBe(false);
-    expect(results.find((r) => r.name === "agents")?.ok).toBe(false);
-    expect(results.find((r) => r.name === "commands")?.ok).toBe(false);
   });
 
   it("passes quality on this repo via ci_static.py", () => {

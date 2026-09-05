@@ -12,7 +12,7 @@ Dormant Benny pack: Slack issue triage plus reproduce/fix. Not a slash-skill tre
 
 - `SKILL.md` files here are automation instructions. Do not add this directory to `package.json` `omp.skills`. Do not prefix them as `ps-*` slash skills.
 - Cursor host: copy to `.cursor/automations/benny/`, enable pstack in `.cursor/settings.json`, create live automations with `/automate`.
-- omp host: copy or run in-repo; shared skills are `/skill:ps-…` via `omp -e`. omp has no Slack-triggered Cursor Automations equivalent (HOST GAP in `benny/README.md`).
+- omp host: copy or run in-repo after `omp plugin link ./`; shared skills are `/skill:ps-…`. omp has no Slack-triggered Cursor Automations equivalent (HOST GAP in `benny/README.md`).
 
 ## Work Guidance
 
@@ -21,7 +21,7 @@ Keep the operational files. Adapt `FOR_AGENTS.md`, `README.md`, and setup notes 
 ## Verification
 
 - `npx vitest run e2e/unit/product-capabilities.test.ts`
-- Key pack files listed in `e2e/unit/static-checks.ts` `PRODUCT_PACK_FILES` must exist.
+- Key pack files listed in `e2e/ci_static.py` `PRODUCT_PACK_FILES` must exist.
 
 ## Child DOX Index
 

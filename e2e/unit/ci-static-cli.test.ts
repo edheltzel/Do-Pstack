@@ -32,18 +32,21 @@ describe("ci_static.py CLI fixtures", () => {
     expect(summary.failed).toContain("skills/x/SKILL.md");
   });
 
-  it("fails parse when the factory has no export default", () => {
+  it("fails quality when the factory is over the size budget", () => {
     const root = fixture({
-      "extensions/pstack.ts": "const nope = 1;\n",
+      "package.json": JSON.stringify({ omp: { extensions: ["./extensions/pstack.ts"] } }),
+      "extensions/pstack.ts": `export default function pstack() {${"x".repeat(33 * 1024)}}\n`,
+      "skills/.keep": "",
+      "agents/.keep": "",
     });
-    const { status, summary } = runCiStatic(["--perf"], root);
+    const { status, summary } = runCiStatic(["--quality"], root);
     expect(status).toBe(1);
-    expect(summary.failed).toContain("pstack_parse");
+    expect(summary.failed).toContain("pstack_size");
   });
 
   it("fails product when docs/guide is missing", () => {
     const root = fixture({
-      "docs/getting-started.md": "# getting started\n",
+      "docs/README.md": "# docs\n",
     });
     const { status, summary } = runCiStatic(["--product"], root);
     expect(status).toBe(1);
