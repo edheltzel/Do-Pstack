@@ -1,5 +1,6 @@
 {
   "name": "pstack",
+  "description": "pstack plugin catalog: skills, agents, and sticky /poteto-mode for Claude Code.",
   "owner": {
     "name": "Ed Heltzel",
     "url": "https://github.com/edheltzel"

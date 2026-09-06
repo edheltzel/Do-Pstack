@@ -201,6 +201,8 @@ def claude_plugin(root: Path) -> list[dict]:
             ok = (
                 isinstance(market.get("name"), str)
                 and bool(KEBAB.fullmatch(str(market.get("name") or "")))
+                and isinstance(market.get("description"), str)
+                and bool(str(market.get("description") or "").strip())
                 and isinstance(market.get("owner"), dict)
                 and isinstance((market.get("owner") or {}).get("name"), str)
                 and isinstance(plugins, list)
@@ -210,7 +212,7 @@ def claude_plugin(root: Path) -> list[dict]:
                 check(
                     "claude_marketplace_json",
                     ok,
-                    "name + owner + plugins source ./" if ok else "marketplace catalog incomplete",
+                    "name + description + owner + plugins source ./" if ok else "marketplace catalog incomplete",
                 )
             )
         elif market is not None:
