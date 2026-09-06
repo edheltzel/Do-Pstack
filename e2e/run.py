@@ -285,7 +285,7 @@ def rpc_suite():
         send(proc, {"id": "cmds", "type": "get_available_commands"})
         resp, _ = wait_response(proc, "cmds", timeout=20)
         names = [c.get("name") for c in ((resp.get("data") or {}).get("commands") or [])]
-  it("plugin_loaded", "poteto-mode" in names, f"commands={len(names)}"))
+        results.append(check("plugin_loaded", "poteto-mode" in names, f"commands={len(names)}"))
 
         st, _ = get_state(proc, "s0")
         results.append(check("fresh_off", not has_needle(st.get("systemPrompt")), f"sid={st.get('sessionId')}"))
