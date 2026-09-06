@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Human docs for this omp plugin. First-run is the README (`omp plugin link ./`). The numbered guide is the original pstack product tutorial. This file must not teach a second mount story.
+Human docs for this plugin. First-run is the README (`omp plugin link ./` and Claude `claude plugin install pstack@pstack`). The numbered guide is the original pstack product tutorial. This file must not teach a second omp mount story (`omp -e`) or a fake installer.
 
 ## Ownership
 
@@ -10,14 +10,14 @@ Human docs for this omp plugin. First-run is the README (`omp plugin link ./`). 
 
 ## Local Contracts
 
-- README owns first-run: `omp plugin link ./`. Do not add `docs/getting-started.md` or teach `omp -e` as an install path.
+- README owns first-run for both hosts: `omp plugin link ./` and Claude plugin install (`marketplace add` + `pstack@pstack`, or `claude --plugin-dir ./`). Do not add `docs/getting-started.md` or teach `omp -e` as an install path.
 - README may link the numbered guide.
-- Guide on-disk skill links use `skills/do-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live surface is `/skill:do-how`. `/poteto-mode` stays unprefixed.
-- Operator install matches the root rail Native omp contract.
+- Guide on-disk skill links use `skills/do-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live omp surface is `/skill:do-how`, Claude is `/pstack:do-how`. `/poteto-mode` stays unprefixed on omp.
+- Operator install matches the root rail Native omp and Native Claude Code contracts.
 
 ## Work Guidance
 
-Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/do-<name>/`. Agents tell operators plugin-link.
+Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/do-<name>/`. Agents tell operators plugin-link (omp) or plugin install (Claude).
 
 ## Verification
 

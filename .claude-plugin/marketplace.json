@@ -1,0 +1,14 @@
+{
+  "name": "pstack",
+  "owner": {
+    "name": "Ed Heltzel",
+    "url": "https://github.com/edheltzel"
+  },
+  "plugins": [
+    {
+      "name": "pstack",
+      "source": "./",
+      "description": "pstack skills and agents. Claude slash skills are /pstack:do-*."
+    }
+  ]
+}

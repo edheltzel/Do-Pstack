@@ -7,7 +7,7 @@ Cases:
   poteto_off             /poteto-mode off removes the needle
   new_session_starts_off same-process new_session: new sid, no entry, next turn off
   resume_stays_on        switch_session back to the on-session: needle on
-  install_plugin_link    README/AGENTS teach omp plugin link ./; competing stories gone
+  install_plugin_link    README/AGENTS teach omp plugin link ./ and Claude plugin install; competing stories gone
   worktree_cleanup_omp   playbook uses ~/.omp/wt and worktree.base
 
 Usage (from repo root):
@@ -232,9 +232,17 @@ def static_setup_docs():
 def static_install_docs():
     readme = (ROOT / "README.md").read_text()
     agents = (ROOT / "AGENTS.md").read_text()
+    setup = (ROOT / "docs/guide/01-setup.md").read_text()
     ok = (
         "omp plugin link ./" in readme
         and "omp plugin link ./" in agents
+        and "claude plugin marketplace add" in readme
+        and "claude plugin install pstack@pstack" in readme
+        and "claude plugin install pstack@pstack" in agents
+        and "claude --plugin-dir ./" in readme
+        and "claude plugin validate" in readme
+        and "omp plugin link ./" in setup
+        and "claude plugin marketplace add" in setup
         and "omp -e" not in readme
         and "/add-plugin" not in readme
         and ".omp/skills" not in readme
@@ -244,13 +252,16 @@ def static_install_docs():
         and not (ROOT / "commands/setup-pstack.md").exists()
         and not (ROOT / "commands/poteto-mode.md").exists()
         and not (ROOT / ".omp-plugin/marketplace.json").exists()
+        and (ROOT / ".claude-plugin/plugin.json").is_file()
+        and (ROOT / ".claude-plugin/marketplace.json").is_file()
+        and not (ROOT / ".claude-plugin/skills").exists()
         and not (ROOT / "e2e/unit/static-checks.ts").exists()
         and not (ROOT / "skills/do-poteto-mode/playbooks/shipping.md").exists()
     )
     return check(
         "install_plugin_link",
         ok,
-        "canonical install is omp plugin link ./; competing stories gone",
+        "canonical installs are omp plugin link ./ and Claude plugin install; competing stories gone",
     )
 
 
@@ -274,7 +285,7 @@ def rpc_suite():
         send(proc, {"id": "cmds", "type": "get_available_commands"})
         resp, _ = wait_response(proc, "cmds", timeout=20)
         names = [c.get("name") for c in ((resp.get("data") or {}).get("commands") or [])]
-        results.append(check("plugin_loaded", "poteto-mode" in names, f"commands={len(names)}"))
+  it("plugin_loaded", "poteto-mode" in names, f"commands={len(names)}"))
 
         st, _ = get_state(proc, "s0")
         results.append(check("fresh_off", not has_needle(st.get("systemPrompt")), f"sid={st.get('sessionId')}"))

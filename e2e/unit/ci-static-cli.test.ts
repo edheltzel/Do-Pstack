@@ -44,6 +44,18 @@ describe("ci_static.py CLI fixtures", () => {
     expect(summary.failed).toContain("pstack_size");
   });
 
+  it("fails quality without Claude plugin.json", () => {
+    const root = fixture({
+      "package.json": JSON.stringify({ omp: { extensions: ["./extensions/pstack.ts"] } }),
+      "extensions/pstack.ts": "export default function pstack() {}\n",
+      "skills/.keep": "",
+      "agents/.keep": "",
+    });
+    const { status, summary } = runCiStatic(["--quality"], root);
+    expect(status).toBe(1);
+    expect(summary.failed).toContain("claude_plugin_json");
+  });
+
   it("fails product when docs/guide is missing", () => {
     const root = fixture({
       "docs/README.md": "# docs\n",

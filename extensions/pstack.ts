@@ -70,6 +70,12 @@ function isPotetoOn(ctx: any, cache: Map<string, boolean>): boolean {
 }
 
 export default function pstackExtension(pi: any): void {
+  try {
+    pi.setLabel?.("pstack");
+  } catch {
+    // older hosts
+  }
+
   const modeBySession = new Map<string, boolean>();
 
   function setStatus(ctx: any, on: boolean): void {

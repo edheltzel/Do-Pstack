@@ -1,6 +1,6 @@
 # pstack
 
-omp plugin: one factory (`extensions/pstack.ts`), skills, agents, and commands.
+omp + Claude Code plugin: one factory (`extensions/pstack.ts`), Claude manifest (`.claude-plugin/plugin.json`), skills, agents.
 
 ## Codegraph
 
@@ -51,7 +51,7 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 ## Project contracts
 
 - Static gate (CI and local): `python3 e2e/run.py --skip-rpc` and `npm test` (Vitest).
-- No `omp`, no `omp --mode rpc`, no TUI on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`.
+- No `omp`, no `omp --mode rpc`, no TUI, no `claude` on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`. Host-only prove (`omp plugin doctor`, `claude plugin validate`) is documented in e2e/AGENTS.md.
 - One factory. Poteto-mode is per-session, never a process-wide boolean.
 
 ## Native omp
@@ -63,6 +63,17 @@ Tell operators plugin-link only:
 - Later sessions, any cwd: type `/` (`/skill:do-…`, sticky `/poteto-mode`)
 - Do not marketplace. Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
 - Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what plugin-link discovers.
+
+## Native Claude Code
+
+Tell operators plugin-first only:
+
+- Manifest: `.claude-plugin/plugin.json`. Catalog: `.claude-plugin/marketplace.json`. Skills stay at plugin-root `skills/`, not inside `.claude-plugin/`.
+- Install: `claude plugin marketplace add <checkout-or-edheltzel/pstack-for-omp>` then `claude plugin install pstack@pstack`.
+- This session only: `claude --plugin-dir ./`
+- Slash skills: `/pstack:do-*`. Do not rename the `do-` skill set.
+- Validate on a host with Claude Code: `claude plugin validate .`
+- Sticky `/poteto-mode` is omp factory only. Claude uses `/pstack:do-poteto-mode`.
 
 ## Verification
 
@@ -78,7 +89,7 @@ npm test
 | [extensions/AGENTS.md](extensions/AGENTS.md) | Factory `pstack.ts`; per-session poteto-mode |
 | [e2e/AGENTS.md](e2e/AGENTS.md) | Static doctor/lint + Vitest; live RPC local-only via plugin-link |
 | [skills/AGENTS.md](skills/AGENTS.md) | Skill tree; SKILL.md frontmatter `name` + `description` |
-| [docs/AGENTS.md](docs/AGENTS.md) | original numbered `guide/`; first-run lives on README (`omp plugin link ./`) |
+| [docs/AGENTS.md](docs/AGENTS.md) | original numbered `guide/`; first-run lives on README (omp plugin link + Claude plugin install) |
 | [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills |
 
 `agents/` and `commands/` have no child AGENTS.md; they follow this rail. Commands need frontmatter `description`.
