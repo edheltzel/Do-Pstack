@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PSTACK_MAX_BYTES = 32 * 1024
+KEBAB = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+CLAUDE_FORBIDDEN = ("skills", "agents", "commands", "hooks")
 
 
 def pstack_ts(root: Path) -> Path:
@@ -87,11 +90,12 @@ def quality(root: Path | None = None) -> list[dict]:
         results.append(check("pstack_size", False, "extensions/pstack.ts missing"))
     else:
         raw = target.read_bytes()
-        size_ok = len(raw) <= PSTACK_MAX_BYTES and b"\0" not in raw
+        factory_text = ""
         try:
-            raw.decode("utf-8")
+            factory_text = raw.decode("utf-8")
         except UnicodeDecodeError:
-            size_ok = False
+            pass
+        size_ok = len(raw) <= PSTACK_MAX_BYTES and b"\0" not in raw and factory_text != ""
         results.append(
             check(
                 "pstack_size",
@@ -99,6 +103,127 @@ def quality(root: Path | None = None) -> list[dict]:
                 f"{len(raw)} bytes (budget {PSTACK_MAX_BYTES})",
             )
         )
+        if factory_text:
+            results.append(
+                check(
+                    "factory_default_export",
+                    "export default function" in factory_text,
+                    "default factory function",
+                )
+            )
+            results.append(
+                check(
+                    "independent_of_zenspc",
+                    "@zenspc/pi-pstack" not in factory_text,
+                    "no @zenspc/pi-pstack import",
+                )
+            )
+    pi = pkg.get("pi")
+    if isinstance(pi, dict) and isinstance(pi.get("extensions"), list):
+        results.append(
+            check(
+                "pi_extensions",
+                pi.get("extensions") == declared,
+                "pi.extensions matches omp.extensions",
+            )
+        )
+    results.extend(claude_plugin(root))
+    return results
+
+
+def claude_plugin(root: Path) -> list[dict]:
+    """Official Claude Code plugin layout: manifest in .claude-plugin/, skills at plugin root."""
+    results = []
+    hidden = root / ".claude-plugin"
+    plugin_path = hidden / "plugin.json"
+    market_path = hidden / "marketplace.json"
+    if not hidden.is_dir():
+        return [
+            check("claude_plugin_dir", False, ".claude-plugin missing"),
+            check("claude_plugin_json", False, "plugin.json missing"),
+            check("claude_marketplace_json", False, "marketplace.json missing"),
+            check("claude_skills_at_root", False, "skills/ at plugin root"),
+        ]
+    nested = [name for name in CLAUDE_FORBIDDEN if (hidden / name).exists()]
+    results.append(
+        check(
+            "claude_plugin_dir",
+            not nested,
+            "no component dirs inside .claude-plugin" if not nested else f"nested {nested}",
+        )
+    )
+    if not plugin_path.is_file():
+        results.append(check("claude_plugin_json", False, "plugin.json missing"))
+    else:
+        try:
+            manifest = json.loads(plugin_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            results.append(check("claude_plugin_json", False, f"invalid JSON: {exc}"))
+            manifest = None
+        if isinstance(manifest, dict):
+            name = manifest.get("name")
+            name_ok = isinstance(name, str) and bool(KEBAB.fullmatch(name)) and name == "pstack"
+            results.append(
+                check(
+                    "claude_plugin_json",
+                    name_ok,
+                    f"name={name!r}" if name_ok else "name must be kebab-case pstack",
+                )
+            )
+            pkg_path = root / "package.json"
+            pkg_ver = None
+            try:
+                pkg_ver = json.loads(pkg_path.read_text(encoding="utf-8")).get("version")
+            except (OSError, json.JSONDecodeError):
+                pkg_ver = None
+            plugin_ver = manifest.get("version")
+            if isinstance(pkg_ver, str) and isinstance(plugin_ver, str):
+                results.append(
+                    check(
+                        "claude_plugin_version",
+                        plugin_ver == pkg_ver,
+                        f"{plugin_ver} == package.json {pkg_ver}",
+                    )
+                )
+        elif manifest is not None:
+            results.append(check("claude_plugin_json", False, "plugin.json must be an object"))
+    if not market_path.is_file():
+        results.append(check("claude_marketplace_json", False, "marketplace.json missing"))
+    else:
+        try:
+            market = json.loads(market_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            results.append(check("claude_marketplace_json", False, f"invalid JSON: {exc}"))
+            market = None
+        if isinstance(market, dict):
+            plugins = market.get("plugins")
+            sources = [entry.get("source") for entry in plugins if isinstance(entry, dict)] if isinstance(plugins, list) else []
+            ok = (
+                isinstance(market.get("name"), str)
+                and bool(KEBAB.fullmatch(str(market.get("name") or "")))
+                and isinstance(market.get("description"), str)
+                and bool(str(market.get("description") or "").strip())
+                and isinstance(market.get("owner"), dict)
+                and isinstance((market.get("owner") or {}).get("name"), str)
+                and isinstance(plugins, list)
+                and "./" in sources
+            )
+            results.append(
+                check(
+                    "claude_marketplace_json",
+                    ok,
+                    "name + description + owner + plugins source ./" if ok else "marketplace catalog incomplete",
+                )
+            )
+        elif market is not None:
+            results.append(check("claude_marketplace_json", False, "marketplace.json must be an object"))
+    results.append(
+        check(
+            "claude_skills_at_root",
+            (root / "skills").is_dir() and not (hidden / "skills").exists(),
+            "skills/ at plugin root",
+        )
+    )
     return results
 
 

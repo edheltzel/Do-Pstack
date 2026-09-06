@@ -19,20 +19,41 @@ function walkText(root: string, rel = ""): string[] {
 }
 
 describe("package.json doctor", () => {
-  it("plugin layout is real: omp.extensions path and skills/do-*/SKILL.md", () => {
+  it("plugin layout is real: omp.extensions path, Claude plugin.json, and skills/do-*/SKILL.md", () => {
     const root = repoDir();
     const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
       omp?: { extensions?: unknown };
+      pi?: { extensions?: unknown };
     };
     const exts = pkg.omp?.extensions;
     expect(Array.isArray(exts) && exts.length > 0).toBe(true);
     for (const rel of exts as string[]) {
       expect(existsSync(join(root, rel)), rel).toBe(true);
     }
+    expect(pkg.pi?.extensions).toEqual(exts);
     const skillMd = readdirSync(join(root, "skills")).filter(
       (name) => name.startsWith("do-") && existsSync(join(root, "skills", name, "SKILL.md")),
     );
     expect(skillMd.length).toBeGreaterThan(0);
+
+    const plugin = JSON.parse(readFileSync(join(root, ".claude-plugin/plugin.json"), "utf8")) as {
+      name?: unknown;
+    };
+    const market = JSON.parse(readFileSync(join(root, ".claude-plugin/marketplace.json"), "utf8")) as {
+      name?: unknown;
+      owner?: { name?: unknown };
+      plugins?: { name?: unknown; source?: unknown }[];
+    };
+    expect(plugin.name).toBe("pstack");
+    expect(market.name).toBe("pstack");
+    expect(market.owner?.name).toBeTruthy();
+    expect(market.plugins?.some((entry) => entry.source === "./" && entry.name === "pstack")).toBe(true);
+    expect(existsSync(join(root, ".claude-plugin/skills"))).toBe(false);
+    expect(existsSync(join(root, "skills"))).toBe(true);
+
+    const factory = readFileSync(join(root, "extensions/pstack.ts"), "utf8");
+    expect(factory).toContain("export default function pstackExtension");
+    expect(factory).not.toContain("@zenspc/pi-pstack");
   });
 
   it("live slash is /skill:do-* and leftover ps- skill folders/slashes are gone", () => {

@@ -2,7 +2,7 @@
 
 Static doctor/lint + Vitest on every PR. Live omp RPC evals are local-only. Not chat-only.
 
-Static (CI and local; no omp):
+Static (CI and local; no omp, no claude):
 
 ```bash
 python3 e2e/run.py --skip-rpc
@@ -20,9 +20,18 @@ Each RPC run uses `--session-dir` under a temp folder and `--no-tools`.
 A factory change still needs an omp restart (a fresh `omp --mode rpc` process loads the tree).
 Do not run `omp --mode rpc` on GitHub runners.
 
+Host-only prove (needs omp and/or Claude Code on the machine; not CI):
+
+```bash
+omp plugin link ./
+omp plugin list
+omp plugin doctor
+claude plugin validate .
+```
+
 | Case | What it proves |
 | --- | --- |
-| `install_plugin_link` | README/AGENTS teach `omp plugin link ./`; competing stories gone |
+| `install_plugin_link` | README/AGENTS teach `omp plugin link ./` and Claude plugin install; competing stories gone |
 | `poteto_on` | `/poteto-mode` injects the needle and writes `pstack-mode` on this session |
 | `second_turn_sticky` | Next turn still has the needle |
 | `poteto_off` | `/poteto-mode off` then next turn has no needle |

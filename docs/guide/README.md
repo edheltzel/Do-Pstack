@@ -1,6 +1,6 @@
 # The pstack guide
 
-> This numbered guide is the original pstack product tutorial. On this omp fork, first-run is the [README](../../README.md) (`omp plugin link ./`). Slash skills are `/skill:do-…` (on-disk `skills/do-*`). `/poteto-mode` stays unprefixed.
+> This numbered guide is the original pstack product tutorial. On this fork, first-run is the [README](../../README.md) (`omp plugin link ./` or Claude `claude plugin install pstack@pstack`). Slash skills are `/skill:do-…` on omp and `/pstack:do-*` on Claude (on-disk `skills/do-*`). `/poteto-mode` stays unprefixed on omp.
 
 pstack works best when you stop micromanaging the agent. You describe what you want and how you'll know it's done. `/poteto-mode` picks the playbook, runs the other skills as the steps need them, and shows you the evidence. This guide teaches that habit with realistic prompts.
 

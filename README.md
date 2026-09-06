@@ -1,6 +1,6 @@
 # pstack
 
-This package is an installable omp **plugin**. From the package root, one-time `omp plugin link ./`. Later sessions (any cwd): start `omp`, type `/` (`/skill:do-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link.
+This package is an installable **plugin** for omp/Pi and Claude Code. Skills stay `do-*` on disk. omp exposes them as `/skill:do-…`. Claude Code exposes them as `/pstack:do-*`. Sticky `/poteto-mode` is the omp factory command.
 
 It is not the Cursor plugin and not an official Cursor port.
 
@@ -16,7 +16,7 @@ Those pages are the Cursor product. This README does not retell them.
 
 ## Docs
 
-- [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/do-*`; slash skills are `/skill:do-…`. `/poteto-mode` stays unprefixed.
+- [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/do-*`. omp slash skills are `/skill:do-…`. Claude slash skills are `/pstack:do-*`. `/poteto-mode` stays unprefixed on omp.
 
 ## Automations
 
@@ -24,40 +24,58 @@ pstack also ships a dormant [benny automation pack](./automations/benny/). Benny
 
 Setup starts at [`automations/benny/FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). That README records the Cursor Automations host vs what omp can run.
 
-## What omp is
-
-[omp](https://omp.sh) is “A coding agent with the IDE wired in.”
-
-- Home: https://omp.sh
-- Install omp: `curl -fsSL https://omp.sh/install | sh`
-- Source: https://github.com/can1357/oh-my-pi
-- Docs: https://omp.sh/docs
-- How omp can install plugins in general (not this repo’s command): https://omp.sh/docs/plugins
-- Authoring: https://omp.sh/docs/extension-authoring
-
 ## Load this plugin
 
-Clone https://github.com/edheltzel/pstack, then from the package root:
+Clone https://github.com/edheltzel/pstack-for-omp, then pick the host.
+
+### omp / Pi
+
+Install omp from https://omp.sh if needed (`curl -fsSL https://omp.sh/install | sh`). From the package root, one-time:
 
 ```
-git clone https://github.com/edheltzel/pstack.git
-cd pstack
+git clone https://github.com/edheltzel/pstack-for-omp.git
+cd pstack-for-omp
 omp plugin link ./
 ```
 
-That one-time link is how later sessions (any cwd) type `/` (`/skill:do-…`, sticky `/poteto-mode`). Confirm with `omp plugin list`.
+Later sessions (any cwd): start `omp`, type `/` (`/skill:do-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link. Confirm with `omp plugin list`. Prove the link with `omp plugin doctor`.
 
-Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`.
+Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`. Do not marketplace-install this package on omp; local-link is the install path.
+
+omp docs: https://omp.sh/docs/plugins and https://omp.sh/docs/extension-authoring.
+
+### Claude Code
+
+This checkout is the plugin root: `.claude-plugin/plugin.json` plus `skills/` and `agents/` beside it (not inside `.claude-plugin/`).
+
+From the package root, add this repo as a marketplace and install:
+
+```
+claude plugin marketplace add /absolute/path/to/pstack-for-omp
+claude plugin install pstack@pstack
+```
+
+From GitHub: `claude plugin marketplace add edheltzel/pstack-for-omp` then `claude plugin install pstack@pstack`.
+
+This session only (no install record):
+
+```
+claude --plugin-dir ./
+```
+
+Claude slash skills are namespaced: `/pstack:do-how`, `/pstack:do-poteto-mode`. Validate the layout with `claude plugin validate .`. Sticky `/poteto-mode` is omp-only; on Claude run `/pstack:do-poteto-mode`.
+
+Claude plugin docs: https://code.claude.com/docs/en/plugins.
 
 ## First steps
 
-1. Install omp from https://omp.sh (`curl -fsSL https://omp.sh/install | sh`).
-2. Clone this repository and, from the package root, `omp plugin link ./` (see Load this plugin). Later sessions (any cwd): `omp`, then type `/`.
-3. `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:do-poteto-mode`.
-4. Work as usual. Resume an on conversation and it stays on. `/new` starts off.
-5. `/poteto-mode off` (aliases: `disable`, `stop`) — disable this conversation.
+1. Install the host (omp from https://omp.sh, or Claude Code).
+2. Load this plugin (see Load this plugin).
+3. On omp: `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:do-poteto-mode`. On Claude: `/pstack:do-poteto-mode`.
+4. Work as usual. On omp, resume an on conversation and it stays on. `/new` starts off.
+5. `/poteto-mode off` (aliases: `disable`, `stop`) — disable this omp conversation.
 
-If Poteto Mode was never turned on in this conversation, it is off. Mode is per conversation, not process-wide.
+If Poteto Mode was never turned on in this omp conversation, it is off. Mode is per conversation, not process-wide.
 
 The TUI status reads `pstack: poteto mode` when on. Other omp surfaces may not show it.
 
@@ -65,14 +83,14 @@ The TUI status reads `pstack: poteto mode` when on. Other omp surfaces may not s
 
 | Command | What it does |
 |---|---|
-| `/poteto-mode` | Enable sticky Poteto Mode for this conversation. Also sends `/skill:do-poteto-mode`. |
-| `/poteto-mode off` | Disable this conversation. Aliases: `disable`, `stop`. |
+| `/poteto-mode` | omp factory: enable sticky Poteto Mode for this conversation. Also sends `/skill:do-poteto-mode`. |
+| `/poteto-mode off` | Disable this omp conversation. Aliases: `disable`, `stop`. |
 
-That is the live extension command. It stays unprefixed. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs.
+That is the live omp extension command. It stays unprefixed. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs. Do not ship `commands/poteto-mode.md`.
 
 ## Poteto Mode (this extension)
 
-- Enable sends `/skill:do-poteto-mode`. The `/skill:do-poteto-mode` input hook also persists enabled.
+- On omp, enable sends `/skill:do-poteto-mode`. The `/skill:do-poteto-mode` input hook also persists enabled.
 - Stored as a custom `pstack-mode` entry on that conversation’s session jsonl. Last `{enabled}` wins. Missing means off.
 - `session_start` re-reads the jsonl. `new_session` / `/new` starts off. Resume of an on conversation stays on.
 - When on, a prompt needle prepends “Pstack Poteto Mode is on…”
@@ -82,9 +100,12 @@ That is the live extension command. It stays unprefixed. There is no worktree co
 
 ## Skills
 
-Files under `skills/` are markdown prompts. Invoke them with `/skill:do-<name>`. They are live after `omp plugin link ./` (sibling tree auto-discovered). They are not live omp functions or CLIs.
+Files under `skills/` are markdown prompts. They are not live omp functions or CLIs.
 
-Examples: `/skill:do-create-verification-skill`, `/skill:do-swarm`, `/skill:do-principle-build-the-lever`. Feature Map is a section in `do-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
+- omp, after `omp plugin link ./`: `/skill:do-<name>`
+- Claude Code, after plugin install: `/pstack:do-<name>`
+
+Examples: `/skill:do-create-verification-skill` (Claude: `/pstack:do-create-verification-skill`), `/skill:do-swarm`, `/skill:do-principle-build-the-lever`. Feature Map is a section in `do-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.
 
 ## License
 
