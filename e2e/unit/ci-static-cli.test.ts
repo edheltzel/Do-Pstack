@@ -44,6 +44,20 @@ describe("ci_static.py CLI fixtures", () => {
     expect(summary.failed).toContain("pstack_size");
   });
 
+  it("fails quality when scratch .tmp-* or e2e/_fm*-proof* files are in the tree", () => {
+    const root = fixture({
+      "package.json": JSON.stringify({ omp: { extensions: ["./extensions/pstack.ts"] } }),
+      "extensions/pstack.ts": "export default function pstack() {}\n",
+      "skills/.keep": "",
+      "agents/.keep": "",
+      ".tmp-fm-x/keep": "",
+      "e2e/_fm1-proof.mjs": "export {}\n",
+    });
+    const { status, summary } = runCiStatic(["--quality"], root);
+    expect(status).toBe(1);
+    expect(summary.failed).toContain("packaging");
+  });
+
   it("fails quality without Claude plugin.json", () => {
     const root = fixture({
       "package.json": JSON.stringify({ omp: { extensions: ["./extensions/pstack.ts"] } }),

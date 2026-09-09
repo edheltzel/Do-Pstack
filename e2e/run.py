@@ -217,6 +217,12 @@ def static_worktree():
 
 def static_setup_docs():
     skill = (ROOT / "skills/do-setup-pstack/SKILL.md").read_text()
+    setup = (ROOT / "docs/guide/01-setup.md").read_text()
+    leftover = [
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / "docs/guide").rglob("*.md")
+        if "pstack-models.mdc" in path.read_text()
+    ]
     ok = (
         "Do not write" in skill
         and "models.json" in skill
@@ -225,8 +231,16 @@ def static_setup_docs():
         and "/model" in skill
         and "/agents" in skill
         and not (ROOT / "commands/setup-pstack.md").exists()
+        and "pstack-models.mdc" not in setup
+        and "/agents" in setup
+        and "Roles" in setup
+        and not leftover
     )
-    return check("setup_pstack_docs", ok, "setup-pstack skill lists roles; no commands/ wrapper")
+    return check(
+        "setup_pstack_docs",
+        ok,
+        "setup lists Roles /agents; guide has no pstack-models.mdc" if ok else f"leftover={leftover}",
+    )
 
 
 def static_install_docs():

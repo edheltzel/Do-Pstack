@@ -123,6 +123,31 @@ describe("original product pack", () => {
     expect(existsSync(join(root, "skills/do-poteto-mode/playbooks/shipping.md"))).toBe(false);
   });
 
+  it("scratch .tmp-* and e2e/_fm*-proof* are gone and gitignored", () => {
+    const root = repoDir();
+    const gitignore = readFileSync(join(root, ".gitignore"), "utf8");
+    expect(gitignore).toMatch(/^\.tmp\*\//m);
+    expect(gitignore).toMatch(/_fm\*-proof\*/);
+    expect(existsSync(join(root, "e2e/_fm230-proof.mjs"))).toBe(false);
+    expect(existsSync(join(root, ".tmp-fm-ponytail"))).toBe(false);
+    expect(existsSync(join(root, ".tmp-fm320-ponytail"))).toBe(false);
+    const { status, summary } = runCiStatic(["--quality"], root);
+    expect(status).toBe(0);
+    expect(summary.failed).not.toContain("packaging");
+  });
+
+  it("guide setup matches do-setup-pstack Roles /agents; no pstack-models.mdc leftover", () => {
+    const root = repoDir();
+    const leftover = walkMarkdown(root, "docs/guide").filter((rel) =>
+      readFileSync(join(root, rel), "utf8").includes("pstack-models.mdc"),
+    );
+    expect(leftover, JSON.stringify(leftover)).toEqual([]);
+    const setup = readFileSync(join(root, "docs/guide/01-setup.md"), "utf8");
+    expect(setup).toContain("/agents");
+    expect(setup).toContain("Roles");
+    expect(setup).not.toContain("inherit-parent");
+  });
+
   it("README and docs relative links resolve (no 404 on original guide paths)", () => {
     const files = ["README.md", ...walkMarkdown(root, "docs"), ...walkMarkdown(root, "automations")];
     const exists = (rel: string) => existsSync(join(root, rel));

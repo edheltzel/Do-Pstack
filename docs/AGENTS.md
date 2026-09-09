@@ -13,6 +13,7 @@ Human docs for this plugin. First-run is the README (`omp plugin link ./` and Cl
 - README owns first-run for both hosts: `omp plugin link ./` and Claude plugin install (`marketplace add` + `pstack@pstack`, or `claude --plugin-dir ./`). Do not add `docs/getting-started.md` or teach `omp -e` as an install path.
 - README may link the numbered guide.
 - Guide on-disk skill links use `skills/do-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live omp surface is `/skill:do-how`, Claude is `/pstack:do-how`. `/poteto-mode` stays unprefixed on omp.
+- Setup guide (`01-setup.md`) matches `do-setup-pstack`: `/model` Roles and `/agents` only. Do not teach `pstack-models.mdc`.
 - Operator install matches the root rail Native omp and Native Claude Code contracts.
 
 ## Work Guidance

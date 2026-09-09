@@ -7,7 +7,7 @@ Prove the plugin without chat-only guesses. Static doctor/lint + Vitest on every
 ## Ownership
 
 - `run.py` — live RPC evals; `--skip-rpc` is static-only
-- `ci_static.py` — doctor, frontmatter, size, product pack, Claude plugin layout
+- `ci_static.py` — doctor, frontmatter, size, product pack, Claude plugin layout, packaging scratch
 - `unit/` — Vitest helpers and tests
 - `ci-shims/` — `node:fs` stub for `tsc` without `@types/node`
 
@@ -21,6 +21,7 @@ Prove the plugin without chat-only guesses. Static doctor/lint + Vitest on every
 - Do not keep a repo `.omp/skills` symlink. `static_install_docs` and `unit/product-capabilities.test.ts` assert filesystem absence, not only README text.
 - Claude components stay at plugin root. `.claude-plugin/` may hold `plugin.json` and `marketplace.json` only — not `skills/`.
 - Official skill vendor-sync tests (`unit/sync-skills.test.ts`) stay offline (`--from` fixture). Do not clone `cursor/plugins` on CI.
+- Do not keep `.tmp-*` dirs or `e2e/_fm*-proof*` in the tree. Gitignore those names. `ci_static.py --quality` packaging asserts absence.
 
 ## Work Guidance
 
