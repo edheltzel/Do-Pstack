@@ -1,4 +1,0 @@
-PI_EXIT=0
-    4923 /tmp/fm320-out.txt
-       0 /tmp/fm320-err.txt
-    4923 total

@@ -20,6 +20,7 @@ Prove the plugin without chat-only guesses. Static doctor/lint + Vitest on every
 - Do not keep a TypeScript copy of `ci_static.py` (no `unit/static-checks.ts`, no homemade brace parser).
 - Do not keep a repo `.omp/skills` symlink. `static_install_docs` and `unit/product-capabilities.test.ts` assert filesystem absence, not only README text.
 - Claude components stay at plugin root. `.claude-plugin/` may hold `plugin.json` and `marketplace.json` only — not `skills/`.
+- Official skill vendor-sync tests (`unit/sync-skills.test.ts`) stay offline (`--from` fixture). Do not clone `cursor/plugins` on CI.
 
 ## Work Guidance
 

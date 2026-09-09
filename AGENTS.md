@@ -53,6 +53,7 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 - Static gate (CI and local): `python3 e2e/run.py --skip-rpc` and `npm test` (Vitest).
 - No `omp`, no `omp --mode rpc`, no TUI, no `claude` on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`. Host-only prove (`omp plugin doctor`, `claude plugin validate`) is documented in e2e/AGENTS.md.
 - One factory. Poteto-mode is per-session, never a process-wide boolean.
+- Official skills SoT is `cursor/plugins` `pstack/skills`. Update with `npm run sync` (`node scripts/pstack.mjs sync`). Writes into existing `skills/do-*` only. Not `backnotprop/pstack`, not skills.sh, not `npx skills add`.
 
 ## Native omp
 
@@ -91,5 +92,6 @@ npm test
 | [skills/AGENTS.md](skills/AGENTS.md) | Skill tree; SKILL.md frontmatter `name` + `description` |
 | [docs/AGENTS.md](docs/AGENTS.md) | original numbered `guide/`; first-run lives on README (omp plugin link + Claude plugin install) |
 | [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills |
+| [scripts/AGENTS.md](scripts/AGENTS.md) | `pstack sync`: vendor official skills from cursor/plugins into `skills/do-*` |
 
 `agents/` and `commands/` have no child AGENTS.md; they follow this rail. Commands need frontmatter `description`.
