@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 
 const POTETO_SKILL = "/skill:do-poteto-mode";
 const POTETO_PROMPT =
@@ -9,6 +9,9 @@ type ModeEntry = {
   customType?: string;
   data?: { enabled?: unknown };
 };
+
+type PotetoScan = { found: boolean; enabled: boolean };
+const jsonlCache = new Map<string, { mtimeMs: number; size: number; value: PotetoScan }>();
 
 function sessionIdFromFile(path: unknown): string | undefined {
   if (typeof path !== "string" || !path) return undefined;
@@ -29,16 +32,28 @@ function sessionFileFromCtx(ctx: any): string | undefined {
   return typeof file === "string" && file.length > 0 ? file : undefined;
 }
 
-function lastPotetoInJsonl(path: string): { found: boolean; enabled: boolean } | undefined {
-  if (!existsSync(path)) return undefined;
-  let found = false;
-  let enabled = false;
+function lastPotetoInJsonl(path: string): PotetoScan | undefined {
+  if (!existsSync(path)) {
+    jsonlCache.delete(path);
+    return undefined;
+  }
+  let st;
+  try {
+    st = statSync(path);
+  } catch {
+    jsonlCache.delete(path);
+    return undefined;
+  }
+  const hit = jsonlCache.get(path);
+  if (hit && hit.mtimeMs === st.mtimeMs && hit.size === st.size) return hit.value;
   let text = "";
   try {
     text = readFileSync(path, "utf8");
   } catch {
     return undefined;
   }
+  let found = false;
+  let enabled = false;
   for (const line of text.split("\n")) {
     if (!line.includes("pstack-mode")) continue;
     try {
@@ -53,7 +68,9 @@ function lastPotetoInJsonl(path: string): { found: boolean; enabled: boolean } |
       // ignore bad lines
     }
   }
-  return { found, enabled };
+  const value = { found, enabled };
+  jsonlCache.set(path, { mtimeMs: st.mtimeMs, size: st.size, value });
+  return value;
 }
 
 /** This conversation only. Missing pstack-mode entry means off. Never a process-wide boolean. */

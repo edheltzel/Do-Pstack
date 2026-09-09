@@ -41,19 +41,17 @@ Run:
 
 On Claude Code the same skill is [`/pstack:do-setup-pstack`](../../skills/do-setup-pstack/SKILL.md).
 
-[`/skill:do-setup-pstack`](../../skills/do-setup-pstack/SKILL.md) detects the models you have access to, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.cursor/rules/pstack-models.mdc`, a small rule every pstack skill reads.
+[`/skill:do-setup-pstack`](../../skills/do-setup-pstack/SKILL.md) lists each plugin agent and the `@role` it uses. Routing lives in `/model` → Roles and each agent's `model: "@role"` line, or an override in `/agents`. The skill writes nothing. Re-run it to re-list.
 
-You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default later, delete that role's line, or just run `/skill:do-setup-pstack` again.
+Want a different concrete model for a role? Open `/model` → Roles and change that `@role`. Want one agent on a different role or a concrete selector? Open `/agents` and override that agent. New `task` calls pick it up.
 
-You might be wondering what happens if you use Auto. Set a role to `inherit-parent` or `auto` and pstack omits the subagent `model` field, so the subagent inherits your parent chat model. Both values mean the same thing, and neither is a model slug. For a panel role the value is a list, and one subagent runs per entry, so the list length sets the panel size. Setup also configures `swarm workers`, the default model for every `/skill:do-swarm` worker unless a race names a model for each arm.
+N parallel models is not available from one agent definition. Diversity is prompt, path, or label unless you change that agent's `model` in `/agents`.
 
 ## Accept the verification offer, or don't
 
 At the end of setup, `/skill:do-setup-pstack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/skill:do-create-verification-skill`](../../skills/do-create-verification-skill/SKILL.md).
 
 Say yes and it writes `.cursor/skills/verify-<app>/`, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill works once before handing it over. Say no and setup moves on. You can run `/skill:do-create-verification-skill` yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when it earns its place.
-
-After setup, start a new chat. The model rule applies to new sessions.
 
 ## Run your first task
 

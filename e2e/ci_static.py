@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PSTACK_MAX_BYTES = 32 * 1024
 KEBAB = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CLAUDE_FORBIDDEN = ("skills", "agents", "commands", "hooks")
+WALK_SKIP = {".git", "node_modules"}
 
 
 def pstack_ts(root: Path) -> Path:
@@ -118,6 +119,7 @@ def quality(root: Path | None = None) -> list[dict]:
                     "no @zenspc/pi-pstack import",
                 )
             )
+    results.extend(packaging(root))
     pi = pkg.get("pi")
     if isinstance(pi, dict) and isinstance(pi.get("extensions"), list):
         results.append(
@@ -129,6 +131,36 @@ def quality(root: Path | None = None) -> list[dict]:
         )
     results.extend(claude_plugin(root))
     return results
+
+
+def scratch_paths(root: Path) -> list[str]:
+    """`.tmp-*` anywhere, and `e2e/_fm*-proof*` files. Report the top matching path only."""
+    hits: set[str] = set()
+    for path in root.rglob("*"):
+        rel_parts = path.relative_to(root).parts
+        if any(part in WALK_SKIP for part in rel_parts):
+            continue
+        for i, part in enumerate(rel_parts):
+            if part.startswith(".tmp-"):
+                hits.add("/".join(rel_parts[: i + 1]))
+                break
+        else:
+            name = rel_parts[-1]
+            if (
+                len(rel_parts) >= 2
+                and rel_parts[0] == "e2e"
+                and name.startswith("_fm")
+                and "-proof" in name
+            ):
+                hits.add("/".join(rel_parts))
+    return sorted(hits)
+
+
+def packaging(root: Path) -> list[dict]:
+    hits = scratch_paths(root)
+    ok = not hits
+    detail = "no .tmp-* or e2e/_fm*-proof*" if ok else "scratch " + ", ".join(hits[:12])
+    return [check("packaging", ok, detail)]
 
 
 def claude_plugin(root: Path) -> list[dict]:

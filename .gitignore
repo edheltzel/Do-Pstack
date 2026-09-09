@@ -3,4 +3,5 @@ node_modules/
 __pycache__/
 *.pyc
 e2e/.run/
-.tmp-*/
+.tmp*/
+_fm*-proof*
