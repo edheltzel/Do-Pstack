@@ -1,0 +1,5 @@
+PI_EXIT:0
+2026-09-05T20:01:41Z
+    4304 .tmp-fm-ponytail/out.txt
+       0 .tmp-fm-ponytail/err.txt
+    4304 total

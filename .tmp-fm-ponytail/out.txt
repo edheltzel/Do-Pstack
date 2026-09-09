@@ -1,0 +1,52 @@
+# VERDICT
+
+FAIL. FM-255 stays on the table.
+
+Stay independent. No `@zenspc/pi-pstack` dependency appears in the manifests or lockfiles. The knockout is simpler: **we built around loading the author's checkout instead of proving one installable omp plugin.**
+
+The initial import brought in 139 files and 12,426 lines. Later commits patched naming and discovery without completing the installation contract.
+
+# FINDINGS (severity, what, where, why fails poteto)
+
+1. **HIGH: Competing loading paths replaced one supported installation.**
+   - **Where:** `package.json:10-25`, `.omp-plugin/marketplace.json`, `.omp/config.yml`, `README.md:3-43`, `docs/getting-started.md:3-18`, `e2e/run.py:132-148`.
+   - The manifests describe a package. Documentation prescribes `omp -e`, rejects plugin installation, and repeatedly credits a `.omp/skills` symlink that no longer exists. The actual mount is project-local `skills.customDirectories`.
+   - The RPC launcher uses neither `-e` nor an explicit plugin installation. Its results therefore depend on discovery or existing machine configuration.
+   - **Why fails poteto:** Native `omp plugin link ./` exists, but the repository documents and tests competing arrangements instead. Directory-specific patches create maintenance work without proving installation into another project's workflow.
+
+2. **HIGH: The port renamed entry points but retained incompatible instructions.**
+   - **Where:** `agents/poteto-agent.md:4-10`, `commands/poteto-mode.md:5`, `commands/setup-pstack.md:5`, `skills/ps-poteto-mode/SKILL.md:24-36`, `skills/ps-poteto-mode/playbooks/shipping.md:7-17`.
+   - Agent autoload still names `poteto-mode`; command wrappers reference old skill identifiers and a deleted directory name. Five concrete relative Markdown links still target pre-prefix paths.
+   - Poteto Mode says Cursor-only tools are skipped, while Shipping requires Cursor cloud agents, `cursor-team-kit`, and Graphite.
+   - **Why fails poteto:** A discoverable `/skill:ps-…` is not an operational workflow. Keeping unsupported instructions and adding exceptions makes every invocation resolve the porting work again.
+
+3. **MEDIUM: Verification maintains duplicate machinery while missing the installation boundary.**
+   - **Where:** `e2e/unit/static-checks.ts`, `e2e/ci_static.py:125-197`, `e2e/run.py:333-340`.
+   - A 218-line TypeScript helper reimplements the Python checker. Both maintain homemade brace parsing although CI already runs TypeScript.
+   - `--skip-rpc` runs only two documentation-string checks. Neither proves skill discovery, agent availability, or installation.
+   - **Why fails poteto:** We maintain tests of duplicated proxies instead of testing the actual package contract.
+
+# PROPOSED CUTS (delete-list; do NOT apply)
+
+- Delete `.omp-plugin/marketplace.json` from the direct-link distribution. Keep one package manifest.
+- After proving `omp plugin link ./`, delete `.omp/config.yml`'s discovery workaround and the competing installation instructions. Keep one canonical installation section in `README.md`.
+- Delete duplicate command wrappers in `commands/`. Keep the factory's sticky `/poteto-mode` and `/skill:ps-setup-pstack`.
+- Delete Cursor-only requirements from advertised omp workflows. Remove unsupported playbook routes rather than retaining contradictory “skip” instructions.
+- Delete `e2e/unit/static-checks.ts` after redirecting useful cases to the real checker. Delete homemade brace parsing; retain `tsc`.
+- Keep the independent factory, useful skills, and named agents. Skill count alone does not justify deletion.
+
+# TESTS / EVALS
+
+Read-only checks performed:
+
+- Static runner: **2/2 passed**.
+- Quality/frontmatter checks: **58/58 passed**.
+- TypeScript no-emit check: **passed**.
+- Link audit: **five broken concrete relative links**.
+- Counterexample: homemade parse check accepts `export default function pstack() { const = ; }`.
+
+Not run: installation, live RPC, or Vitest, whose fixtures write files.
+
+Required acceptance eval: link from `/Users/ed/Developer/pstack-for-pi` in an isolated local configuration, launch from an unrelated project, verify all 45 `/skill:ps-…` entries resolve to this clone, verify named-agent discovery, then exercise on/off/new/resume. Confirm no zenspc installation is needed.
+
+No cuts applied.
