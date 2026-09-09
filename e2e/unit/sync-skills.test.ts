@@ -1,0 +1,181 @@
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
+import { describe, expect, it } from "vitest";
+import { repoDir } from "./py-ci.ts";
+import {
+  LOCAL_SUBTRACTIONS,
+  UPSTREAM_REPO,
+  UPSTREAM_SKILLS,
+  formatReport,
+  parseArgs,
+  planSync,
+  rewriteLayout,
+  runSync,
+} from "../../scripts/pstack.mjs";
+
+const cli = fileURLToPath(new URL("../../scripts/pstack.mjs", import.meta.url));
+
+function write(root: string, rel: string, body: string): void {
+  const path = join(root, rel);
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, body);
+}
+
+function fixture(): { root: string; from: string } {
+  const root = mkdtempSync(join(tmpdir(), "pstack-sync-pkg-"));
+  const from = mkdtempSync(join(tmpdir(), "pstack-sync-up-"));
+  write(
+    from,
+    "how/SKILL.md",
+    "---\nname: how\ndescription: Explain code.\n---\n\nSee [Why](../why/SKILL.md).\n",
+  );
+  write(
+    from,
+    "why/SKILL.md",
+    "---\nname: why\ndescription: Motivation.\n---\n\n# Why\n",
+  );
+  write(
+    from,
+    "setup-pstack/SKILL.md",
+    "---\nname: setup-pstack\ndescription: Cursor setup.\n---\n\nWrite pstack-models.mdc.\n",
+  );
+  write(from, "poteto-mode/SKILL.md", "---\nname: poteto-mode\ndescription: Router.\n---\n\n# Poteto\n");
+  write(from, "poteto-mode/playbooks/shipping.md", "### Shipping\n");
+  write(
+    from,
+    "principle-attack-the-premise/SKILL.md",
+    "---\nname: principle-attack-the-premise\ndescription: Question the premise.\n---\n\nSee [Build the Lever](../principle-build-the-lever/SKILL.md).\n",
+  );
+  write(
+    from,
+    "principle-build-the-lever/SKILL.md",
+    "---\nname: principle-build-the-lever\ndescription: Build the script.\n---\n\n# Lever\n",
+  );
+
+  write(
+    root,
+    "skills/do-how/SKILL.md",
+    "---\nname: do-how\ndescription: Explain code (omp).\n---\n\nLocal omp fork.\n",
+  );
+  write(
+    root,
+    "skills/do-setup-pstack/SKILL.md",
+    "---\nname: do-setup-pstack\ndescription: omp setup.\n---\n\nDo not write models.json.\n",
+  );
+  write(root, "skills/do-poteto-mode/SKILL.md", "---\nname: do-poteto-mode\ndescription: Router.\n---\n\n# Poteto\n");
+  write(
+    root,
+    "skills/do-principle-build-the-lever/SKILL.md",
+    "---\nname: do-principle-build-the-lever\ndescription: Build the script.\n---\n\n# Lever\n",
+  );
+  return { root, from };
+}
+
+describe("pstack sync", () => {
+  it("defaults SoT to cursor/plugins, not backnotprop or skills.sh", () => {
+    expect(UPSTREAM_REPO).toBe("https://github.com/cursor/plugins.git");
+    expect(UPSTREAM_SKILLS).toBe("pstack/skills");
+    expect(UPSTREAM_REPO).not.toContain("backnotprop");
+    expect(LOCAL_SUBTRACTIONS).toContain("poteto-mode/playbooks/shipping.md");
+    const opts = parseArgs(["sync"]);
+    expect(opts.repo).toBe(UPSTREAM_REPO);
+    expect(opts.command).toBe("sync");
+  });
+
+  it("rewrites official layout onto skills/do-* without a second tree", () => {
+    const slugs = ["how", "why", "principle-build-the-lever"];
+    const text = rewriteLayout(
+      "---\nname: how\ndescription: x\n---\n\n[Why](../why/SKILL.md) and skills/how/SKILL.md\n",
+      slugs,
+      "how",
+    );
+    expect(text).toContain("name: do-how");
+    expect(text).toContain("../do-why/SKILL.md");
+    expect(text).toContain("skills/do-how/SKILL.md");
+    expect(text).not.toContain("name: how\n");
+    expect(text).not.toContain("../why/");
+    expect(text).not.toContain("do-do-");
+  });
+
+  it("adds missing official skills, skips shipping.md, keeps diverged local forks", () => {
+    const { root, from } = fixture();
+    const plan = planSync({
+      upstreamSkills: from,
+      destSkills: join(root, "skills"),
+      force: false,
+    });
+    const kinds = Object.fromEntries(plan.actions.map((a) => [a.destRel, a.kind]));
+    expect(kinds["skills/do-why/SKILL.md"]).toBe("add");
+    expect(kinds["skills/do-principle-attack-the-premise/SKILL.md"]).toBe("add");
+    expect(kinds["skills/do-poteto-mode/playbooks/shipping.md"]).toBe("skip");
+    expect(kinds["skills/do-how/SKILL.md"]).toBe("diverged");
+    expect(kinds["skills/do-setup-pstack/SKILL.md"]).toBe("diverged");
+    expect(kinds["skills/do-poteto-mode/SKILL.md"]).toBeUndefined();
+
+    const report = runSync({
+      command: "sync",
+      dryRun: false,
+      force: false,
+      from,
+      repo: UPSTREAM_REPO,
+      ref: null,
+      root,
+      help: false,
+    });
+    const added = readFileSync(join(root, "skills/do-principle-attack-the-premise/SKILL.md"), "utf8");
+    expect(added.startsWith("---\nname: do-principle-attack-the-premise\n")).toBe(true);
+    expect(added).toContain("../do-principle-build-the-lever/SKILL.md");
+    expect(readFileSync(join(root, "skills/do-how/SKILL.md"), "utf8")).toContain("Local omp fork");
+    expect(readFileSync(join(root, "skills/do-setup-pstack/SKILL.md"), "utf8")).toContain("Do not write models.json");
+    expect(() => readFileSync(join(root, "skills/do-poteto-mode/playbooks/shipping.md"))).toThrow();
+    expect(existsSync(join(root, "skills/why"))).toBe(false);
+    expect(existsSync(join(root, "skills/how"))).toBe(false);
+    expect(existsSync(join(root, "skills/do-why/SKILL.md"))).toBe(true);
+    const text = formatReport(report);
+    expect(text).toContain("sot: cursor/plugins pstack/skills → skills/do-*");
+    expect(text).toContain("added: skills/do-why/SKILL.md");
+    expect(text).toContain("skipped: skills/do-poteto-mode/playbooks/shipping.md");
+    expect(text).toMatch(/summary: added=\d+ updated=0 skipped=1 diverged=\d+/);
+  });
+
+  it("dry-run writes nothing", () => {
+    const { root, from } = fixture();
+    runSync({
+      command: "sync",
+      dryRun: true,
+      force: false,
+      from,
+      repo: UPSTREAM_REPO,
+      ref: null,
+      root,
+      help: false,
+    });
+    expect(() => readFileSync(join(root, "skills/do-why/SKILL.md"))).toThrow();
+  });
+
+  it("package docs name npm run sync and cursor/plugins as SoT", () => {
+    const readme = readFileSync(join(repoDir(), "README.md"), "utf8");
+    const agents = readFileSync(join(repoDir(), "AGENTS.md"), "utf8");
+    expect(readme).toContain("npm run sync");
+    expect(readme).toContain("node scripts/pstack.mjs sync");
+    expect(readme).toContain("cursor/plugins");
+    expect(readme).not.toMatch(/npx skills add/);
+    expect(agents).toContain("npm run sync");
+    expect(agents).toContain("cursor/plugins");
+  });
+
+  it("CLI sync --dry-run --from prints a plan and exits 0", () => {
+    const { root, from } = fixture();
+    const result = spawnSync(process.execPath, [cli, "sync", "--dry-run", "--from", from, "--root", root], {
+      encoding: "utf8",
+    });
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("mode: dry-run");
+    expect(result.stdout).toContain("added: skills/do-why/SKILL.md");
+    expect(result.stdout).toContain("cursor/plugins");
+    expect(() => readFileSync(join(root, "skills/do-why/SKILL.md"))).toThrow();
+  });
+});

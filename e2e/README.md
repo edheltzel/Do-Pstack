@@ -32,6 +32,7 @@ claude plugin validate .
 | Case | What it proves |
 | --- | --- |
 | `install_plugin_link` | README/AGENTS teach `omp plugin link ./` and Claude plugin install; competing stories gone |
+| `pstack sync` | `e2e/unit/sync-skills.test.ts` — official skills SoT is `cursor/plugins`; writes into `skills/do-*` only |
 | `poteto_on` | `/poteto-mode` injects the needle and writes `pstack-mode` on this session |
 | `second_turn_sticky` | Next turn still has the needle |
 | `poteto_off` | `/poteto-mode off` then next turn has no needle |

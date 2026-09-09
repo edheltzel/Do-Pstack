@@ -38,7 +38,7 @@ cd pstack-for-omp
 omp plugin link ./
 ```
 
-Later sessions (any cwd): start `omp`, type `/` (`/skill:do-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link. Confirm with `omp plugin list`. Prove the link with `omp plugin doctor`.
+Later sessions (any cwd): start `omp`, type `/` (`/skill:do-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link. Confirm with `omp plugin list`. Prove the link with `omp plugin doctor`. Update official skills with `pstack sync` (below).
 
 Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`. Do not marketplace-install this package on omp; local-link is the install path.
 
@@ -97,6 +97,18 @@ That is the live omp extension command. It stays unprefixed. There is no worktre
 - The TUI status reads `pstack: poteto mode` when on.
 - Off aliases: `off`, `disable`, `stop`.
 - No Cursor marketplace APIs. No `models.json` writer. No `hooks/` or `src/` tree.
+
+## Update official skills
+
+Official skills come from the Cursor pstack folder in [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack), not from `backnotprop/pstack` and not from skills.sh. From this package root:
+
+```
+npm run sync
+```
+
+Same command: `node scripts/pstack.mjs sync`. Dry-run: `npm run sync -- --dry-run`.
+
+That pulls `pstack/skills/<name>` from `cursor/plugins` into the existing `skills/do-*` tree (YAML `name` gets the `do-` prefix). It does not create a second skill tree or install into agent skill directories. Diverged local omp forks stay unless you pass `--force`. This fork keeps `playbooks/shipping.md` deleted.
 
 ## Skills
 

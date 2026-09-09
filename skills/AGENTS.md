@@ -18,6 +18,8 @@ pstack skill tree. Sibling `skills/` at the package root is what omp auto-discov
 
 Keep leaf skills operational. Do not add a per-skill AGENTS.md unless a skill becomes its own durable boundary.
 
+Official skill bodies come from `cursor/plugins` `pstack/skills`. Refresh this tree with `npm run sync` (`node scripts/pstack.mjs sync`). That maps `skills/<name>` → `skills/do-<name>` here. Do not add a second skills tree. Do not `npx skills add`.
+
 ## Verification
 
 ```bash

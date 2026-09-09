@@ -4,8 +4,12 @@
   "description": "pstack plugin for omp/Pi and Claude Code: sticky /poteto-mode, skills, agents.",
   "private": true,
   "type": "module",
+  "bin": {
+    "pstack": "./scripts/pstack.mjs"
+  },
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "sync": "node ./scripts/pstack.mjs sync"
   },
   "omp": {
     "extensions": [
