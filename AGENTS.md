@@ -60,7 +60,7 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 GitButler (`but`) is the VCS. The main checkout is the `gitbutler/workspace` branch; target is `origin/master`.
 
 - All writes go through `but` (`commit`, `push`, `pr new`, `move`, `squash`). Read-only git (`git log`, `git blame`) is fine.
-- One dedicated `but` branch per agent session. Commit only that session's changes to it.
+- One dedicated `but` branch per feature. Commit only that session's changes to it.
 - Commit small and often: after every working checkpoint, not at the end of the task. Split unrelated hunks into separate commits. Large commits hide what changed from the human in the loop.
 - Stack when a change clearly builds on an unmerged branch: `but move <child> --above <parent>`. Do not mix dependent work into one branch.
 - Prefer `but` branches in the workspace over git worktrees (GitButler does not commit from linked worktrees). If a worktree is needed for a new feature, suffix it `-wip`.
@@ -96,13 +96,13 @@ npm test
 
 ## Child DOX Index
 
-| Path | Owns |
-| --- | --- |
-| [extensions/AGENTS.md](extensions/AGENTS.md) | Factory `pstack.ts`; per-session poteto-mode |
-| [e2e/AGENTS.md](e2e/AGENTS.md) | Static doctor/lint + Vitest; live RPC local-only via plugin-link |
-| [skills/AGENTS.md](skills/AGENTS.md) | Skill tree; SKILL.md frontmatter `name` + `description` |
-| [docs/AGENTS.md](docs/AGENTS.md) | original numbered `guide/`; first-run lives on README (omp plugin link + Claude plugin install) |
-| [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills |
-| [scripts/AGENTS.md](scripts/AGENTS.md) | `pstack sync`: vendor official skills from cursor/plugins into `skills/do-*` |
+| Path                                           | Owns                                                                                            |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [extensions/AGENTS.md](extensions/AGENTS.md)   | Factory `pstack.ts`; per-session poteto-mode                                                    |
+| [e2e/AGENTS.md](e2e/AGENTS.md)                 | Static doctor/lint + Vitest; live RPC local-only via plugin-link                                |
+| [skills/AGENTS.md](skills/AGENTS.md)           | Skill tree; SKILL.md frontmatter `name` + `description`                                         |
+| [docs/AGENTS.md](docs/AGENTS.md)               | original numbered `guide/`; first-run lives on README (omp plugin link + Claude plugin install) |
+| [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills                                                            |
+| [scripts/AGENTS.md](scripts/AGENTS.md)         | `pstack sync`: vendor official skills from cursor/plugins into `skills/do-*`                    |
 
 `agents/` and `commands/` have no child AGENTS.md; they follow this rail. Commands need frontmatter `description`.
