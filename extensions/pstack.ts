@@ -98,7 +98,7 @@ export default function pstackExtension(pi: any): void {
   function setStatus(ctx: any, on: boolean): void {
     if (ctx?.mode !== "tui") return;
     try {
-      ctx.ui?.setStatus?.("pstack-mode", on ? "pstack: poteto mode" : undefined);
+      ctx.ui?.setStatus?.("pstack-mode", on ? "🍠 poteto: ✓ on" : undefined);
     } catch {
       // ignore
     }

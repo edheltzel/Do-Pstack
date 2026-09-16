@@ -77,7 +77,7 @@ Claude slash skills are namespaced: `/pstack:do-how`, `/pstack:do-poteto-mode`. 
 
 `/poteto-mode` is off by default
 
-please note: omp's TUI shows `pstack: poteto mode` when enabled.
+please note: omp's TUI shows `🍠 poteto: ✓ on` when enabled.
 
 ## Commands
 
@@ -94,7 +94,7 @@ That is the live omp extension command. It stays unprefixed. There is no worktre
 - Stored as a custom `pstack-mode` entry on that conversation’s session jsonl. Last `{enabled}` wins. Missing means off.
 - `session_start` re-reads the jsonl. `new_session` / `/new` starts off. Resume of an on conversation stays on.
 - When on, a prompt needle prepends “Pstack Poteto Mode is on…”
-- The TUI status reads `pstack: poteto mode` when on.
+- The TUI status reads `🍠 poteto: ✓ on` when on.
 - Off aliases: `off`, `disable`, `stop`.
 
 ## Update official skills
