@@ -94,6 +94,7 @@ export default function pstackExtension(pi: any): void {
   }
 
   const modeBySession = new Map<string, boolean>();
+  let lastOn = false;
 
   function setStatus(ctx: any, on: boolean): void {
     if (ctx?.mode !== "tui") return;
@@ -109,6 +110,7 @@ export default function pstackExtension(pi: any): void {
     const file = sessionFileFromCtx(ctx);
     if (sid) modeBySession.set(sid, enabled);
     if (file) modeBySession.set(file, enabled);
+    lastOn = enabled;
     try {
       pi.appendEntry("pstack-mode", { enabled });
     } catch {
@@ -122,12 +124,14 @@ export default function pstackExtension(pi: any): void {
     if (sid) modeBySession.delete(sid);
     const on = isPotetoOn(ctx, modeBySession);
     setStatus(ctx, on);
+    lastOn = on;
     return on;
   }
 
   pi.on("session_shutdown", async (_event: unknown, ctx: any) => {
     const sid = sessionIdFromCtx(ctx);
     if (sid) modeBySession.delete(sid);
+    lastOn = false;
     setStatus(ctx, false);
   });
 
@@ -157,11 +161,12 @@ export default function pstackExtension(pi: any): void {
   });
 
   pi.registerCommand("poteto-mode", {
-    description: "Enable or disable sticky pstack Poteto Mode. Usage: /poteto-mode [task] | /poteto-mode off",
+    description: "Enable or disable sticky pstack Poteto Mode. Usage: /poteto-mode [on|off|task]",
     getArgumentCompletions: (prefix: string) => {
       const token = String(prefix ?? "").trim().toLowerCase();
-      if (!token || "off".startsWith(token)) {
-        return [{ value: "off", label: "off" }];
+      const value = lastOn ? "off" : "on";
+      if (!token || value.startsWith(token)) {
+        return [{ value, label: value }];
       }
       return null;
     },
@@ -186,7 +191,11 @@ export default function pstackExtension(pi: any): void {
       } catch {
         // ignore
       }
-      const payload = `${POTETO_SKILL}${raw ? ` ${raw}` : ""}`;
+      const task =
+        token === "on" || token === "enable" || token === "start"
+          ? raw.slice(token.length).trim()
+          : raw;
+      const payload = `${POTETO_SKILL}${task ? ` ${task}` : ""}`;
       if (typeof pi.sendUserMessage === "function") {
         const idle = typeof ctx?.isIdle === "function" ? ctx.isIdle() : true;
         pi.sendUserMessage(
