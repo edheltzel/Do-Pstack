@@ -7,26 +7,22 @@
 ╚═╝     ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
 ```
 
-# pstack
+# pstack for OMP
 
-> [!NOTE]
-> EdHeltzel's pstack for omp
+This is just a port of `pstack`, that is an installable **plugin** for [Oh-My-Pi](https://omp.sh). Skills are prefixed with `do-*`. Oh-My-Pi exposes them as `/skill:do-…`. Sticky `/poteto-mode` is a native omp slash command.
 
-This package is an installable **plugin** for omp/Pi and Claude Code. Skills stay `do-*` on disk. omp exposes them as `/skill:do-…`. Claude Code exposes them as `/pstack:do-*`. Sticky `/poteto-mode` is the omp factory command.
+There is support for Pi and Claude, Claude Code exposes them as `/pstack:do-*`.
 
-It is not the Cursor plugin and not an official Cursor port.
+I will admit I did not fully test Pi and Cluade outside of a couple of quick
+tests.
 
 ## What pstack is
 
-pstack is a Cursor-verified plugin of Lauren Tan ([@poteto](https://x.com/poteto)) skills.
-
-- Source (a folder in `cursor/plugins`, not a standalone repo): https://github.com/cursor/plugins/tree/main/pstack
-- Product README: https://github.com/cursor/plugins/blob/main/pstack/README.md
-- User guide: https://github.com/cursor/plugins/blob/main/pstack/docs/guide/README.md
-
-Those pages are the Cursor product. This README does not retell them.
+pstack is a Cursor-verified plugin of Lauren Tan ([@poteto](https://x.com/poteto)) skills. See [Curor's repo](https://github.com/cursor/plugins/tree/main/pstack) for more details
 
 ## Docs
+
+> These are prefixed with `do-` to follow the namespacing follow my [Do-Skills](https://github.com/edheltzel/Do-Skills)
 
 - [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images). On-disk skill links use `skills/do-*`. omp slash skills are `/skill:do-…`. Claude slash skills are `/pstack:do-*`. `/poteto-mode` stays unprefixed on omp.
 
@@ -93,10 +89,10 @@ The TUI status reads `pstack: poteto mode` when on. Other omp surfaces may not s
 
 ## Commands
 
-| Command | What it does |
-|---|---|
-| `/poteto-mode` | omp factory: enable sticky Poteto Mode for this conversation. Also sends `/skill:do-poteto-mode`. |
-| `/poteto-mode off` | Disable this omp conversation. Aliases: `disable`, `stop`. |
+| Command            | What it does                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------- |
+| `/poteto-mode`     | omp factory: enable sticky Poteto Mode for this conversation. Also sends `/skill:do-poteto-mode`. |
+| `/poteto-mode off` | Disable this omp conversation. Aliases: `disable`, `stop`.                                        |
 
 That is the live omp extension command. It stays unprefixed. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs. Do not ship `commands/poteto-mode.md`.
 
