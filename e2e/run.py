@@ -248,11 +248,11 @@ def static_install_docs():
     agents = (ROOT / "AGENTS.md").read_text()
     setup = (ROOT / "docs/guide/01-setup.md").read_text()
     ok = (
-        "omp plugin marketplace add edheltzel/pstack-for-omp" in readme
+        "omp plugin marketplace add edheltzel/Do-Pstack" in readme
         and "omp plugin install pstack@pstack" in readme
-        and "omp plugin marketplace add edheltzel/pstack-for-omp" in agents
-        and "pi install git:github.com/edheltzel/pstack-for-omp" in readme
-        and "pi install git:github.com/edheltzel/pstack-for-omp" in agents
+        and "omp plugin marketplace add edheltzel/Do-Pstack" in agents
+        and "pi install git:github.com/edheltzel/Do-Pstack" in readme
+        and "pi install git:github.com/edheltzel/Do-Pstack" in agents
         and "omp plugin link ./" in readme
         and "omp plugin link ./" in agents
         and "claude plugin marketplace add" in readme
@@ -262,8 +262,8 @@ def static_install_docs():
         and "claude plugin validate" in readme
         and "omp plugin link ./" in setup
         and "claude plugin marketplace add" in setup
-        and "omp plugin marketplace add edheltzel/pstack-for-omp" in setup
-        and "pi install git:github.com/edheltzel/pstack-for-omp" in setup
+        and "omp plugin marketplace add edheltzel/Do-Pstack" in setup
+        and "pi install git:github.com/edheltzel/Do-Pstack" in setup
         and "omp -e" not in readme
         and "/add-plugin" not in readme
         and ".omp/skills" not in readme

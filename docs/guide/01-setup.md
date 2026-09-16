@@ -9,7 +9,7 @@ This package is the plugin root for both hosts. Pick one. GitHub install; no clo
 ### omp
 
 ```text
-omp plugin marketplace add edheltzel/pstack-for-omp
+omp plugin marketplace add edheltzel/Do-Pstack
 omp plugin install pstack@pstack
 ```
 
@@ -20,7 +20,7 @@ The Cursor product used `/add-plugin pstack`. That is history. omp catalog is `.
 ### Pi
 
 ```text
-pi install git:github.com/edheltzel/pstack-for-omp
+pi install git:github.com/edheltzel/Do-Pstack
 ```
 
 This checkout: `pi install ./`. List with `pi list`.

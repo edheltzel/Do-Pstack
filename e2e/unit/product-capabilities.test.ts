@@ -100,11 +100,11 @@ describe("original product pack", () => {
   it("README teaches GitHub omp/Pi install and Claude plugin install; competing stories gone", () => {
     const readme = readFileSync(join(root, "README.md"), "utf8");
     const agents = readFileSync(join(root, "AGENTS.md"), "utf8");
-    expect(readme).toContain("omp plugin marketplace add edheltzel/pstack-for-omp");
+    expect(readme).toContain("omp plugin marketplace add edheltzel/Do-Pstack");
     expect(readme).toContain("omp plugin install pstack@pstack");
-    expect(agents).toContain("omp plugin marketplace add edheltzel/pstack-for-omp");
-    expect(readme).toContain("pi install git:github.com/edheltzel/pstack-for-omp");
-    expect(agents).toContain("pi install git:github.com/edheltzel/pstack-for-omp");
+    expect(agents).toContain("omp plugin marketplace add edheltzel/Do-Pstack");
+    expect(readme).toContain("pi install git:github.com/edheltzel/Do-Pstack");
+    expect(agents).toContain("pi install git:github.com/edheltzel/Do-Pstack");
     expect(readme).toContain("omp plugin link ./");
     expect(agents).toContain("omp plugin link ./");
     expect(readme).toContain("claude plugin marketplace add");

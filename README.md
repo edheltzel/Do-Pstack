@@ -43,7 +43,7 @@ GitHub install. No clone required.
 ### omp
 
 ```
-omp plugin marketplace add edheltzel/pstack-for-omp
+omp plugin marketplace add edheltzel/Do-Pstack
 omp plugin install pstack@pstack
 ```
 
@@ -56,7 +56,7 @@ omp docs: https://omp.sh/docs/plugins
 ### Pi
 
 ```
-pi install git:github.com/edheltzel/pstack-for-omp
+pi install git:github.com/edheltzel/Do-Pstack
 ```
 
 This checkout: `pi install ./`. List with `pi list`. Docs: https://pi.dev/docs/latest/packages#install-and-manage
@@ -70,11 +70,11 @@ This checkout is the plugin root: `.claude-plugin/plugin.json` plus `skills/` an
 From the package root, add this repo as a marketplace and install:
 
 ```
-claude plugin marketplace add /absolute/path/to/pstack-for-omp
+claude plugin marketplace add /absolute/path/to/Do-Pstack
 claude plugin install pstack@pstack
 ```
 
-From GitHub: `claude plugin marketplace add edheltzel/pstack-for-omp` then `claude plugin install pstack@pstack`.
+From GitHub: `claude plugin marketplace add edheltzel/Do-Pstack` then `claude plugin install pstack@pstack`.
 
 This session only (no install record):
 
