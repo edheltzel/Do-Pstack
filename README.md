@@ -38,23 +38,30 @@ Setup starts at [`automations/benny/FOR_AGENTS.md`](./automations/benny/FOR_AGEN
 
 ## Load this plugin
 
-Clone https://github.com/edheltzel/pstack-for-omp, then pick the host.
+GitHub install. No clone required.
 
-### omp / Pi
-
-Install omp from https://omp.sh if needed (`curl -fsSL https://omp.sh/install | sh`). From the package root, one-time:
+### omp
 
 ```
-git clone https://github.com/edheltzel/pstack-for-omp.git
-cd pstack-for-omp
-omp plugin link ./
+omp plugin marketplace add edheltzel/pstack-for-omp
+omp plugin install pstack@pstack
 ```
 
-Later sessions (any cwd): start `omp`, type `/` (`/skill:do-…`, sticky `/poteto-mode`). Sibling `skills/` at the package root is what omp auto-discovers after link. Confirm with `omp plugin list`. Prove the link with `omp plugin doctor`. Update official skills with `pstack sync` (below).
+This checkout: `omp plugin link ./`. Confirm with `omp plugin list`. Prove with `omp plugin doctor`.
 
-Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`. Do not marketplace-install this package on omp; local-link is the install path.
+Do not copy only `pstack.ts` into `~/.omp/agent/extensions/`. Catalog is `.claude-plugin/marketplace.json` (omp reads that fallback). Do not add `.omp-plugin/`.
 
-omp docs: https://omp.sh/docs/plugins and https://omp.sh/docs/extension-authoring.
+omp docs: https://omp.sh/docs/plugins
+
+### Pi
+
+```
+pi install git:github.com/edheltzel/pstack-for-omp
+```
+
+This checkout: `pi install ./`. List with `pi list`. Docs: https://pi.dev/docs/latest/packages#install-and-manage
+
+Do not use `pi -e` as the install path.
 
 ### Claude Code
 
@@ -81,7 +88,7 @@ Claude plugin docs: https://code.claude.com/docs/en/plugins.
 
 ## First steps
 
-1. Install the host (omp from https://omp.sh, or Claude Code).
+1. Install the host (omp from https://omp.sh, Pi, or Claude Code).
 2. Load this plugin (see Load this plugin).
 3. On omp: `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:do-poteto-mode`. On Claude: `/pstack:do-poteto-mode`.
 4. Work as usual. On omp, resume an on conversation and it stays on. `/new` starts off.
@@ -126,7 +133,8 @@ That pulls `pstack/skills/<name>` from `cursor/plugins` into the existing `skill
 
 Files under `skills/` are markdown prompts. They are not live omp functions or CLIs.
 
-- omp, after `omp plugin link ./`: `/skill:do-<name>`
+- omp, after marketplace install or `omp plugin link ./`: `/skill:do-<name>`
+- Pi, after `pi install`: skills from `skills/`
 - Claude Code, after plugin install: `/pstack:do-<name>`
 
 Examples: `/skill:do-create-verification-skill` (Claude: `/pstack:do-create-verification-skill`), `/skill:do-swarm`, `/skill:do-principle-build-the-lever`. Feature Map is a section in `do-create-verification-skill`, not a runner. Do not treat Feature Map, swarm, or Build the Lever as functions or CLIs.

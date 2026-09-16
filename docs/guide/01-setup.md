@@ -4,19 +4,26 @@ In this page you install the plugin, pick which models pstack uses, and run your
 
 ## Install the plugin
 
-This package is the plugin root for both hosts. Pick one.
+This package is the plugin root for both hosts. Pick one. GitHub install; no clone required.
 
-### omp / Pi
-
-From the package root:
+### omp
 
 ```text
-omp plugin link ./
+omp plugin marketplace add edheltzel/pstack-for-omp
+omp plugin install pstack@pstack
 ```
 
-Confirm with `omp plugin list`. Prove with `omp plugin doctor`.
+This checkout: `omp plugin link ./`. Confirm with `omp plugin list`. Prove with `omp plugin doctor`.
 
-The Cursor product used `/add-plugin pstack`. That is history, not how you install this package. omp marketplaces are catalogs you add (a git repo with `marketplace.json`); this package is local-link only on omp, not listed in an omp catalog.
+The Cursor product used `/add-plugin pstack`. That is history. omp catalog is `.claude-plugin/marketplace.json`.
+
+### Pi
+
+```text
+pi install git:github.com/edheltzel/pstack-for-omp
+```
+
+This checkout: `pi install ./`. List with `pi list`.
 
 ### Claude Code
 

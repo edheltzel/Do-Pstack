@@ -68,13 +68,22 @@ GitButler (`but`) is the VCS. The main checkout is the `gitbutler/workspace` bra
 
 ## Native omp
 
-Tell operators plugin-link only:
+Tell operators GitHub marketplace:
 
 - Install host via https://omp.sh/install if needed.
-- From this package root: `omp plugin link ./`
+- `omp plugin marketplace add edheltzel/pstack-for-omp` then `omp plugin install pstack@pstack`
+- This checkout / live RPC: `omp plugin link ./`
 - Later sessions, any cwd: type `/` (`/skill:do-…`, sticky `/poteto-mode`)
-- Do not marketplace. Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
-- Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what plugin-link discovers.
+- Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
+- Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what the plugin discovers.
+
+## Native Pi
+
+Tell operators git install:
+
+- `pi install git:github.com/edheltzel/pstack-for-omp`
+- This checkout: `pi install ./`
+- Do not use `pi -e` as the install path.
 
 ## Native Claude Code
 
@@ -101,7 +110,7 @@ npm test
 | [extensions/AGENTS.md](extensions/AGENTS.md)   | Factory `pstack.ts`; per-session poteto-mode                                                    |
 | [e2e/AGENTS.md](e2e/AGENTS.md)                 | Static doctor/lint + Vitest; live RPC local-only via plugin-link                                |
 | [skills/AGENTS.md](skills/AGENTS.md)           | Skill tree; SKILL.md frontmatter `name` + `description`                                         |
-| [docs/AGENTS.md](docs/AGENTS.md)               | original numbered `guide/`; first-run lives on README (omp plugin link + Claude plugin install) |
+| [docs/AGENTS.md](docs/AGENTS.md)               | original numbered `guide/`; first-run lives on README (omp marketplace, pi git install, Claude plugin install) |
 | [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills                                                            |
 | [scripts/AGENTS.md](scripts/AGENTS.md)         | `pstack sync`: vendor official skills from cursor/plugins into `skills/do-*`                    |
 

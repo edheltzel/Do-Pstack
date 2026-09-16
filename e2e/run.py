@@ -7,7 +7,7 @@ Cases:
   poteto_off             /poteto-mode off removes the needle
   new_session_starts_off same-process new_session: new sid, no entry, next turn off
   resume_stays_on        switch_session back to the on-session: needle on
-  install_plugin_link    README/AGENTS teach omp plugin link ./ and Claude plugin install; competing stories gone
+  install_plugin_link    README/AGENTS teach omp marketplace, pi git install, Claude plugin install; competing stories gone
   worktree_cleanup_omp   playbook uses ~/.omp/wt and worktree.base
 
 Usage (from repo root):
@@ -248,7 +248,12 @@ def static_install_docs():
     agents = (ROOT / "AGENTS.md").read_text()
     setup = (ROOT / "docs/guide/01-setup.md").read_text()
     ok = (
-        "omp plugin link ./" in readme
+        "omp plugin marketplace add edheltzel/pstack-for-omp" in readme
+        and "omp plugin install pstack@pstack" in readme
+        and "omp plugin marketplace add edheltzel/pstack-for-omp" in agents
+        and "pi install git:github.com/edheltzel/pstack-for-omp" in readme
+        and "pi install git:github.com/edheltzel/pstack-for-omp" in agents
+        and "omp plugin link ./" in readme
         and "omp plugin link ./" in agents
         and "claude plugin marketplace add" in readme
         and "claude plugin install pstack@pstack" in readme
@@ -257,6 +262,8 @@ def static_install_docs():
         and "claude plugin validate" in readme
         and "omp plugin link ./" in setup
         and "claude plugin marketplace add" in setup
+        and "omp plugin marketplace add edheltzel/pstack-for-omp" in setup
+        and "pi install git:github.com/edheltzel/pstack-for-omp" in setup
         and "omp -e" not in readme
         and "/add-plugin" not in readme
         and ".omp/skills" not in readme
@@ -275,9 +282,8 @@ def static_install_docs():
     return check(
         "install_plugin_link",
         ok,
-        "canonical installs are omp plugin link ./ and Claude plugin install; competing stories gone",
+        "canonical installs are GitHub omp marketplace, pi git install, and Claude plugin install; competing stories gone",
     )
-
 
 def rpc_suite():
     results = []
