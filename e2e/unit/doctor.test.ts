@@ -9,7 +9,8 @@ function walkText(root: string, rel = ""): string[] {
   const dir = rel ? join(root, rel) : root;
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
-    if (name === ".git" || name === "node_modules") continue;
+    if (name === ".git" || name === "node_modules" || name === ".delta" || name === ".codegraph") continue;
+
     const child = rel ? `${rel}/${name}` : name;
     const st = statSync(join(root, child));
     if (st.isDirectory()) out.push(...walkText(root, child));
