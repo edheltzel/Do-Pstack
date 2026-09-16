@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Human docs for this plugin. First-run is the README (omp marketplace `pstack@pstack`, `pi install git:github.com/edheltzel/Do-Pstack`, Claude `claude plugin install pstack@pstack`). The numbered guide is the original pstack product tutorial. This file must not teach a second omp mount story (`omp -e`) or a fake installer.
+Human docs for this plugin. First-run is the README (omp marketplace `pstack@pstack`, `pi install git:github.com/edheltzel/Do-Pstack`, Claude `claude plugin install pstack@pstack`). The numbered guide is an omp walkthrough of the original pstack product tutorial. This file must not teach a second omp mount story (`omp -e`) or a fake installer.
 
 ## Ownership
 
-- `guide/` — original numbered tutorial (01–10 plus images), ported from `cursor/plugins` `pstack/docs/guide/`.
+- `guide/` — numbered walkthrough (01–10 plus images). Images still come from `cursor/plugins` `pstack/docs/guide/`.
 
 ## Local Contracts
 
@@ -18,7 +18,7 @@ Human docs for this plugin. First-run is the README (omp marketplace `pstack@pst
 
 ## Work Guidance
 
-Port guide pages and images from upstream. Remap `../../skills/<name>/` to `../../skills/do-<name>/`. Agents tell operators GitHub install (omp marketplace, `pi install git:…`, Claude plugin install).
+Keep the omp walkthrough. Do not paste upstream Cursor install prose back over it. Remap `../../skills/<name>/` to `../../skills/do-<name>/`. Agents tell operators GitHub install (omp marketplace, `pi install git:…`, Claude plugin install).
 
 ## Verification
 

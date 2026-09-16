@@ -1,6 +1,6 @@
 # Verify the result and open a PR
 
-"It compiles" is not evidence. The [Prove It Works principle](../../skills/do-principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success, and your job is to make "the real artifact" checkable. This page covers stating a finish condition, generating a verification skill for your app, opening the PR, and driving it to merged.
+"It compiles" is not evidence. The [Prove It Works principle](../../skills/do-principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success. Your job is to make "the real artifact" checkable. This page covers stating a finish condition, generating a verification skill for your app, opening the PR, and driving it to merged.
 
 ![A prototype plane flies a real test course while she times it with a stopwatch and robots film and checklist the run; the terminal reads verify: pass, evidence: captured.](./images/verification.jpg)
 
@@ -12,7 +12,7 @@ Put what done means in the first prompt, in whatever words fit:
 /poteto-mode add json output to this command. text output stays byte-identical, the json parses, both run against the sample project. show me the evidence.
 ```
 
-Now the agent has three checks it can run, not a mood to satisfy. When the reply comes back, it should carry the exact commands and outputs. If a check couldn't run, a good reply says "inconclusive", and you should treat a confident reply without evidence as a red flag.
+Now the agent has three checks it can run, not a mood to satisfy. When the reply comes back, it should carry the exact commands and outputs. If a check couldn't run, a good reply says "inconclusive". Treat a confident reply without evidence as a red flag.
 
 Match the check to the change:
 

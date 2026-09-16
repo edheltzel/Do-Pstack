@@ -48,7 +48,7 @@ Skills aren't the only prose you ship. For docs, RFCs, readmes, PR descriptions,
 /technical-writing review the readme changes
 ```
 
-[`/technical-writing`](../../skills/do-technical-writing/SKILL.md) applies a layered standard with one goal, prose a tired engineer understands on the first read. It picks the document's mode first (tutorial, how-to, reference, or explanation), then works sentence by sentence: who does what, one thought per sentence, nothing readable two ways. Use it to review what you or an agent just wrote, or name it up front when you ask for a doc.
+[`/technical-writing`](../../skills/do-technical-writing/SKILL.md) applies a layered standard with one goal: prose a tired engineer understands on the first read. It picks the document's mode first (tutorial, how-to, reference, or explanation), then works sentence by sentence: who does what, one thought per sentence, nothing readable two ways. Use it to review what you or an agent just wrote, or name it up front when you ask for a doc.
 
 ## Test a skill change blind
 
@@ -58,10 +58,10 @@ A skill edit affects every future session, so test it like the experiment it is:
 /poteto-mode run the eval playbook on this skill change. same task for both variants, candidates stay blind.
 ```
 
-The [Eval playbook](../../skills/do-poteto-mode/playbooks/eval.md) is built around one failure mode, the observer effect. An agent that knows it's being evaluated behaves differently. So candidate agents get an organic-looking task in sanitized directories, never the words "eval" or "candidate", and never each other's existence. One judge scores all outputs under neutral labels, and chain-following gets graded from which files each candidate actually read, not from what it claims.
+The [Eval playbook](../../skills/do-poteto-mode/playbooks/eval.md) is built around one failure mode: the observer effect. An agent that knows it's being evaluated behaves differently. So candidate agents get an organic-looking task in sanitized directories, never the words "eval" or "candidate", and never each other's existence. One judge scores all outputs under neutral labels, and chain-following gets graded from which files each candidate actually read, not from what it claims.
 
 Read every output yourself before accepting the verdict. If you disagree with the judge, suspect the rubric before you suspect your judgment.
 
-**Pitfall:** don't edit a skill mid-task because it's misbehaving. Fix it in its own PR and keep the task moving. A skill edit that ships tangled into feature work is invisible to review and impossible to evaluate.
+Don't edit a skill mid-task because it's misbehaving. Fix it in its own PR and keep the task moving. A skill edit that ships tangled into feature work is invisible to review and impossible to evaluate.
 
 Next: [Recipes and pitfalls](./10-recipes-and-pitfalls.md).

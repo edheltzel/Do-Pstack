@@ -1,6 +1,6 @@
 # Build the change and clean the diff
 
-The build playbooks share one discipline. Say what you observed, let the playbook demand the evidence. This page shows what to put in the prompt for each common build task, then the cleanup habit that keeps diffs reviewable.
+The build playbooks share one discipline. Say what you observed. Let the playbook demand the evidence. This page shows what to put in the prompt for each common build task, then the cleanup habit that keeps diffs reviewable.
 
 ## Prompt each build playbook with what you know
 
@@ -28,7 +28,7 @@ A perf prompt states the measurement, not a vibe:
 /poteto-mode startup takes 1.8s on this fixture. trace it, fix the measured cause, show me before and after.
 ```
 
-Each of these routes to its playbook ([Bug fix](../../skills/do-poteto-mode/playbooks/bug-fix.md), [Feature](../../skills/do-poteto-mode/playbooks/feature.md), [Refactoring](../../skills/do-poteto-mode/playbooks/refactoring.md), [Perf issue](../../skills/do-poteto-mode/playbooks/perf-issue.md)), and the playbook supplies the steps you didn't type: reproduce before fixing, name the data shape before implementing, pin behavior before restructuring, profile before optimizing.
+Each of these routes to its playbook ([Bug fix](../../skills/do-poteto-mode/playbooks/bug-fix.md), [Feature](../../skills/do-poteto-mode/playbooks/feature.md), [Refactoring](../../skills/do-poteto-mode/playbooks/refactoring.md), [Perf issue](../../skills/do-poteto-mode/playbooks/perf-issue.md)). The playbook supplies the steps you didn't type: reproduce before fixing, name the data shape before implementing, pin behavior before restructuring, profile before optimizing.
 
 For sustained improvement of one number, there's the [Hillclimb playbook](../../skills/do-poteto-mode/playbooks/hillclimb.md). Give it the metric, a target, and a floor on attempts, and it loops one hypothesis at a time with a frozen measurement harness. It keeps wins and reverts everything else.
 
@@ -56,7 +56,7 @@ For prose, `/unslop` takes a target and any extra rules you have:
 /unslop the readme changes, no emdashes
 ```
 
-You'll develop your own shorthand. The skill reads intent fine from terse prompts like `unslop that, tighten it`.
+The skill reads intent from terse prompts like `unslop that, tighten it`.
 
 ## Strip the comments with `/no-comments`
 
@@ -68,8 +68,8 @@ Comments need their own pass, and not from the agent that wrote them. An author 
 
 [`/no-comments`](../../skills/do-no-comments/SKILL.md) spawns [Comment Sicko](../../agents/comment-sicko.md), a read-only reviewer with a short keep list: license headers, doc comments on a public API, links that explain what code can't, behavior forced by an external dependency you can't reshape. Everything else goes. A surprise in your own code gets no such pass. The comment comes back as a refactor flag, and `/no-comments` fixes the flags it accepts at the root cause. When a comment claims a constraint, "do not remove", the skill offers to encode the claim as a type, test, or lint. Either way, the comment comes out.
 
-The division of labor is worth keeping straight. `/deslop` cleans slop out of the code, `/unslop` cleans it out of prose, and `/no-comments` hands the comments to a reviewer who didn't write them.
+Keep the split straight. `/deslop` cleans slop out of the code. `/unslop` cleans it out of prose. `/no-comments` hands the comments to a reviewer who didn't write them.
 
-**Pitfall:** cleanup is not optional polish. A diff with narrating comments and defensive dead weight reads as unfinished to reviewers, and the extra code is where the next bug hides. If the diff feels padded, say `deslop it` before you commit, not after review calls it out.
+Cleanup is not optional polish. A diff with narrating comments and defensive dead weight reads as unfinished to reviewers, and the extra code is where the next bug hides. If the diff feels padded, say `deslop it` before you commit, not after review calls it out.
 
 Next: [Verify and ship](./06-verify-and-ship.md).

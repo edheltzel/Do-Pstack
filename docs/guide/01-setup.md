@@ -1,23 +1,72 @@
 # Set up pstack
 
-In this page you install the plugin, pick which models pstack uses, and run your first task. Setup is one command plus a short conversation.
+In this tutorial we'll install the plugin on omp, pick models, and run one small task.
 
-## Install the plugin
+## Prerequisites
 
-This package is the plugin root for both hosts. Pick one. GitHub install; no clone required.
+- omp from https://omp.sh
+- A project you can edit
 
-### omp
+We'll use omp for the rest of this guide. Pi and Claude Code load the same plugin. Their install commands are at the end.
+
+## Step 1: Install the plugin
+
+Run:
 
 ```text
 omp plugin marketplace add edheltzel/Do-Pstack
 omp plugin install pstack@pstack
 ```
 
-This checkout: `omp plugin link ./`. Confirm with `omp plugin list`. Prove with `omp plugin doctor`.
+You should see `pstack` in `omp plugin list`. Prove it with `omp plugin doctor`.
 
-The Cursor product used `/add-plugin pstack`. That is history. omp catalog is `.claude-plugin/marketplace.json`.
+This checkout, from the package root:
 
-### Pi
+```text
+omp plugin link ./
+```
+
+Cursor used `/add-plugin pstack`. That is old. The catalog is `.claude-plugin/marketplace.json`.
+
+## Step 2: Pick your models
+
+Start omp in the project and run:
+
+```text
+/skill:do-setup-pstack
+```
+
+You should see each plugin agent and the `@role` it uses. Routing lives in `/model` Roles and each agent's `model: "@role"` line, or an override in `/agents`. The skill writes nothing. Run it again to re-list.
+
+To change a concrete model for a role, open `/model` then Roles. To put one agent on a different role, open `/agents` and override that agent. New `task` calls pick it up.
+
+One agent definition cannot run N models in parallel. Diversity is prompt, path, or a model override in `/agents`.
+
+On Claude Code the same skill is [`/pstack:do-setup-pstack`](../../skills/do-setup-pstack/SKILL.md).
+
+## Step 3: The verification offer
+
+At the end of setup, `/skill:do-setup-pstack` looks for a way to prove app behavior: a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/skill:do-create-verification-skill`](../../skills/do-create-verification-skill/SKILL.md).
+
+Say yes and it writes `.cursor/skills/verify-<app>/`, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill once before handing it over. Say no and setup moves on. You can run `/skill:do-create-verification-skill` any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when that earns its place.
+
+## Step 4: Run your first task
+
+Pick something real but small. Describe it the way you'd describe it to a colleague:
+
+```text
+/poteto-mode add a --json flag to this command. text output stays byte-identical. verify both.
+```
+
+You should see a todo list. The first item is "read the Principles section." The rest are Feature playbook steps. If `/poteto-mode` skips a step, the step stays in the list with `skip: <reason>`.
+
+Type normal follow-ups after that. On omp, `/poteto-mode` stays on for this conversation until you turn it off.
+
+On Claude Code, start with `/pstack:do-poteto-mode` instead of the omp factory `/poteto-mode`.
+
+## Other hosts
+
+Pi:
 
 ```text
 pi install git:github.com/edheltzel/Do-Pstack
@@ -25,53 +74,19 @@ pi install git:github.com/edheltzel/Do-Pstack
 
 This checkout: `pi install ./`. List with `pi list`.
 
-### Claude Code
-
-From the package root:
+Claude Code, from the package root:
 
 ```text
 claude plugin marketplace add /absolute/path/to/this-checkout
 claude plugin install pstack@pstack
 ```
 
-Or this session only: `claude --plugin-dir ./`. Validate with `claude plugin validate .`. Skills show as `/pstack:do-*`.
+This session only: `claude --plugin-dir ./`. Validate with `claude plugin validate .`. Skills show as `/pstack:do-*`.
 
 The Claude catalog is `.claude-plugin/marketplace.json`. Skills stay at the plugin root (`skills/do-*/SKILL.md`), not inside `.claude-plugin/`.
 
-## Pick your models
+## What you've learned
 
-Run:
-
-```text
-/skill:do-setup-pstack
-```
-
-On Claude Code the same skill is [`/pstack:do-setup-pstack`](../../skills/do-setup-pstack/SKILL.md).
-
-[`/skill:do-setup-pstack`](../../skills/do-setup-pstack/SKILL.md) lists each plugin agent and the `@role` it uses. Routing lives in `/model` → Roles and each agent's `model: "@role"` line, or an override in `/agents`. The skill writes nothing. Re-run it to re-list.
-
-Want a different concrete model for a role? Open `/model` → Roles and change that `@role`. Want one agent on a different role or a concrete selector? Open `/agents` and override that agent. New `task` calls pick it up.
-
-N parallel models is not available from one agent definition. Diversity is prompt, path, or label unless you change that agent's `model` in `/agents`.
-
-## Accept the verification offer, or don't
-
-At the end of setup, `/skill:do-setup-pstack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/skill:do-create-verification-skill`](../../skills/do-create-verification-skill/SKILL.md).
-
-Say yes and it writes `.cursor/skills/verify-<app>/`, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill works once before handing it over. Say no and setup moves on. You can run `/skill:do-create-verification-skill` yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers when it earns its place.
-
-## Run your first task
-
-Pick something real but small, and describe it the way you'd describe it to a colleague:
-
-```text
-/poteto-mode add a --json flag to this command. text output stays byte-identical. verify both.
-```
-
-On Claude Code, start with `/pstack:do-poteto-mode` instead of the omp factory `/poteto-mode`.
-
-Watch the todo list. The first item is always "read the Principles section". The rest are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/poteto-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
-
-From here you can type normal follow-ups. On omp, `/poteto-mode` is sticky. It stays on for the conversation until you opt out by saying so.
+You installed pstack, listed model roles, and ran one `/poteto-mode` task.
 
 Next: [Route work through `/poteto-mode`](./02-poteto-mode.md).

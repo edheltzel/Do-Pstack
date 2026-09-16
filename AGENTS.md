@@ -110,7 +110,7 @@ npm test
 | [extensions/AGENTS.md](extensions/AGENTS.md)   | Factory `pstack.ts`; per-session poteto-mode                                                    |
 | [e2e/AGENTS.md](e2e/AGENTS.md)                 | Static doctor/lint + Vitest; live RPC local-only via plugin-link                                |
 | [skills/AGENTS.md](skills/AGENTS.md)           | Skill tree; SKILL.md frontmatter `name` + `description`                                         |
-| [docs/AGENTS.md](docs/AGENTS.md)               | original numbered `guide/`; first-run lives on README (omp marketplace, pi git install, Claude plugin install) |
+| [docs/AGENTS.md](docs/AGENTS.md)               | original numbered `guide/` as an omp walkthrough; first-run lives on README (omp marketplace, pi git install, Claude plugin install) |
 | [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills                                                            |
 | [scripts/AGENTS.md](scripts/AGENTS.md)         | `pstack sync`: vendor official skills from cursor/plugins into `skills/do-*`                    |
 

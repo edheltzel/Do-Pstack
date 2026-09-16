@@ -1,6 +1,6 @@
 # Route work through `/poteto-mode`
 
-`/poteto-mode` is the front door. You give it a goal, it matches one of twenty-two playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
+`/poteto-mode` is the front door. You give it a goal. It matches one of twenty-two playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them.
 
 ![A dispatcher pulls a switch lever to route robots on rail handcars toward lit gates, under a /poteto-mode departure board listing BUG FIX, FEATURE, and INVESTIGATION.](./images/router.jpg)
 
@@ -27,7 +27,7 @@ flowchart TD
 
 The diagram shows the common routes. There are also playbooks for hillclimbing a metric, diagnosing runtime symptoms and captured traces, prototypes, visual parity, authoring and evaluating skills, autonomous runs, babysitting a PR or stack to merge-ready, shipping a verified stack, running a PR queue on autopilot, orchestrating project-scale programs, session pickup, pausing safely, multi-phase plans, and worktree cleanup. The [playbook directory](../../skills/do-poteto-mode/playbooks/) has the full set.
 
-## Say the goal, not the ceremony
+## Say the goal, not the steps
 
 You don't write a spec. You say what's wrong or what you want, plus anything you already know that saves the agent time:
 
@@ -35,9 +35,9 @@ You don't write a spec. You say what's wrong or what you want, plus anything you
 /poteto-mode users get two notifications after a retry. repro first, then fix and verify.
 ```
 
-That's a Bug fix prompt. "repro first" is a real constraint, not politeness, and the playbook honors it. Watch the todo list fill with the Bug fix steps. A skipped step stays visible with `skip: <reason>`.
+You should see the Bug fix steps in the todo list. "repro first" is a constraint, not politeness. A skipped step stays visible with `skip: <reason>`.
 
-When the conversation already carries the context, the prompt shrinks to almost nothing. All of these are enough:
+When the conversation already carries the context, these are enough:
 
 ```text
 /poteto-mode do it
@@ -51,11 +51,11 @@ continue
 keep going until done
 ```
 
-Short works because the mode is sticky and the playbook holds the structure. Your words carry the intent, and the skill carries the rigor.
+Short works because the mode is sticky and the playbook holds the structure.
 
 ## Switch tasks with "new task"
 
-A long chat accumulates context from the last task. When you change subjects, say so:
+A long chat keeps context from the last task. When you change subjects, say so:
 
 ```text
 /poteto-mode new task. figure out why the cache entry survives logout. don't change any code yet.
@@ -89,9 +89,9 @@ When you step away, say what done means and go:
 /poteto-mode im stepping away. keep going until the migration check reports zero old callers. log your decisions.
 ```
 
-Work you'll review later routes through [`/figure-it-out`](../../skills/do-figure-it-out/SKILL.md), which designs the run's phases and keeps a [`/show-me-your-work`](../../skills/do-show-me-your-work/SKILL.md) decision log. [Run work while you sleep](./07-overnight.md) covers the full overnight contract.
+Work you'll review later routes through [`/figure-it-out`](../../skills/do-figure-it-out/SKILL.md), which designs the run's phases and keeps a [`/show-me-your-work`](../../skills/do-show-me-your-work/SKILL.md) decision log. [Run work while you sleep](./07-overnight.md) covers the overnight contract.
 
-**Pitfall:** don't enumerate skills in your prompt ("use /how, then /architect, then /arena..."). The playbook already sequences them, and a hand-written sequence usually reorders or drops steps the playbook would have kept. Name a skill only when you want to override a specific choice.
+Don't list skills in your prompt ("use /how, then /architect, then /arena..."). The playbook already sequences them. A hand-written sequence usually reorders or drops steps. Name a skill only when you want to override a specific choice.
 
 Read [`poteto-mode`](../../skills/do-poteto-mode/SKILL.md) itself for the full routing rules.
 
