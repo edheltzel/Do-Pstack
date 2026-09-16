@@ -1,4 +1,16 @@
+```
+██████╗ ███████╗████████╗ █████╗  ██████╗██╗  ██╗
+██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
+██████╔╝███████╗   ██║   ███████║██║     █████╔╝
+██╔═══╝ ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
+██║     ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
+╚═╝     ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+```
+
 # pstack
+
+> [!NOTE]
+> EdHeltzel's pstack for omp
 
 This package is an installable **plugin** for omp/Pi and Claude Code. Skills stay `do-*` on disk. omp exposes them as `/skill:do-…`. Claude Code exposes them as `/pstack:do-*`. Sticky `/poteto-mode` is the omp factory command.
 
