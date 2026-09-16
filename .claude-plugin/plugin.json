@@ -7,8 +7,8 @@
     "name": "Ed Heltzel",
     "url": "https://github.com/edheltzel"
   },
-  "homepage": "https://github.com/edheltzel/pstack-for-omp",
-  "repository": "https://github.com/edheltzel/pstack-for-omp",
+  "homepage": "https://github.com/edheltzel/Do-Pstack",
+  "repository": "https://github.com/edheltzel/Do-Pstack",
   "license": "MIT",
   "keywords": ["pstack", "poteto-mode", "skills", "omp"]
 }

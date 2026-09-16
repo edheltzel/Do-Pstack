@@ -97,9 +97,14 @@ describe("original product pack", () => {
     expect(hits.length, "README.md must link to ./docs/guide/README.md").toBeGreaterThan(0);
   });
 
-  it("README teaches omp plugin link ./ and Claude plugin install; competing stories gone", () => {
+  it("README teaches GitHub omp/Pi install and Claude plugin install; competing stories gone", () => {
     const readme = readFileSync(join(root, "README.md"), "utf8");
     const agents = readFileSync(join(root, "AGENTS.md"), "utf8");
+    expect(readme).toContain("omp plugin marketplace add edheltzel/Do-Pstack");
+    expect(readme).toContain("omp plugin install pstack@pstack");
+    expect(agents).toContain("omp plugin marketplace add edheltzel/Do-Pstack");
+    expect(readme).toContain("pi install git:github.com/edheltzel/Do-Pstack");
+    expect(agents).toContain("pi install git:github.com/edheltzel/Do-Pstack");
     expect(readme).toContain("omp plugin link ./");
     expect(agents).toContain("omp plugin link ./");
     expect(readme).toContain("claude plugin marketplace add");
@@ -107,6 +112,7 @@ describe("original product pack", () => {
     expect(agents).toContain("claude plugin install pstack@pstack");
     expect(readme).toContain("claude --plugin-dir ./");
     expect(readme).toContain("/pstack:do-");
+
     expect(readme).not.toMatch(/omp -e /);
     expect(readme).not.toContain("/add-plugin");
     expect(readme).not.toContain(".omp/skills");

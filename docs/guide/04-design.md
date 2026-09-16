@@ -54,7 +54,7 @@ The panel comes from your [`/setup-pstack`](../../skills/do-setup-pstack/SKILL.m
 
 [`/swarm`](../../skills/do-swarm/SKILL.md) fans N workers across independent slices, coverage matrices, gauntlet lanes, exploration partitions, or declared race arms. Each worker gets its own scope and check, then reports `PASS`, `ISSUES`, or `BLOCKED`. The parent waits for the workers and returns one compact report with any gaps or dropouts.
 
-Reach for it when parallelism buys coverage or lets independent checks race. `/arena` gives every worker the same design or code brief, then picks a base and grafts the best parts. `/swarm` covers slices or runs a race with a selection rule declared up front. It does not use the base-selection and grafting ceremony.
+Reach for it when parallelism buys coverage or lets independent checks race. `/arena` gives every worker the same design or code brief, then picks a base and grafts the best parts. `/swarm` covers slices or runs a race with a selection rule declared up front. It does not pick a base or graft losers into a winner.
 
 ## Break it with `/interrogate`
 
@@ -68,7 +68,7 @@ Read the dismissals too. The lead is a pragmatic senior engineer, not an oracle,
 
 ## How much design work does a task deserve?
 
-You might be wondering whether every change needs this. No. Most changes need none of it. A rough ladder:
+Most changes need none of this. A rough ladder:
 
 - A small, finished change you're unsure about needs `/interrogate` alone.
 - A change that crosses function boundaries or moves ownership earns `/architect`, which brings `/arena` with it.

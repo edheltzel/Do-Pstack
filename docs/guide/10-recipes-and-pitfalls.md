@@ -1,6 +1,6 @@
 # Recipes and pitfalls
 
-Prompts worth copying, then the mistakes everyone makes once. Swap in your own paths and finish conditions. The recipes are deliberately informal. That's how they get typed in practice, and the skills read intent fine.
+Prompts worth copying, then the mistakes everyone makes once. Swap in your own paths and finish conditions. The recipes are informal on purpose. That's how they get typed, and the skills read intent fine.
 
 ![She tastes a finished dish while robots cook from a recipe box, with pinned cards reading /how, /tdd, and /loop above the counter.](./images/recipes.jpg)
 
@@ -18,7 +18,7 @@ Mechanics first, history second. Each skill's report tells you which sources it 
 ask /arena for a second opinion on this thread and our approach
 ```
 
-Your current design becomes one candidate among several, and the synthesis tells you whether the panel found something better or confirmed what you had. Cheap insurance before a costly commitment.
+Your current design becomes one candidate among several, and the synthesis tells you whether the panel found something better or confirmed what you had.
 
 ## Check independent slices in parallel
 
@@ -80,14 +80,14 @@ That's the whole prompt. [`/bro`](../../skills/do-bro/SKILL.md) restates the las
 
 ## The pitfalls
 
-- **Enumerating skills in the prompt.** "use /how then /architect then /arena" reorders steps the playbook already sequences. State the goal and constraints. Name a skill only to override a default.
-- **A vague finish condition.** "make it better" gives `/loop` nothing to check. Give a command or artifact that can pass or fail.
-- **Parallel agents in one worktree.** They overwrite each other and the diff becomes archaeology. Say "own worktree per attempt" and the isolation is free.
-- **Using `/arena` for coverage.** `/arena` repeats one design or code brief, then picks a base and grafts the best parts. `/swarm` partitions slices or declared race arms and aggregates one report.
-- **Accepting every review comment.** Bots and humans both file real catches and noise in one list. `/interrogate` sorts findings into act-on and dismissed buckets with reasons, and you can override either way.
-- **Editing routing files by hand.** Change a role in `/model` → Roles, or override one agent in `/agents`. Do not pass `model` on `task`. [Setup](./01-setup.md) covers it.
-- **Reporting success off a green build.** A build proves it compiles. Ask for the real command, flow, stored value, or profile, and expect the evidence in the reply.
-- **Writing a `SKILL.md` freehand.** Route it through the [Authoring or modifying a skill playbook](../../skills/do-poteto-mode/playbooks/authoring-a-skill.md) so validation and review happen.
+- Enumerating skills in the prompt. "use /how then /architect then /arena" reorders steps the playbook already sequences. State the goal and constraints. Name a skill only to override a default.
+- A vague finish condition. "make it better" gives `/loop` nothing to check. Give a command or artifact that can pass or fail.
+- Parallel agents in one worktree. They overwrite each other and the diff becomes archaeology. Say "own worktree per attempt" and the isolation is free.
+- Using `/arena` for coverage. `/arena` repeats one design or code brief, then picks a base and grafts the best parts. `/swarm` partitions slices or declared race arms and aggregates one report.
+- Accepting every review comment. Bots and humans both file real catches and noise in one list. `/interrogate` sorts findings into act-on and dismissed buckets with reasons, and you can override either way.
+- Editing routing files by hand. Change a role in `/model` then Roles, or override one agent in `/agents`. Do not pass `model` on `task`. [Setup](./01-setup.md) covers it.
+- Reporting success off a green build. A build proves it compiles. Ask for the real command, flow, stored value, or profile, and expect the evidence in the reply.
+- Writing a `SKILL.md` freehand. Route it through the [Authoring or modifying a skill playbook](../../skills/do-poteto-mode/playbooks/authoring-a-skill.md) so validation and review happen.
 
 That's the guide. If you skipped ahead, go back to [setup](./01-setup.md) and run one real task. The habits stick from use, not from reading.
 
