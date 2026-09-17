@@ -26,6 +26,22 @@ function write(root: string, rel: string, body: string): void {
   writeFileSync(path, body);
 }
 
+function git(cwd: string, ...args: string[]) {
+  return spawnSync("git", ["-C", cwd, ...args], { encoding: "utf8" });
+}
+
+function gitVersionRepo(version: string): string {
+  const root = mkdtempSync(join(tmpdir(), "pstack-bump-git-"));
+  write(root, "package.json", JSON.stringify({ name: "pstack", version }, null, 2) + "\n");
+  write(root, ".claude-plugin/plugin.json", JSON.stringify({ name: "pstack", version }, null, 2) + "\n");
+  git(root, "init");
+  git(root, "config", "user.email", "dev@example.com");
+  git(root, "config", "user.name", "dev");
+  git(root, "add", "package.json", ".claude-plugin/plugin.json");
+  git(root, "commit", "-m", `v${version}`);
+  return root;
+}
+
 function fixture(): { root: string; from: string } {
   const root = mkdtempSync(join(tmpdir(), "pstack-sync-pkg-"));
   const from = mkdtempSync(join(tmpdir(), "pstack-sync-up-"));
@@ -223,6 +239,8 @@ describe("pstack bump", () => {
     const agents = readFileSync(join(repoDir(), "AGENTS.md"), "utf8");
     expect(readme).toContain("npm run bump -- patch");
     expect(agents).toContain("npm run bump -- patch");
+    expect(agents).toContain("npm run bump -- --tag");
+    expect(readme).toContain("npm run bump -- --tag");
   });
 
   it("CLI bump patch --dry-run exits 0", () => {
@@ -235,5 +253,58 @@ describe("pstack bump", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("0.1.0 -> 0.1.1");
     expect(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version).toBe("0.1.0");
+  });
+
+  it("refuses kind with --tag so it cannot tag old HEAD", () => {
+    const root = mkdtempSync(join(tmpdir(), "pstack-bump-refuse-"));
+    write(root, "package.json", JSON.stringify({ version: "0.15.0" }, null, 2) + "\n");
+    write(root, ".claude-plugin/plugin.json", JSON.stringify({ version: "0.15.0" }, null, 2) + "\n");
+    expect(() =>
+      runBump({ command: "bump", kind: "patch", dryRun: false, tag: true, release: false, root }),
+    ).toThrow(/commit, then pstack bump --tag/);
+  });
+
+  it("tags the committed HEAD sha, not a dirty tree", () => {
+    const root = gitVersionRepo("0.15.1");
+    const sha = git(root, "rev-parse", "HEAD").stdout.trim();
+    const report = runBump({ command: "bump", kind: null, dryRun: false, tag: true, release: false, root });
+    expect(report.sha).toBe(sha);
+    expect(report.tag).toBe("v0.15.1");
+    const tagged = git(root, "rev-parse", "v0.15.1^{commit}").stdout.trim();
+    expect(tagged).toBe(sha);
+    write(root, "package.json", JSON.stringify({ version: "0.15.2" }, null, 2) + "\n");
+    expect(() =>
+      runBump({ command: "bump", kind: null, dryRun: false, tag: true, release: false, root }),
+    ).toThrow(/not committed/);
+  });
+
+  it("release pushes the tag and gh --target HEAD sha", () => {
+    const root = gitVersionRepo("0.16.0");
+    const bare = mkdtempSync(join(tmpdir(), "pstack-bump-bare-"));
+    git(bare, "init", "--bare");
+    git(root, "remote", "add", "origin", bare);
+    const sha = git(root, "rev-parse", "HEAD").stdout.trim();
+    const gh: string[][] = [];
+    const spawn = (cmd: string, args: string[], opts?: object) => {
+      if (cmd === "gh") {
+        gh.push(args);
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      return spawnSync(cmd, args, opts);
+    };
+    runBump({ command: "bump", kind: null, dryRun: false, tag: true, release: true, root }, spawn);
+    expect(git(root, "rev-parse", "v0.16.0^{commit}").stdout.trim()).toBe(sha);
+    expect(git(bare, "rev-parse", "v0.16.0^{commit}").stdout.trim()).toBe(sha);
+    expect(gh[0]).toEqual([
+      "release",
+      "create",
+      "v0.16.0",
+      "--title",
+      "v0.16.0",
+      "--notes",
+      "pstack 0.16.0",
+      "--target",
+      sha,
+    ]);
   });
 });

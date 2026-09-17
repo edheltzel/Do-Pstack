@@ -15,7 +15,7 @@ Maintainer CLI for this package. `pstack.mjs` is `pstack sync` (vendor official 
 - One skill tree: sibling `skills/` at the package root. Do not write `.omp/skills`, `.claude-plugin/skills`, or agent skill dirs.
 - Do not restore `poteto-mode/playbooks/shipping.md` (this fork deleted it).
 - Default apply adds missing official files and leaves diverged local forks (omp adaptations) in place. `--force` overwrites diverged files except local subtractions.
-- `bump` writes `package.json` version (omp + pi) and `.claude-plugin/plugin.json`. Marketplace catalog has no version field. `--tag` is `git tag vX.Y.Z`. `--release` also runs `gh release create`.
+- `bump <kind>` writes `package.json` version (omp + pi) and `.claude-plugin/plugin.json` only. Marketplace catalog has no version field. After commit, `bump --tag` tags that HEAD sha; `bump --release` pushes the tag and `gh release create --target <sha>`. Kind and --tag together are refused.
 
 ## Work Guidance
 

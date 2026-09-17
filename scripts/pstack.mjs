@@ -32,12 +32,13 @@ Commands:
 
 pstack sync [--dry-run] [--force] [--from DIR] [--repo URL] [--ref REF] [--root DIR]
 
-pstack bump <patch|minor|major> [--dry-run] [--tag] [--release] [--root DIR]
+pstack bump <patch|minor|major> [--dry-run] [--root DIR]
+pstack bump --tag [--release] [--dry-run] [--root DIR]
 
 SoT is github.com/cursor/plugins (pstack/skills), not backnotprop/pstack or skills.sh.
 Writes into the existing skills/do-* tree. Does not install into agent skill dirs.
 bump writes package.json and .claude-plugin/plugin.json. omp and pi use package.json.
---tag creates git tag vX.Y.Z. --release also runs gh release create.
+Commit those files, then --tag on that HEAD (git tag vX.Y.Z <sha>). --release pushes the tag and gh release create --target <sha>.
 `;
 
 export const VERSION_FILES = Object.freeze(["package.json", ".claude-plugin/plugin.json"]);
@@ -344,46 +345,85 @@ function writeJsonVersion(path, version) {
   writeFileSync(path, `${JSON.stringify(json, null, 2)}\n`);
 }
 
-export function runBump(opts, spawn = spawnSync) {
-  const kind = opts.kind;
-  if (!BUMP_KINDS.includes(kind)) throw new Error("usage: pstack bump <patch|minor|major>");
-  const root = opts.root;
-  const pkgPath = join(root, "package.json");
-  const from = readJsonVersion(pkgPath);
-  if (!from) throw new Error(`no version in ${pkgPath}`);
-  const to = bumpSemver(from, kind);
-  const files = [];
-  for (const rel of VERSION_FILES) {
-    const path = join(root, rel);
-    if (!existsSync(path)) throw new Error(`missing ${rel}`);
-    files.push(rel);
-    if (!opts.dryRun) writeJsonVersion(path, to);
+function gitOut(spawn, root, args) {
+  const result = spawn("git", ["-C", root, ...args], { encoding: "utf8" });
+  if (result.status !== 0) {
+    throw new Error((result.stderr || result.stdout || `git ${args.join(" ")} failed`).trim());
   }
-  const tag = `v${to}`;
+  return (result.stdout || "").trim();
+}
+
+function committedVersion(spawn, root, rel) {
+  const raw = gitOut(spawn, root, ["show", `HEAD:${rel}`]);
+  const json = JSON.parse(raw);
+  if (typeof json.version !== "string") throw new Error(`no version in HEAD:${rel}`);
+  return json.version;
+}
+
+function requireCommittedVersions(spawn, root) {
+  const diff = spawn("git", ["-C", root, "diff", "--quiet", "HEAD", "--", ...VERSION_FILES], {
+    encoding: "utf8",
+  });
+  if (diff.status !== 0) {
+    throw new Error("version files are not committed; commit then pstack bump --tag");
+  }
+  const pkg = committedVersion(spawn, root, "package.json");
+  const plugin = committedVersion(spawn, root, ".claude-plugin/plugin.json");
+  if (pkg !== plugin) throw new Error(`HEAD versions differ: package.json ${pkg} vs plugin.json ${plugin}`);
+  return pkg;
+}
+
+export function runBump(opts, spawn = spawnSync) {
+  const root = opts.root;
+  if (opts.kind && (opts.tag || opts.release)) {
+    throw new Error("bump <kind> only writes files; commit, then pstack bump --tag");
+  }
+  if (opts.kind) {
+    if (!BUMP_KINDS.includes(opts.kind)) throw new Error("usage: pstack bump <patch|minor|major>");
+    const pkgPath = join(root, "package.json");
+    const from = readJsonVersion(pkgPath);
+    if (!from) throw new Error(`no version in ${pkgPath}`);
+    const to = bumpSemver(from, opts.kind);
+    const files = [];
+    for (const rel of VERSION_FILES) {
+      const path = join(root, rel);
+      if (!existsSync(path)) throw new Error(`missing ${rel}`);
+      files.push(rel);
+      if (!opts.dryRun) writeJsonVersion(path, to);
+    }
+    return { from, to, files, tag: `v${to}`, dryRun: Boolean(opts.dryRun), ran: [], sha: null };
+  }
+  if (!opts.tag && !opts.release) {
+    throw new Error("usage: pstack bump <patch|minor|major> | pstack bump --tag [--release]");
+  }
+  const version = requireCommittedVersions(spawn, root);
+  const sha = gitOut(spawn, root, ["rev-parse", "HEAD"]);
+  const tag = `v${version}`;
   const ran = [];
   if (opts.tag || opts.release) {
     if (!opts.dryRun) {
-      const tagged = spawn("git", ["-C", root, "tag", tag], { encoding: "utf8" });
-      if (tagged.status !== 0) {
-        throw new Error((tagged.stderr || tagged.stdout || `git tag ${tag} failed`).trim());
-      }
+      gitOut(spawn, root, ["tag", "-a", tag, sha, "-m", tag]);
+      const tagged = gitOut(spawn, root, ["rev-parse", `${tag}^{commit}`]);
+      if (tagged !== sha) throw new Error(`tag ${tag} points at ${tagged}, not ${sha}`);
     }
-    ran.push(`git tag ${tag}`);
+    ran.push(`git tag ${tag} ${sha}`);
   }
   if (opts.release) {
     if (!opts.dryRun) {
+      gitOut(spawn, root, ["push", "origin", `refs/tags/${tag}`]);
       const rel = spawn(
         "gh",
-        ["release", "create", tag, "--title", tag, "--notes", `pstack ${to}`],
+        ["release", "create", tag, "--title", tag, "--notes", `pstack ${version}`, "--target", sha],
         { encoding: "utf8", cwd: root },
       );
       if (rel.status !== 0) {
         throw new Error((rel.stderr || rel.stdout || `gh release create ${tag} failed`).trim());
       }
     }
-    ran.push(`gh release create ${tag}`);
+    ran.push(`git push origin refs/tags/${tag}`);
+    ran.push(`gh release create ${tag} --target ${sha}`);
   }
-  return { from, to, files, tag, dryRun: Boolean(opts.dryRun), ran };
+  return { from: version, to: version, files: [...VERSION_FILES], tag, dryRun: Boolean(opts.dryRun), ran, sha };
 }
 
 export function formatBump(info) {

@@ -54,7 +54,7 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 - No `omp`, no `omp --mode rpc`, no TUI, no `claude` on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`. Host-only prove (`omp plugin doctor`, `claude plugin validate`) is documented in e2e/AGENTS.md.
 - One factory. Poteto-mode is per-session, never a process-wide boolean.
 - Official skills SoT is `cursor/plugins` `pstack/skills`. Update with `npm run sync` (`node scripts/pstack.mjs sync`). Writes into existing `skills/do-*` only. Not `backnotprop/pstack`, not skills.sh, not `npx skills add`.
-- After shipping a feature or official-skills sync, bump with `npm run bump -- patch` (or `minor` / `major`). Writes `package.json` (omp + pi) and `.claude-plugin/plugin.json`. Then `npm run bump -- patch --tag` and `--release` for `vX.Y.Z` + `gh release create`. Do not bump as a separate forgotten closeout.
+- After shipping a feature or official-skills sync, bump with `npm run bump -- patch` (or `minor` / `major`). Writes `package.json` (omp + pi) and `.claude-plugin/plugin.json`. Commit that, then `npm run bump -- --tag` and `npm run bump -- --release` so the tag hits the committed sha (`gh release create --target`). Do not pass patch and --tag in one command (that would bump twice or tag the old HEAD).
 
 ## Version control
 
