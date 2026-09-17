@@ -54,6 +54,7 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 - No `omp`, no `omp --mode rpc`, no TUI, no `claude` on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`. Host-only prove (`omp plugin doctor`, `claude plugin validate`) is documented in e2e/AGENTS.md.
 - One factory. Poteto-mode is per-session, never a process-wide boolean.
 - Official skills SoT is `cursor/plugins` `pstack/skills`. Update with `npm run sync` (`node scripts/pstack.mjs sync`). Writes into existing `skills/do-*` only. Not `backnotprop/pstack`, not skills.sh, not `npx skills add`.
+- After shipping a feature or official-skills sync, bump with `npm run bump -- patch` (or `minor` / `major`). Writes `package.json` (omp + pi) and `.claude-plugin/plugin.json`. Then `npm run bump -- patch --tag` and `--release` for `vX.Y.Z` + `gh release create`. Do not bump as a separate forgotten closeout.
 
 ## Version control
 
@@ -112,6 +113,6 @@ npm test
 | [skills/AGENTS.md](skills/AGENTS.md)           | Skill tree; SKILL.md frontmatter `name` + `description`                                         |
 | [docs/AGENTS.md](docs/AGENTS.md)               | original numbered `guide/` as an omp walkthrough; first-run lives on README (omp marketplace, pi git install, Claude plugin install) |
 | [automations/AGENTS.md](automations/AGENTS.md) | Dormant Benny pack; not slash skills                                                            |
-| [scripts/AGENTS.md](scripts/AGENTS.md)         | `pstack sync`: vendor official skills from cursor/plugins into `skills/do-*`                    |
+| [scripts/AGENTS.md](scripts/AGENTS.md)         | `pstack sync` + `pstack bump` (package.json + Claude plugin version)                            |
 
 `agents/` and `commands/` have no child AGENTS.md; they follow this rail. Commands need frontmatter `description`.

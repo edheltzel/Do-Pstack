@@ -110,6 +110,16 @@ Dry-run: `npm run sync -- --dry-run`.
 
 That pulls `pstack/skills/<name>` from `cursor/plugins` into the existing `skills/do-*` tree (YAML `name` gets the `do-` prefix). It does not create a second skill tree or install into agent skill directories.
 
+After a feature or this sync, bump versions the same way:
+
+```
+npm run bump -- patch
+npm run bump -- minor
+npm run bump -- major
+```
+
+That updates `package.json` (omp plugin + pi extension) and `.claude-plugin/plugin.json` together. Dry-run: `npm run bump -- patch --dry-run`. Git tag: add `--tag`. GitHub release: add `--release`.
+
 ## License
 
 I just follow omp's license but i think I need to do that?

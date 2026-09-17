@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "vitest run",
-    "sync": "node ./scripts/pstack.mjs sync"
+    "sync": "node ./scripts/pstack.mjs sync",
+    "bump": "node ./scripts/pstack.mjs bump"
   },
   "omp": {
     "extensions": [

@@ -9,10 +9,12 @@ import {
   LOCAL_SUBTRACTIONS,
   UPSTREAM_REPO,
   UPSTREAM_SKILLS,
+  bumpSemver,
   formatReport,
   parseArgs,
   planSync,
   rewriteLayout,
+  runBump,
   runSync,
 } from "../../scripts/pstack.mjs";
 
@@ -177,5 +179,61 @@ describe("pstack sync", () => {
     expect(result.stdout).toContain("added: skills/do-why/SKILL.md");
     expect(result.stdout).toContain("cursor/plugins");
     expect(() => readFileSync(join(root, "skills/do-why/SKILL.md"))).toThrow();
+  });
+});
+
+describe("pstack bump", () => {
+  it("bumps patch minor major", () => {
+    expect(bumpSemver("0.15.0", "patch")).toBe("0.15.1");
+    expect(bumpSemver("0.15.0", "minor")).toBe("0.16.0");
+    expect(bumpSemver("0.15.0", "major")).toBe("1.0.0");
+  });
+
+  it("writes package.json and plugin.json together", () => {
+    const root = mkdtempSync(join(tmpdir(), "pstack-bump-"));
+    write(root, "package.json", JSON.stringify({ name: "pstack", version: "0.15.0" }, null, 2) + "\n");
+    write(
+      root,
+      ".claude-plugin/plugin.json",
+      JSON.stringify({ name: "pstack", version: "0.15.0" }, null, 2) + "\n",
+    );
+    const report = runBump({
+      command: "bump",
+      kind: "patch",
+      dryRun: false,
+      tag: false,
+      release: false,
+      root,
+    });
+    expect(report.to).toBe("0.15.1");
+    expect(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version).toBe("0.15.1");
+    expect(JSON.parse(readFileSync(join(root, ".claude-plugin/plugin.json"), "utf8")).version).toBe("0.15.1");
+  });
+
+  it("dry-run writes nothing", () => {
+    const root = mkdtempSync(join(tmpdir(), "pstack-bump-dry-"));
+    write(root, "package.json", JSON.stringify({ version: "1.2.3" }, null, 2) + "\n");
+    write(root, ".claude-plugin/plugin.json", JSON.stringify({ version: "1.2.3" }, null, 2) + "\n");
+    runBump({ command: "bump", kind: "minor", dryRun: true, tag: false, release: false, root });
+    expect(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version).toBe("1.2.3");
+  });
+
+  it("docs name npm run bump", () => {
+    const readme = readFileSync(join(repoDir(), "README.md"), "utf8");
+    const agents = readFileSync(join(repoDir(), "AGENTS.md"), "utf8");
+    expect(readme).toContain("npm run bump -- patch");
+    expect(agents).toContain("npm run bump -- patch");
+  });
+
+  it("CLI bump patch --dry-run exits 0", () => {
+    const root = mkdtempSync(join(tmpdir(), "pstack-bump-cli-"));
+    write(root, "package.json", JSON.stringify({ version: "0.1.0" }, null, 2) + "\n");
+    write(root, ".claude-plugin/plugin.json", JSON.stringify({ version: "0.1.0" }, null, 2) + "\n");
+    const result = spawnSync(process.execPath, [cli, "bump", "patch", "--dry-run", "--root", root], {
+      encoding: "utf8",
+    });
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("0.1.0 -> 0.1.1");
+    expect(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version).toBe("0.1.0");
   });
 });

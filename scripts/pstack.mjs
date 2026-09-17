@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * Vendor official pstack skills from cursor/plugins into this package's
- * single skills/do-* tree. Not a second skill tree. Not skills.sh.
+ * Maintainer CLI: vendor official skills (`sync`) and bump package versions (`bump`).
  */
 import { spawnSync } from "node:child_process";
 import {
@@ -29,12 +28,20 @@ const HELP = `Usage: pstack <command> [options]
 
 Commands:
   sync    Pull official skills from cursor/plugins into skills/do-*
+  bump    Bump package.json + Claude plugin version (omp/pi share package.json)
 
 pstack sync [--dry-run] [--force] [--from DIR] [--repo URL] [--ref REF] [--root DIR]
 
+pstack bump <patch|minor|major> [--dry-run] [--tag] [--release] [--root DIR]
+
 SoT is github.com/cursor/plugins (pstack/skills), not backnotprop/pstack or skills.sh.
 Writes into the existing skills/do-* tree. Does not install into agent skill dirs.
+bump writes package.json and .claude-plugin/plugin.json. omp and pi use package.json.
+--tag creates git tag vX.Y.Z. --release also runs gh release create.
 `;
+
+export const VERSION_FILES = Object.freeze(["package.json", ".claude-plugin/plugin.json"]);
+export const BUMP_KINDS = Object.freeze(["patch", "minor", "major"]);
 
 export function parseArgs(argv) {
   const args = [...argv];
@@ -48,6 +55,9 @@ export function parseArgs(argv) {
     ref: null,
     root: null,
     help: false,
+    kind: null,
+    tag: false,
+    release: false,
   };
   for (let i = 0; i < args.length; i += 1) {
     const a = args[i];
@@ -58,6 +68,9 @@ export function parseArgs(argv) {
     else if (a === "--repo") opts.repo = args[++i];
     else if (a === "--ref") opts.ref = args[++i];
     else if (a === "--root") opts.root = args[++i];
+    else if (a === "--tag") opts.tag = true;
+    else if (a === "--release") opts.release = true;
+    else if (command === "bump" && BUMP_KINDS.includes(a) && opts.kind == null) opts.kind = a;
     else throw new Error(`unknown option: ${a}`);
   }
   return opts;
@@ -305,6 +318,81 @@ export function runSync(opts) {
   }
 }
 
+export function bumpSemver(version, kind) {
+  const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(version);
+  if (!m) throw new Error(`not a patch.minor.major version: ${version}`);
+  if (!BUMP_KINDS.includes(kind)) throw new Error(`kind must be patch, minor, or major`);
+  let major = Number(m[1]);
+  let minor = Number(m[2]);
+  let patch = Number(m[3]);
+  if (kind === "major") {
+    major += 1;
+    minor = 0;
+    patch = 0;
+  } else if (kind === "minor") {
+    minor += 1;
+    patch = 0;
+  } else {
+    patch += 1;
+  }
+  return `${major}.${minor}.${patch}`;
+}
+
+function writeJsonVersion(path, version) {
+  const json = JSON.parse(readFileSync(path, "utf8"));
+  json.version = version;
+  writeFileSync(path, `${JSON.stringify(json, null, 2)}\n`);
+}
+
+export function runBump(opts, spawn = spawnSync) {
+  const kind = opts.kind;
+  if (!BUMP_KINDS.includes(kind)) throw new Error("usage: pstack bump <patch|minor|major>");
+  const root = opts.root;
+  const pkgPath = join(root, "package.json");
+  const from = readJsonVersion(pkgPath);
+  if (!from) throw new Error(`no version in ${pkgPath}`);
+  const to = bumpSemver(from, kind);
+  const files = [];
+  for (const rel of VERSION_FILES) {
+    const path = join(root, rel);
+    if (!existsSync(path)) throw new Error(`missing ${rel}`);
+    files.push(rel);
+    if (!opts.dryRun) writeJsonVersion(path, to);
+  }
+  const tag = `v${to}`;
+  const ran = [];
+  if (opts.tag || opts.release) {
+    if (!opts.dryRun) {
+      const tagged = spawn("git", ["-C", root, "tag", tag], { encoding: "utf8" });
+      if (tagged.status !== 0) {
+        throw new Error((tagged.stderr || tagged.stdout || `git tag ${tag} failed`).trim());
+      }
+    }
+    ran.push(`git tag ${tag}`);
+  }
+  if (opts.release) {
+    if (!opts.dryRun) {
+      const rel = spawn(
+        "gh",
+        ["release", "create", tag, "--title", tag, "--notes", `pstack ${to}`],
+        { encoding: "utf8", cwd: root },
+      );
+      if (rel.status !== 0) {
+        throw new Error((rel.stderr || rel.stdout || `gh release create ${tag} failed`).trim());
+      }
+    }
+    ran.push(`gh release create ${tag}`);
+  }
+  return { from, to, files, tag, dryRun: Boolean(opts.dryRun), ran };
+}
+
+export function formatBump(info) {
+  const lines = [`${info.from} -> ${info.to}`, `files: ${info.files.join(", ")}`];
+  if (info.dryRun) lines.push("dry-run");
+  for (const step of info.ran) lines.push(step);
+  return lines.join("\n");
+}
+
 export function main(argv = process.argv.slice(2), io = process) {
   let opts;
   try {
@@ -317,12 +405,17 @@ export function main(argv = process.argv.slice(2), io = process) {
     io.stdout.write(HELP);
     return opts.help ? 0 : 2;
   }
-  if (opts.command !== "sync") {
+  if (opts.command !== "sync" && opts.command !== "bump") {
     io.stderr.write(`unknown command: ${opts.command}\n${HELP}`);
     return 2;
   }
   try {
     const root = opts.root ? resolve(opts.root) : resolve(dirname(fileURLToPath(import.meta.url)), "..");
+    if (opts.command === "bump") {
+      const report = runBump({ ...opts, root });
+      io.stdout.write(`${formatBump(report)}\n`);
+      return 0;
+    }
     const report = runSync({ ...opts, root });
     io.stdout.write(`${formatReport(report)}\n`);
     return 0;
