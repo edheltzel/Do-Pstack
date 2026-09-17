@@ -339,11 +339,6 @@ export function bumpSemver(version, kind) {
   return `${major}.${minor}.${patch}`;
 }
 
-function writeJsonVersion(path, version) {
-  const json = JSON.parse(readFileSync(path, "utf8"));
-  json.version = version;
-  writeFileSync(path, `${JSON.stringify(json, null, 2)}\n`);
-}
 
 function gitOut(spawn, root, args) {
   const result = spawn("git", ["-C", root, ...args], { encoding: "utf8" });
@@ -396,18 +391,41 @@ export function runBump(opts, spawn = spawnSync) {
   }
   if (opts.kind) {
     if (!BUMP_KINDS.includes(opts.kind)) throw new Error("usage: pstack bump <patch|minor|major>");
-    const pkgPath = join(root, "package.json");
-    const from = readJsonVersion(pkgPath);
-    if (!from) throw new Error(`no version in ${pkgPath}`);
-    const to = bumpSemver(from, opts.kind);
-    const files = [];
+    const docs = [];
     for (const rel of VERSION_FILES) {
       const path = join(root, rel);
       if (!existsSync(path)) throw new Error(`missing ${rel}`);
-      files.push(rel);
-      if (!opts.dryRun) writeJsonVersion(path, to);
+      let json;
+      try {
+        json = JSON.parse(readFileSync(path, "utf8"));
+      } catch {
+        throw new Error(`invalid JSON: ${rel}`);
+      }
+      if (typeof json.version !== "string") throw new Error(`no version in ${rel}`);
+      docs.push({ rel, path, json });
     }
-    return { from, to, files, tag: `v${to}`, dryRun: Boolean(opts.dryRun), ran: [], sha: null };
+    const from = docs[0].json.version;
+    for (const doc of docs) {
+      if (doc.json.version !== from) {
+        throw new Error(`versions differ: ${docs[0].rel} ${from} vs ${doc.rel} ${doc.json.version}`);
+      }
+    }
+    const to = bumpSemver(from, opts.kind);
+    if (!opts.dryRun) {
+      for (const doc of docs) {
+        doc.json.version = to;
+        writeFileSync(doc.path, `${JSON.stringify(doc.json, null, 2)}\n`);
+      }
+    }
+    return {
+      from,
+      to,
+      files: docs.map((d) => d.rel),
+      tag: `v${to}`,
+      dryRun: Boolean(opts.dryRun),
+      ran: [],
+      sha: null,
+    };
   }
   if (!opts.tag && !opts.release) {
     throw new Error("usage: pstack bump <patch|minor|major> | pstack bump --tag [--release]");

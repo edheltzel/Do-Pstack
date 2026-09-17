@@ -226,6 +226,16 @@ describe("pstack bump", () => {
     expect(JSON.parse(readFileSync(join(root, ".claude-plugin/plugin.json"), "utf8")).version).toBe("0.15.1");
   });
 
+  it("does not write package.json when plugin.json is invalid", () => {
+    const root = mkdtempSync(join(tmpdir(), "pstack-bump-bad-plugin-"));
+    write(root, "package.json", JSON.stringify({ version: "0.15.0" }, null, 2) + "\n");
+    write(root, ".claude-plugin/plugin.json", "{not json");
+    expect(() =>
+      runBump({ command: "bump", kind: "patch", dryRun: false, tag: false, release: false, root }),
+    ).toThrow(/invalid JSON/);
+    expect(JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version).toBe("0.15.0");
+  });
+
   it("dry-run writes nothing", () => {
     const root = mkdtempSync(join(tmpdir(), "pstack-bump-dry-"));
     write(root, "package.json", JSON.stringify({ version: "1.2.3" }, null, 2) + "\n");
