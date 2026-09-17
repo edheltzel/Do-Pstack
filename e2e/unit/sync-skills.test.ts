@@ -307,4 +307,27 @@ describe("pstack bump", () => {
       sha,
     ]);
   });
+
+  it("tag then release reuses the existing matching tag", () => {
+    const root = gitVersionRepo("0.17.0");
+    const bare = mkdtempSync(join(tmpdir(), "pstack-bump-seq-"));
+    git(bare, "init", "--bare");
+    git(root, "remote", "add", "origin", bare);
+    const sha = git(root, "rev-parse", "HEAD").stdout.trim();
+    runBump({ command: "bump", kind: null, dryRun: false, tag: true, release: false, root });
+    expect(git(root, "rev-parse", "v0.17.0^{commit}").stdout.trim()).toBe(sha);
+    const gh: string[][] = [];
+    const spawn = (cmd: string, args: string[], opts?: object) => {
+      if (cmd === "gh") {
+        gh.push(args);
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      return spawnSync(cmd, args, opts);
+    };
+    runBump({ command: "bump", kind: null, dryRun: false, tag: false, release: true, root }, spawn);
+    expect(git(root, "rev-parse", "v0.17.0^{commit}").stdout.trim()).toBe(sha);
+    expect(git(bare, "rev-parse", "v0.17.0^{commit}").stdout.trim()).toBe(sha);
+    expect(gh[0]?.includes("--target")).toBe(true);
+    expect(gh[0]?.at(-1)).toBe(sha);
+  });
 });

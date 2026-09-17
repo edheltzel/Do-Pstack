@@ -372,6 +372,22 @@ function requireCommittedVersions(spawn, root) {
   if (pkg !== plugin) throw new Error(`HEAD versions differ: package.json ${pkg} vs plugin.json ${plugin}`);
   return pkg;
 }
+function peeledTag(spawn, root, tag) {
+  const result = spawn("git", ["-C", root, "rev-parse", `${tag}^{commit}`], { encoding: "utf8" });
+  if (result.status !== 0) return null;
+  return (result.stdout || "").trim();
+}
+
+function ensureTag(spawn, root, tag, sha) {
+  const existing = peeledTag(spawn, root, tag);
+  if (existing) {
+    if (existing !== sha) throw new Error(`tag ${tag} points at ${existing}, not ${sha}`);
+    return;
+  }
+  gitOut(spawn, root, ["tag", "-a", tag, sha, "-m", tag]);
+  const tagged = gitOut(spawn, root, ["rev-parse", `${tag}^{commit}`]);
+  if (tagged !== sha) throw new Error(`tag ${tag} points at ${tagged}, not ${sha}`);
+}
 
 export function runBump(opts, spawn = spawnSync) {
   const root = opts.root;
@@ -401,11 +417,7 @@ export function runBump(opts, spawn = spawnSync) {
   const tag = `v${version}`;
   const ran = [];
   if (opts.tag || opts.release) {
-    if (!opts.dryRun) {
-      gitOut(spawn, root, ["tag", "-a", tag, sha, "-m", tag]);
-      const tagged = gitOut(spawn, root, ["rev-parse", `${tag}^{commit}`]);
-      if (tagged !== sha) throw new Error(`tag ${tag} points at ${tagged}, not ${sha}`);
-    }
+    if (!opts.dryRun) ensureTag(spawn, root, tag, sha);
     ran.push(`git tag ${tag} ${sha}`);
   }
   if (opts.release) {
