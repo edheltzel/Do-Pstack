@@ -6,7 +6,7 @@ Human docs for this plugin. First-run is the README (omp marketplace `pstack@pst
 
 ## Ownership
 
-- `guide/` — numbered walkthrough (01–10 plus images). Images still come from `cursor/plugins` `pstack/docs/guide/`.
+- `guide/` — numbered walkthrough (01–10 plus images). Tutorial stills still come from `cursor/plugins` `pstack/docs/guide/`. `images/pstack-demo.gif` is live Terminal stills of omp (`/poteto-mode`, playbook todos, `npm run sync -- --dry-run`).
 
 ## Local Contracts
 

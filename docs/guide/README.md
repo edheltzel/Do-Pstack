@@ -4,6 +4,8 @@ In this tutorial we'll run pstack on a real task. First-run is the [README](../.
 
 Give a goal and a way to check it, in your own words. `/poteto-mode` picks the playbook, runs the other skills, and shows the evidence.
 
+![How pstack works](./images/pstack-demo.gif)
+
 Read these pages in order the first time. After that, each page stands alone.
 
 1. [Set up pstack](./01-setup.md). Install the plugin and pick your models.
