@@ -259,25 +259,37 @@ export function applyPlan(root, plan) {
 }
 
 export function formatReport(info) {
-  const lines = [
-    `source: ${info.repo}${info.sha ? `@${info.sha}` : ""}`,
-    `sot: cursor/plugins pstack/skills → skills/do-*`,
-  ];
-  if (info.version) lines.push(`upstream-version: ${info.version}`);
-  if (info.dryRun) lines.push("mode: dry-run");
-  const added = info.plan.actions.filter((a) => a.kind === "add");
-  const updated = info.plan.actions.filter((a) => a.kind === "update");
-  const skipped = info.plan.actions.filter((a) => a.kind === "skip");
-  const diverged = info.plan.actions.filter((a) => a.kind === "diverged");
-  for (const a of added) lines.push(`added: ${a.destRel}`);
-  for (const a of updated) lines.push(`updated: ${a.destRel}`);
-  for (const a of skipped) lines.push(`skipped: ${a.destRel} (local subtraction)`);
-  const divergedSkills = [...new Set(diverged.map((a) => a.destRel.split("/").slice(0, 2).join("/")))].sort();
-  if (divergedSkills.length) {
-    lines.push(`diverged-kept-local: ${divergedSkills.join(" ")}`);
+  const of = (kind) => info.plan.actions.filter((a) => a.kind === kind);
+  const added = of("add");
+  const updated = of("update");
+  const skipped = of("skip");
+  const diverged = of("diverged");
+  const perSkill = new Map();
+  for (const a of diverged) {
+    const skill = a.destRel.split("/")[1];
+    perSkill.set(skill, (perSkill.get(skill) || 0) + 1);
   }
+  const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+  const lines = [
+    `pstack sync${info.dryRun ? " (dry run, nothing written)" : ""}`,
+    `  from  ${info.repo}${info.sha ? ` @ ${info.sha}` : ""}${info.version ? ` (v${info.version})` : ""}`,
+    `  path  cursor/plugins pstack/skills → skills/do-*`,
+  ];
+  const section = (title, items) => {
+    if (!items.length) return;
+    lines.push("", title);
+    for (const item of items) lines.push(`  ${item}`);
+  };
+  section(`Added (${added.length})`, added.map((a) => a.destRel));
+  section(`Updated (${updated.length})`, updated.map((a) => a.destRel));
+  section(
+    `Kept local edits in ${plural(perSkill.size, "skill")} (${plural(diverged.length, "file")}); --force takes upstream`,
+    [...perSkill].sort(([a], [b]) => a.localeCompare(b)).map(([skill, n]) => `${skill} (${plural(n, "file")})`),
+  );
+  section(`Skipped (${skipped.length}), deleted on purpose by this fork`, skipped.map((a) => a.destRel));
   lines.push(
-    `summary: added=${added.length} updated=${updated.length} skipped=${skipped.length} diverged=${diverged.length} unchanged=${info.plan.unchanged}`,
+    "",
+    `${plural(info.plan.slugs.length, "skill")}: ${added.length} added, ${updated.length} updated, ${diverged.length} kept local, ${skipped.length} skipped, ${info.plan.unchanged} unchanged`,
   );
   return lines.join("\n");
 }

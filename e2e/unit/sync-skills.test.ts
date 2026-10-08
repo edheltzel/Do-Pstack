@@ -153,10 +153,10 @@ describe("pstack sync", () => {
     expect(existsSync(join(root, "skills/how"))).toBe(false);
     expect(existsSync(join(root, "skills/do-why/SKILL.md"))).toBe(true);
     const text = formatReport(report);
-    expect(text).toContain("sot: cursor/plugins pstack/skills → skills/do-*");
-    expect(text).toContain("added: skills/do-why/SKILL.md");
-    expect(text).toContain("skipped: skills/do-poteto-mode/playbooks/shipping.md");
-    expect(text).toMatch(/summary: added=\d+ updated=0 skipped=1 diverged=\d+/);
+    expect(text).toContain("cursor/plugins pstack/skills → skills/do-*");
+    expect(text).toMatch(/Added \(\d+\)\n(  .*\n)*  skills\/do-why\/SKILL\.md/);
+    expect(text).toMatch(/Skipped \(1\).*\n  skills\/do-poteto-mode\/playbooks\/shipping\.md/);
+    expect(text).toMatch(/\d+ added, 0 updated, \d+ kept local, 1 skipped, \d+ unchanged$/);
   });
 
   it("dry-run writes nothing", () => {
@@ -191,8 +191,8 @@ describe("pstack sync", () => {
       encoding: "utf8",
     });
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("mode: dry-run");
-    expect(result.stdout).toContain("added: skills/do-why/SKILL.md");
+    expect(result.stdout).toContain("dry run, nothing written");
+    expect(result.stdout).toContain("  skills/do-why/SKILL.md");
     expect(result.stdout).toContain("cursor/plugins");
     expect(() => readFileSync(join(root, "skills/do-why/SKILL.md"))).toThrow();
   });
