@@ -9,7 +9,7 @@
     {
       "name": "pstack",
       "source": "./",
-      "description": "pstack skills and agents. Claude slash skills are /pstack:do-*."
+      "description": "pstack skills and agents. Claude slash skills are /pstack:ps-*."
     }
   ]
 }

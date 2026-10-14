@@ -12,13 +12,13 @@ Human docs for this plugin. First-run is the README (omp marketplace `pstack@pst
 
 - README owns first-run: omp `marketplace add edheltzel/Do-Pstack` + `install pstack@pstack`, Pi `pi install git:github.com/edheltzel/Do-Pstack`, Claude plugin install (`marketplace add` + `pstack@pstack`, or `claude --plugin-dir ./`). Checkout path is `omp plugin link ./` / `pi install ./`. Do not add `docs/getting-started.md` or teach `omp -e` / `pi -e` as an install path.
 - README may link the numbered guide.
-- Guide on-disk skill links use `skills/do-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live omp surface is `/skill:do-how`, Claude is `/pstack:do-how`. `/poteto-mode` stays unprefixed on omp.
-- Setup guide (`01-setup.md`) matches `do-setup-pstack`: `/model` Roles and `/agents` only. Do not teach `pstack-models.mdc`.
+- Guide on-disk skill links use `skills/ps-*` so they resolve in this tree. Slash names in guide prose may still say `/how`; the live omp surface is `/skill:ps-how`, Claude is `/pstack:ps-how`. `/poteto-mode` stays unprefixed on omp.
+- Setup guide (`01-setup.md`) matches `ps-setup-pstack`: `/model` Roles and `/agents` only. Do not teach `pstack-models.mdc`.
 - Operator install matches the root rail Native omp, Native Pi, and Native Claude Code contracts.
 
 ## Work Guidance
 
-Keep the omp walkthrough. Do not paste upstream Cursor install prose back over it. Remap `../../skills/<name>/` to `../../skills/do-<name>/`. Agents tell operators GitHub install (omp marketplace, `pi install git:…`, Claude plugin install).
+Keep the omp walkthrough. Do not paste upstream Cursor install prose back over it. Remap `../../skills/<name>/` to `../../skills/ps-<name>/`. Agents tell operators GitHub install (omp marketplace, `pi install git:…`, Claude plugin install).
 
 ## Verification
 

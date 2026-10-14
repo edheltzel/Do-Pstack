@@ -1,6 +1,6 @@
 # The pstack guide
 
-In this tutorial we'll run pstack on a real task. First-run is the [README](../../README.md). Install with omp `pstack@pstack`, `pi install git:github.com/edheltzel/Do-Pstack`, or Claude `claude plugin install pstack@pstack`. On-disk skills are `skills/do-*`. omp slash skills are `/skill:do-…`. Claude slash skills are `/pstack:do-*`. `/poteto-mode` stays unprefixed on omp.
+In this tutorial we'll run pstack on a real task. First-run is the [README](../../README.md). Install with omp `pstack@pstack`, `pi install git:github.com/edheltzel/Do-Pstack`, or Claude `claude plugin install pstack@pstack`. On-disk skills are `skills/ps-*`. omp slash skills are `/skill:ps-…`. Claude slash skills are `/pstack:ps-*`. `/poteto-mode` stays unprefixed on omp.
 
 Give a goal and a way to check it, in your own words. `/poteto-mode` picks the playbook, runs the other skills, and shows the evidence.
 

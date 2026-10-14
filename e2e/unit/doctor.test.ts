@@ -20,7 +20,7 @@ function walkText(root: string, rel = ""): string[] {
 }
 
 describe("package.json doctor", () => {
-  it("plugin layout is real: omp.extensions path, Claude plugin.json, and skills/do-*/SKILL.md", () => {
+  it("plugin layout is real: omp.extensions path, Claude plugin.json, and skills/ps-*/SKILL.md", () => {
     const root = repoDir();
     const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
       omp?: { extensions?: unknown };
@@ -33,7 +33,7 @@ describe("package.json doctor", () => {
     }
     expect(pkg.pi?.extensions).toEqual(exts);
     const skillMd = readdirSync(join(root, "skills")).filter(
-      (name) => name.startsWith("do-") && existsSync(join(root, "skills", name, "SKILL.md")),
+      (name) => name.startsWith("ps-") && existsSync(join(root, "skills", name, "SKILL.md")),
     );
     expect(skillMd.length).toBeGreaterThan(0);
 
@@ -57,24 +57,23 @@ describe("package.json doctor", () => {
     expect(factory).not.toContain("@zenspc/pi-pstack");
   });
 
-  it("live slash is /skill:do-* and leftover ps- skill folders/slashes are gone", () => {
+  it("live slash is /skill:ps-* and every skill folder uses the ps- prefix", () => {
     const root = repoDir();
     const skillDirs = readdirSync(join(root, "skills")).filter((name) =>
       existsSync(join(root, "skills", name, "SKILL.md")),
     );
-    expect(skillDirs.filter((name) => name.startsWith("ps-"))).toEqual([]);
     expect(skillDirs.length).toBeGreaterThan(0);
-    expect(skillDirs.every((name) => name.startsWith("do-"))).toBe(true);
+    expect(skillDirs.every((name) => name.startsWith("ps-"))).toBe(true);
     for (const name of skillDirs) {
       const text = readFileSync(join(root, "skills", name, "SKILL.md"), "utf8");
       expect(text.startsWith(`---\nname: ${name}\n`), name).toBe(true);
     }
 
     const factory = readFileSync(join(root, "extensions/pstack.ts"), "utf8");
-    expect(factory).toContain('const POTETO_SKILL = "/skill:do-poteto-mode"');
+    expect(factory).toContain('const POTETO_SKILL = "/skill:ps-poteto-mode"');
     expect(factory).toContain('pi.registerCommand("poteto-mode"');
-    const oldSlash = `/skill:${"ps-"}`;
-    const oldPath = `skills/${"ps-"}`;
+    const oldSlash = `/skill:${"do-"}`;
+    const oldPath = `skills/${"do-"}`;
     expect(factory.includes(oldSlash)).toBe(false);
 
     const leftover = walkText(root).flatMap((rel) => {

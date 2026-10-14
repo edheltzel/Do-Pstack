@@ -289,7 +289,7 @@ PRODUCT_PACK_FILES = (
     "automations/benny/templates/configuration.example.yaml",
     "automations/benny/templates/reproduce-automation-prompt.md",
     "automations/benny/templates/triage-automation-prompt.md",
-    "skills/do-swarm/SKILL.md",
+    "skills/ps-swarm/SKILL.md",
     "agents/comment-sicko.md",
     "agents/poteto-agent.md",
 )

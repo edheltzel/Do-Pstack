@@ -198,7 +198,7 @@ def check(name, ok, detail):
 
 
 def static_worktree():
-    path = ROOT / "skills/do-poteto-mode/playbooks/worktree-cleanup.md"
+    path = ROOT / "skills/ps-poteto-mode/playbooks/worktree-cleanup.md"
     text = path.read_text()
     ok = (
         "~/.omp/wt" in text
@@ -216,7 +216,7 @@ def static_worktree():
 
 
 def static_setup_docs():
-    skill = (ROOT / "skills/do-setup-pstack/SKILL.md").read_text()
+    skill = (ROOT / "skills/ps-setup-pstack/SKILL.md").read_text()
     setup = (ROOT / "docs/guide/01-setup.md").read_text()
     leftover = [
         path.relative_to(ROOT).as_posix()
@@ -277,7 +277,7 @@ def static_install_docs():
         and (ROOT / ".claude-plugin/marketplace.json").is_file()
         and not (ROOT / ".claude-plugin/skills").exists()
         and not (ROOT / "e2e/unit/static-checks.ts").exists()
-        and not (ROOT / "skills/do-poteto-mode/playbooks/shipping.md").exists()
+        and not (ROOT / "skills/ps-poteto-mode/playbooks/shipping.md").exists()
     )
     return check(
         "install_plugin_link",

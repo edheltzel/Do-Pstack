@@ -45,6 +45,6 @@ describe("poteto-mode completions", () => {
   it("does not send on as a skill task", async () => {
     const { command, messages, ctx } = boot();
     await command.handler("on", ctx);
-    expect(messages).toEqual(["/skill:do-poteto-mode"]);
+    expect(messages).toEqual(["/skill:ps-poteto-mode"]);
   });
 });

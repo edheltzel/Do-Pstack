@@ -53,7 +53,7 @@ Closeout: re-check paths, update owning docs, refresh indexes, run verification,
 - Static gate (CI and local): `python3 e2e/run.py --skip-rpc` and `npm test` (Vitest).
 - No `omp`, no `omp --mode rpc`, no TUI, no `claude` on GitHub runners. Live RPC is local only: `python3 e2e/run.py` without `--skip-rpc`. Host-only prove (`omp plugin doctor`, `claude plugin validate`) is documented in e2e/AGENTS.md.
 - One factory. Poteto-mode is per-session, never a process-wide boolean.
-- Official skills SoT is `cursor/plugins` `pstack/skills`. Update with `npm run sync` (`node scripts/pstack.mjs sync`). Writes into existing `skills/do-*` only. Not `backnotprop/pstack`, not skills.sh, not `npx skills add`.
+- Official skills SoT is `cursor/plugins` `pstack/skills`. Update with `npm run sync` (`node scripts/pstack.mjs sync`). Writes into existing `skills/ps-*` only. Not `backnotprop/pstack`, not skills.sh, not `npx skills add`.
 - After shipping a feature or official-skills sync, bump with `npm run bump -- patch` (or `minor` / `major`). Writes `package.json` (omp + pi) and `.claude-plugin/plugin.json`. Commit that, then `npm run bump -- --tag` and `npm run bump -- --release` so the tag hits the committed sha (`gh release create --target`). Do not pass patch and --tag in one command (that would bump twice or tag the old HEAD).
 
 ## Version control
@@ -74,7 +74,7 @@ Tell operators GitHub marketplace:
 - Install host via https://omp.sh/install if needed.
 - `omp plugin marketplace add edheltzel/Do-Pstack` then `omp plugin install pstack@pstack`
 - This checkout / live RPC: `omp plugin link ./`
-- Later sessions, any cwd: type `/` (`/skill:do-…`, sticky `/poteto-mode`)
+- Later sessions, any cwd: type `/` (`/skill:ps-…`, sticky `/poteto-mode`)
 - Do not copy `pstack.ts` into `~/.omp/agent/extensions/`.
 - Do not keep a repo `.omp/skills` symlink. Sibling `skills/` is what the plugin discovers.
 
@@ -93,9 +93,9 @@ Tell operators plugin-first only:
 - Manifest: `.claude-plugin/plugin.json`. Catalog: `.claude-plugin/marketplace.json`. Skills stay at plugin-root `skills/`, not inside `.claude-plugin/`.
 - Install: `claude plugin marketplace add <checkout-or-edheltzel/Do-Pstack>` then `claude plugin install pstack@pstack`.
 - This session only: `claude --plugin-dir ./`
-- Slash skills: `/pstack:do-*`. Do not rename the `do-` skill set.
+- Slash skills: `/pstack:ps-*`. Do not rename the `ps-` skill set.
 - Validate on a host with Claude Code: `claude plugin validate .`
-- Sticky `/poteto-mode` is omp factory only. Claude uses `/pstack:do-poteto-mode`.
+- Sticky `/poteto-mode` is omp factory only. Claude uses `/pstack:ps-poteto-mode`.
 
 ## Verification
 

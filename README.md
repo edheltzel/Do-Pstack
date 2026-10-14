@@ -11,7 +11,7 @@
 
 This is a native plugin for Oh-My-Pi but has support for Pi and Claude Code.
 
-All skills follow the `do-*` namespace, from my [Do-Skills repo](https://github.com/edheltzel/Do-Skills). You might hate it 😬.
+All skills follow the `ps-*` namespace, from my [Do-Skills repo](https://github.com/edheltzel/Do-Skills). You might hate it 😬.
 
 ## What pstack is
 
@@ -21,7 +21,7 @@ pstack is a Cursor plugin by Lauren Tan ([@poteto](https://x.com/poteto)). See [
 
 - [The pstack guide](./docs/guide/README.md) — original numbered product tutorial (setup through recipes, plus images).
 
-**pi** skill use `skills/do-*`. **omp** skills are `/skill:do-…`. **claude** skills are `/pstack:do-*`. `/poteto-mode` stays unprefixed on omp, becuase it is a native plugin.
+**pi** skill use `skills/ps-*`. **omp** skills are `/skill:ps-…`. **claude** skills are `/pstack:ps-*`. `/poteto-mode` stays unprefixed on omp, becuase it is a native plugin.
 
 ## Automations
 
@@ -64,11 +64,11 @@ claude plugin install pstack@pstack
 
 This session only: `claude --plugin-dir ./`
 
-Claude slash skills are namespaced: `/pstack:do-how`, `/pstack:do-poteto-mode`. Validate the layout with `claude plugin validate .`. Sticky `/poteto-mode` is omp-only; on Claude run `/pstack:do-poteto-mode`.
+Claude slash skills are namespaced: `/pstack:ps-how`, `/pstack:ps-poteto-mode`. Validate the layout with `claude plugin validate .`. Sticky `/poteto-mode` is omp-only; on Claude run `/pstack:ps-poteto-mode`.
 
 ## Usage
 
-1. On omp: `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:do-poteto-mode`.
+1. On omp: `/poteto-mode` — enable sticky Poteto Mode for this conversation. Optional task arguments are passed through; this also sends `/skill:ps-poteto-mode`.
 2. Do your thing as usual. Just with pstack's flow and skills
 
 - `/poteto-mode` is persistent in omp with you execute `/new` or when you resume a conversation.
@@ -83,14 +83,14 @@ please note: omp's TUI shows `🍠 poteto: ✓ on` when enabled.
 
 | Command            | What it does                                                                                      |
 | ------------------ | ------------------------------------------------------------------------------------------------- |
-| `/poteto-mode`     | omp factory: enable sticky Poteto Mode for this conversation. Also sends `/skill:do-poteto-mode`. |
+| `/poteto-mode`     | omp factory: enable sticky Poteto Mode for this conversation. Also sends `/skill:ps-poteto-mode`. |
 | `/poteto-mode off` | Disable this omp conversation. Aliases: `disable`, `stop`.                                        |
 
 That is the live omp extension command. It stays unprefixed. There is no worktree command. No `hooks/` tree. No `src/` tree. No Cursor marketplace APIs. Do not ship `commands/poteto-mode.md`.
 
 ## Poteto Mode (this extension)
 
-- On omp, enable sends `/skill:do-poteto-mode`. The `/skill:do-poteto-mode` input hook also persists enabled.
+- On omp, enable sends `/skill:ps-poteto-mode`. The `/skill:ps-poteto-mode` input hook also persists enabled.
 - Stored as a custom `pstack-mode` entry on that conversation’s session jsonl. Last `{enabled}` wins. Missing means off.
 - `session_start` re-reads the jsonl. `new_session` / `/new` starts off. Resume of an on conversation stays on.
 - When on, a prompt needle prepends “Pstack Poteto Mode is on…”
@@ -108,7 +108,7 @@ npm run sync
 Same command: `node scripts/pstack.mjs sync`.
 Dry-run: `npm run sync -- --dry-run`.
 
-That pulls `pstack/skills/<name>` from `cursor/plugins` into the existing `skills/do-*` tree (YAML `name` gets the `do-` prefix). It does not create a second skill tree or install into agent skill directories.
+That pulls `pstack/skills/<name>` from `cursor/plugins` into the existing `skills/ps-*` tree (YAML `name` gets the `ps-` prefix). It does not create a second skill tree or install into agent skill directories.
 
 After a feature or this sync, bump versions the same way:
 

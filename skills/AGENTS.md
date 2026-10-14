@@ -10,7 +10,7 @@ pstack skill tree. Sibling `skills/` at the package root is what omp auto-discov
 
 ## Local Contracts
 
-- Skill directories and YAML `name` use the `do-` prefix. After `omp plugin link ./`, the live slash is `/skill:do-<name>`. After Claude plugin install, the live slash is `/pstack:do-<name>`. Do not rename the `do-` set.
+- Skill directories and YAML `name` use the `ps-` prefix. After `omp plugin link ./`, the live slash is `/skill:ps-<name>`. After Claude plugin install, the live slash is `/pstack:ps-<name>`. Do not rename the `ps-` set.
 - Every `SKILL.md` has YAML frontmatter with non-empty `name` and `description`.
 - `python3 e2e/ci_static.py --frontmatter` is the gate.
 
@@ -18,7 +18,7 @@ pstack skill tree. Sibling `skills/` at the package root is what omp auto-discov
 
 Keep leaf skills operational. Do not add a per-skill AGENTS.md unless a skill becomes its own durable boundary.
 
-Official skill bodies come from `cursor/plugins` `pstack/skills`. Refresh this tree with `npm run sync` (`node scripts/pstack.mjs sync`). That maps `skills/<name>` → `skills/do-<name>` here. Do not add a second skills tree. Do not `npx skills add`.
+Official skill bodies come from `cursor/plugins` `pstack/skills`. Refresh this tree with `npm run sync` (`node scripts/pstack.mjs sync`). That maps `skills/<name>` → `skills/ps-<name>` here. Do not add a second skills tree. Do not `npx skills add`.
 
 ## Verification
 

@@ -27,7 +27,7 @@ const TEXT = /\.(md|txt|json|yml|yaml|ts|js|mjs|cjs|sh)$/i;
 const HELP = `Usage: pstack <command> [options]
 
 Commands:
-  sync    Pull official skills from cursor/plugins into skills/do-*
+  sync    Pull official skills from cursor/plugins into skills/ps-*
   bump    Bump package.json + Claude plugin version (omp/pi share package.json)
 
 pstack sync [--dry-run] [--force] [--from DIR] [--repo URL] [--ref REF] [--root DIR]
@@ -36,7 +36,7 @@ pstack bump <patch|minor|major> [--dry-run] [--root DIR]
 pstack bump --tag [--release] [--dry-run] [--root DIR]
 
 SoT is github.com/cursor/plugins (pstack/skills), not backnotprop/pstack or skills.sh.
-Writes into the existing skills/do-* tree. Does not install into agent skill dirs.
+Writes into the existing skills/ps-* tree. Does not install into agent skill dirs.
 bump writes package.json and .claude-plugin/plugin.json. omp and pi use package.json.
 Commit those files, then --tag on that HEAD (git tag vX.Y.Z <sha>). --release pushes the tag and gh release create --target <sha>.
 `;
@@ -83,12 +83,12 @@ export function escapeRegExp(value) {
 
 export function rewriteLayout(text, slugs, ownSlug) {
   let out = text;
-  if (ownSlug && !ownSlug.startsWith("do-")) {
-    out = out.replace(new RegExp(`^(name:\\s*)${escapeRegExp(ownSlug)}\\s*$`, "m"), `$1do-${ownSlug}`);
+  if (ownSlug && !ownSlug.startsWith("ps-")) {
+    out = out.replace(new RegExp(`^(name:\\s*)${escapeRegExp(ownSlug)}\\s*$`, "m"), `$1ps-${ownSlug}`);
   }
-  const sorted = [...slugs].filter((s) => s && !s.startsWith("do-")).sort((a, b) => b.length - a.length);
+  const sorted = [...slugs].filter((s) => s && !s.startsWith("ps-")).sort((a, b) => b.length - a.length);
   for (const slug of sorted) {
-    const dest = `do-${slug}`;
+    const dest = `ps-${slug}`;
     const reSlug = escapeRegExp(slug);
     out = out.replace(new RegExp(`(?<![\\w-])skills/${reSlug}/`, "g"), `skills/${dest}/`);
     out = out.replace(new RegExp(`\\.\\./${reSlug}/`, "g"), `../${dest}/`);
@@ -212,10 +212,10 @@ export function planSync(args) {
 
   for (const slug of slugs) {
     const srcRoot = join(upstreamSkills, slug);
-    const destRoot = join(destSkills, `do-${slug}`);
+    const destRoot = join(destSkills, `ps-${slug}`);
     for (const rel of walkFiles(srcRoot)) {
       const upRel = `${slug}/${rel}`;
-      const destRel = `skills/do-${slug}/${rel}`;
+      const destRel = `skills/ps-${slug}/${rel}`;
       if (subtraction.has(upRel)) {
         actions.push({ kind: "skip", destRel, src: upRel });
         skipped += 1;
@@ -273,7 +273,7 @@ export function formatReport(info) {
   const lines = [
     `pstack sync${info.dryRun ? " (dry run, nothing written)" : ""}`,
     `  from  ${info.repo}${info.sha ? ` @ ${info.sha}` : ""}${info.version ? ` (v${info.version})` : ""}`,
-    `  path  cursor/plugins pstack/skills → skills/do-*`,
+    `  path  cursor/plugins pstack/skills → skills/ps-*`,
   ];
   const section = (title, items) => {
     if (!items.length) return;

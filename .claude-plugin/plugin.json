@@ -2,7 +2,7 @@
   "name": "pstack",
   "displayName": "pstack",
   "version": "0.15.1",
-  "description": "pstack skills, agents, and sticky /poteto-mode. Claude slash skills are /pstack:do-*.",
+  "description": "pstack skills, agents, and sticky /poteto-mode. Claude slash skills are /pstack:ps-*.",
   "author": {
     "name": "Ed Heltzel",
     "url": "https://github.com/edheltzel"

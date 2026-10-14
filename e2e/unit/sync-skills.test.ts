@@ -75,19 +75,19 @@ function fixture(): { root: string; from: string } {
 
   write(
     root,
-    "skills/do-how/SKILL.md",
-    "---\nname: do-how\ndescription: Explain code (omp).\n---\n\nLocal omp fork.\n",
+    "skills/ps-how/SKILL.md",
+    "---\nname: ps-how\ndescription: Explain code (omp).\n---\n\nLocal omp fork.\n",
   );
   write(
     root,
-    "skills/do-setup-pstack/SKILL.md",
-    "---\nname: do-setup-pstack\ndescription: omp setup.\n---\n\nDo not write models.json.\n",
+    "skills/ps-setup-pstack/SKILL.md",
+    "---\nname: ps-setup-pstack\ndescription: omp setup.\n---\n\nDo not write models.json.\n",
   );
-  write(root, "skills/do-poteto-mode/SKILL.md", "---\nname: do-poteto-mode\ndescription: Router.\n---\n\n# Poteto\n");
+  write(root, "skills/ps-poteto-mode/SKILL.md", "---\nname: ps-poteto-mode\ndescription: Router.\n---\n\n# Poteto\n");
   write(
     root,
-    "skills/do-principle-build-the-lever/SKILL.md",
-    "---\nname: do-principle-build-the-lever\ndescription: Build the script.\n---\n\n# Lever\n",
+    "skills/ps-principle-build-the-lever/SKILL.md",
+    "---\nname: ps-principle-build-the-lever\ndescription: Build the script.\n---\n\n# Lever\n",
   );
   return { root, from };
 }
@@ -103,19 +103,19 @@ describe("pstack sync", () => {
     expect(opts.command).toBe("sync");
   });
 
-  it("rewrites official layout onto skills/do-* without a second tree", () => {
+  it("rewrites official layout onto skills/ps-* without a second tree", () => {
     const slugs = ["how", "why", "principle-build-the-lever"];
     const text = rewriteLayout(
       "---\nname: how\ndescription: x\n---\n\n[Why](../why/SKILL.md) and skills/how/SKILL.md\n",
       slugs,
       "how",
     );
-    expect(text).toContain("name: do-how");
-    expect(text).toContain("../do-why/SKILL.md");
-    expect(text).toContain("skills/do-how/SKILL.md");
+    expect(text).toContain("name: ps-how");
+    expect(text).toContain("../ps-why/SKILL.md");
+    expect(text).toContain("skills/ps-how/SKILL.md");
     expect(text).not.toContain("name: how\n");
     expect(text).not.toContain("../why/");
-    expect(text).not.toContain("do-do-");
+    expect(text).not.toContain("ps-ps-");
   });
 
   it("adds missing official skills, skips shipping.md, keeps diverged local forks", () => {
@@ -126,12 +126,12 @@ describe("pstack sync", () => {
       force: false,
     });
     const kinds = Object.fromEntries(plan.actions.map((a) => [a.destRel, a.kind]));
-    expect(kinds["skills/do-why/SKILL.md"]).toBe("add");
-    expect(kinds["skills/do-principle-attack-the-premise/SKILL.md"]).toBe("add");
-    expect(kinds["skills/do-poteto-mode/playbooks/shipping.md"]).toBe("skip");
-    expect(kinds["skills/do-how/SKILL.md"]).toBe("diverged");
-    expect(kinds["skills/do-setup-pstack/SKILL.md"]).toBe("diverged");
-    expect(kinds["skills/do-poteto-mode/SKILL.md"]).toBeUndefined();
+    expect(kinds["skills/ps-why/SKILL.md"]).toBe("add");
+    expect(kinds["skills/ps-principle-attack-the-premise/SKILL.md"]).toBe("add");
+    expect(kinds["skills/ps-poteto-mode/playbooks/shipping.md"]).toBe("skip");
+    expect(kinds["skills/ps-how/SKILL.md"]).toBe("diverged");
+    expect(kinds["skills/ps-setup-pstack/SKILL.md"]).toBe("diverged");
+    expect(kinds["skills/ps-poteto-mode/SKILL.md"]).toBeUndefined();
 
     const report = runSync({
       command: "sync",
@@ -143,19 +143,19 @@ describe("pstack sync", () => {
       root,
       help: false,
     });
-    const added = readFileSync(join(root, "skills/do-principle-attack-the-premise/SKILL.md"), "utf8");
-    expect(added.startsWith("---\nname: do-principle-attack-the-premise\n")).toBe(true);
-    expect(added).toContain("../do-principle-build-the-lever/SKILL.md");
-    expect(readFileSync(join(root, "skills/do-how/SKILL.md"), "utf8")).toContain("Local omp fork");
-    expect(readFileSync(join(root, "skills/do-setup-pstack/SKILL.md"), "utf8")).toContain("Do not write models.json");
-    expect(() => readFileSync(join(root, "skills/do-poteto-mode/playbooks/shipping.md"))).toThrow();
+    const added = readFileSync(join(root, "skills/ps-principle-attack-the-premise/SKILL.md"), "utf8");
+    expect(added.startsWith("---\nname: ps-principle-attack-the-premise\n")).toBe(true);
+    expect(added).toContain("../ps-principle-build-the-lever/SKILL.md");
+    expect(readFileSync(join(root, "skills/ps-how/SKILL.md"), "utf8")).toContain("Local omp fork");
+    expect(readFileSync(join(root, "skills/ps-setup-pstack/SKILL.md"), "utf8")).toContain("Do not write models.json");
+    expect(() => readFileSync(join(root, "skills/ps-poteto-mode/playbooks/shipping.md"))).toThrow();
     expect(existsSync(join(root, "skills/why"))).toBe(false);
     expect(existsSync(join(root, "skills/how"))).toBe(false);
-    expect(existsSync(join(root, "skills/do-why/SKILL.md"))).toBe(true);
+    expect(existsSync(join(root, "skills/ps-why/SKILL.md"))).toBe(true);
     const text = formatReport(report);
-    expect(text).toContain("cursor/plugins pstack/skills → skills/do-*");
-    expect(text).toMatch(/Added \(\d+\)\n(  .*\n)*  skills\/do-why\/SKILL\.md/);
-    expect(text).toMatch(/Skipped \(1\).*\n  skills\/do-poteto-mode\/playbooks\/shipping\.md/);
+    expect(text).toContain("cursor/plugins pstack/skills → skills/ps-*");
+    expect(text).toMatch(/Added \(\d+\)\n(  .*\n)*  skills\/ps-why\/SKILL\.md/);
+    expect(text).toMatch(/Skipped \(1\).*\n  skills\/ps-poteto-mode\/playbooks\/shipping\.md/);
     expect(text).toMatch(/\d+ added, 0 updated, \d+ kept local, 1 skipped, \d+ unchanged$/);
   });
 
@@ -171,7 +171,7 @@ describe("pstack sync", () => {
       root,
       help: false,
     });
-    expect(() => readFileSync(join(root, "skills/do-why/SKILL.md"))).toThrow();
+    expect(() => readFileSync(join(root, "skills/ps-why/SKILL.md"))).toThrow();
   });
 
   it("package docs name npm run sync and cursor/plugins as SoT", () => {
@@ -192,9 +192,9 @@ describe("pstack sync", () => {
     });
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("dry run, nothing written");
-    expect(result.stdout).toContain("  skills/do-why/SKILL.md");
+    expect(result.stdout).toContain("  skills/ps-why/SKILL.md");
     expect(result.stdout).toContain("cursor/plugins");
-    expect(() => readFileSync(join(root, "skills/do-why/SKILL.md"))).toThrow();
+    expect(() => readFileSync(join(root, "skills/ps-why/SKILL.md"))).toThrow();
   });
 });
 

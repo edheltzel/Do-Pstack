@@ -11,7 +11,7 @@ Maintainer CLI for this package. `pstack.mjs` is `pstack sync` (vendor official 
 ## Local Contracts
 
 - Source of truth is `https://github.com/cursor/plugins.git` folder `pstack/skills`. Not `backnotprop/pstack`. Not skills.sh. `npx skills add` is not the path (it would install a second skill tree).
-- Layout map: upstream `skills/<name>/` → package `skills/do-<name>/`. YAML `name` gets the `do-` prefix. Sibling links `../<name>/` become `../do-<name>/`.
+- Layout map: upstream `skills/<name>/` → package `skills/ps-<name>/`. YAML `name` gets the `ps-` prefix. Sibling links `../<name>/` become `../ps-<name>/`.
 - One skill tree: sibling `skills/` at the package root. Do not write `.omp/skills`, `.claude-plugin/skills`, or agent skill dirs.
 - Do not restore `poteto-mode/playbooks/shipping.md` (this fork deleted it).
 - Default apply adds missing official files and leaves diverged local forks (omp adaptations) in place. `--force` overwrites diverged files except local subtractions.
