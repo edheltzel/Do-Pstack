@@ -11,7 +11,7 @@
 
 This is a native plugin for Oh-My-Pi but has support for Pi and Claude Code.
 
-All skills follow the `ps-*` namespace, from my [Do-Skills repo](https://github.com/edheltzel/Do-Skills). You might hate it 😬.
+All skills follow the `ps-*` namespace, You might hate it 😬.
 
 ## What pstack is
 
