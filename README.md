@@ -7,11 +7,11 @@
 ╚═╝     ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
 ```
 
-# Do Pstack
+# PStack for Oh-My-Pi 
 
-This is a native plugin for Oh-My-Pi but has support for Pi and Claude Code.
+This is a native plugin for Oh-My-Pi (omp) but has support for Pi and Claude Code.
 
-All skills follow the `ps-*` namespace, You might hate it 😬.
+All skills follow the `ps-*` namespace, You might hate it 😬, but for me it's a quick visual and typing action to quickly find the skill I want to run manually. Which is similar to my [DoSkills](https://github.com/edheltzel/Do-Skills).
 
 ## What pstack is
 
