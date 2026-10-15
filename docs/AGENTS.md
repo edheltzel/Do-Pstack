@@ -7,6 +7,7 @@ Human docs for this plugin. First-run is the README (omp marketplace `pstack@pst
 ## Ownership
 
 - `guide/` — numbered walkthrough (01–10 plus images). Tutorial stills still come from `cursor/plugins` `pstack/docs/guide/`. `images/pstack-demo.gif` is live Terminal stills of omp (`/poteto-mode`, playbook todos, `npm run sync -- --dry-run`).
+- `plans/` - release-note drafts (`release-<version>.md`), applied with `gh release edit v<version> --notes-file docs/plans/release-<version>.md`. Not shipped docs.
 
 ## Local Contracts
 

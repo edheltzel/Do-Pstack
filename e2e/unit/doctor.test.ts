@@ -76,7 +76,7 @@ describe("package.json doctor", () => {
     const oldPath = `skills/${"do-"}`;
     expect(factory.includes(oldSlash)).toBe(false);
 
-    const leftover = walkText(root).flatMap((rel) => {
+    const leftover = walkText(root).filter((rel) => !rel.startsWith("docs/plans/")).flatMap((rel) => {
       const text = readFileSync(join(root, rel), "utf8");
       const hits = [
         ...(text.includes(oldSlash) ? [oldSlash] : []),
